@@ -1,0 +1,12 @@
+.field-style {
+
+}
+
+.field-style.error {
+    border-color: red;
+    background-color: #ffe6e6;
+}
+
+.error-message-values {
+    color: red;
+}
