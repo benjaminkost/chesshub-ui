@@ -1,5 +1,6 @@
 # Content
 This repo is the browser webapp service for a microservice app called chesshub. Chesshub is a project for storing chess games of you and your club/ team and search for chess events to praticipate in.
+
 __Comment__: Currently the backend services are mostly private but I will set them public in the near future.
 
 # Set-up
