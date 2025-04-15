@@ -1,5 +1,6 @@
 import {useState} from "react";
 import "../styles/Registration.css"
+import {_post} from "../../client/apiChessHubCoreClient.js";
 
 export function Registration() {
     const [email, setEmail] = useState("");
@@ -8,6 +9,7 @@ export function Registration() {
     const [username, setUsername] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
+    const [phone, setPhone] = useState("");
     const [passwordsMatch, setPasswordsMatch] = useState(true);
     const passwordsDontMatchStyle = !passwordsMatch ? "field-style error" : "field-style";
 
@@ -36,6 +38,10 @@ export function Registration() {
         setLastName(event.target.value);
     }
 
+    const PhoneInput = (event) => {
+        setPhone(event.target.value);
+    }
+
     const CheckIfPasswordsMatch = () => {
         setPasswordsMatch(true);
         if (password === confirmPassword) {
@@ -45,7 +51,17 @@ export function Registration() {
         }
     }
 
-
+    const registerUser = async () => {
+        const payload = {
+            username: username,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
+            phone: phone
+            }
+        _post('/auth/register', payload);
+    }
 
     return (
             <>
@@ -122,9 +138,27 @@ export function Registration() {
                                 placeholder="Lastname"
                             />
                     </p>
-                <button type="submit" onClick={CheckIfPasswordsMatch}>
-                    Register
-                </button>
+                <p>
+                    <label htmlFor="phone">Phone Number: </label>
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        value={phone}
+                        onInput={PhoneInput}
+                        placeholder="Phone Number"
+                    />
+                </p>
+                <div>
+                    <button onClick={() =>{
+                        CheckIfPasswordsMatch();
+                        if(passwordsMatch === true) {
+                            registerUser();
+                        }
+                    }}>
+                        Register
+                    </button>
+                </div>
 
                 {
                     !passwordsMatch && (
@@ -133,11 +167,6 @@ export function Registration() {
                         </p>
                     )
                 }
-
-                <br/>
-                <p>
-                    Username: {username}, password: {password}
-                </p>
             </>
         )
 }
