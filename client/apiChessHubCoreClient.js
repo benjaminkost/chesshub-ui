@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = 'http://localhost:8080/api';
+const baseURL = import.meta.env.VITE_CHESSHUB_CORE_BASEURL;
 
 const apiClient = axios.create({
     baseURL: baseURL,
