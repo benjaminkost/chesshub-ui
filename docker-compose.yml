@@ -1,0 +1,7 @@
+services:
+  chesshub-ui:
+    build: .
+    container_name: chesshub-ui
+    image: ${DOCKER_USERNAME}/chesshub-ui:${DOCKER_IMAGE_VERSION}
+    ports:
+      - "9000:9000"
