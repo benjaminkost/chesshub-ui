@@ -1,6 +1,11 @@
 services:
   chesshub-ui:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+      platforms:
+        - linux/arm64
+        - linux/amd64
     container_name: chesshub-ui
     image: ${DOCKER_USERNAME}/chesshub-ui:${DOCKER_IMAGE_VERSION}
     ports:
