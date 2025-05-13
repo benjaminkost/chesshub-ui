@@ -12,6 +12,7 @@ export const _post = (url, config = {}) => {
         return apiClient.post(url, config)
             .then(res => {
             console.log(res)
+            return res;
         })
             .catch(err => {
                 console.log(err)
