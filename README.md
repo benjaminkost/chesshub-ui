@@ -1,6 +1,7 @@
 # Chesshub-ui
 ## Overview
 This repository is part of a project called ChessHub. The ChessHub project is build with a Microservice-Architecture.
+
 The chesshub-ui repository defines the service which is providing a web ui for the user interact with the other services. 
 ## Installation
 ### Prerequisites
