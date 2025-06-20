@@ -200,7 +200,7 @@ export function Registration() {
                         </p>
                     )
                 }
-                    {
+                 {
                         passwordsMatch && userRegistered && (
                             <p>
                                 User registered!

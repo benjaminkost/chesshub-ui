@@ -1,18 +1,43 @@
-# Content
-This repo is the browser webapp service for a microservice app called chesshub. Chesshub is a project for storing chess games of you and your club/ team and search for chess events to praticipate in.
+# Chesshub-ui
+## Overview
+This repository is part of a project called ChessHub. The ChessHub project is build with a Microservice-Architecture.
 
-__Comment__: Currently the backend services are mostly private but I will set them public in the near future.
+The chesshub-ui repository defines the service which is providing a web ui for the user interact with the other services. 
+## Installation
+### Prerequisites
+- Docker
+- Javascript
+- npm
+### Setup
+1. Clone the repository:
+```bash
+git clone https://github.com/benjaminkost/chesshub-ui.git
+```
 
-# Set-up
-## React + Vite
+2. Define .env
+- copy `.env_sample` and rename it to `.env`
+- define the values according to your system
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+3. Start project
+```bash
+docker compose up -d
+```
+## API Endpoints
 
-Currently, two official plugins are available:
+| Endpoint                                      | Method | Description                                      |
+| --------------------------------------------- | ------ | ------------------------------------------------ |
+| /auth/register, /auth/signup                  | POST   | Register a User                                  |
+| /uploadImage/api/auth/login, /api/auth/signin | GET    | Login a User                                     |
+| /uploadImage                                  | POST   | Upload image get a chess game as a PGN-File back |
+## Test it out
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-### Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+1. Open a browser and tip in: `http://localhost:9000`
+2. Click around
+## Architecture
+- Framework: React + Vite
+- API handling: Axios
+- Build and deploy: Docker compose
+## Problems
+Create an Issue in the Issues section in this repository.
+## License
+This project is licensed under the MIT License. See `License` for details.
