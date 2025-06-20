@@ -82,7 +82,7 @@ export function Login() {
             </p>
 
             <button onClick={loginUser}>
-                Login
+                <Link to = "/uploadImage">Login</Link>
             </button>
 
             </article>

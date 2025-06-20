@@ -60,9 +60,14 @@ export function UploadImage() {
                 <header>
                     <div className="title">
                         <h1>Upload your Chess Scoresheet</h1>
-                        <p>And let the magic happen!</p>
+                        <p>It will return a Portable Game Notation File</p>
                     </div>
                 </header>
+                <div>
+                    <p>
+                        <label>The Process to generated the PGN-File will take some time so do not reload the page</label>
+                    </p>
+                </div>
                 <div>
                     <input type="file" onChange={handleFile}/>
                     <p>
@@ -74,7 +79,7 @@ export function UploadImage() {
                         }
                     </p>
                 </div>
-                </article>
+            </article>
             </>
             )
             }

@@ -13,6 +13,7 @@ export function Registration() {
     const [phone, setPhone] = useState("");
     const [passwordsMatch, setPasswordsMatch] = useState(true);
     const passwordsDontMatchStyle = !passwordsMatch ? "field-style error" : "field-style";
+    const [userRegistered, setUserRegistered] = useState(false);
 
     // Methods
     const EmailInput = (event) => {
@@ -61,7 +62,7 @@ export function Registration() {
             password: password,
             phone: phone
             }
-        _post('/auth/register', payload);
+        setUserRegistered(_post('/auth/register', payload));
     }
 
     return (
@@ -199,6 +200,13 @@ export function Registration() {
                         </p>
                     )
                 }
+                 {
+                        passwordsMatch && userRegistered && (
+                            <p>
+                                User registered!
+                            </p>
+                        )
+                    }
                 </article>
             </>
         )
