@@ -1,7 +1,6 @@
 import {useState} from "react";
-import "../styles/Registration.css"
 import {_post} from "../../client/apiChessHubCoreClient.js";
-import {Link} from "react-router-dom";
+import {Header} from "../components/Header.jsx";
 
 export function Registration() {
     const [email, setEmail] = useState("");
@@ -67,52 +66,25 @@ export function Registration() {
 
     return (
             <>
-                <header id="header">
-                    <h1><a href="/">ChessHub</a></h1>
-                    <nav className="links">
-                        <ul>
-                            <li>
-                                <Link to = "/auth/login">Login</Link>
-                            </li>
-                            <li>
-                                <Link to = "/uploadImage">Upload Image</Link>
-                            </li>
-                        </ul>
-                    </nav>
-                    <nav className="main">
-                        <ul>
-                            <li className="search">
-                                <a className="fa-search">Search</a>
-                                <form id="search" method="get" action="#">
-                                    <input type="text" name="query" placeholder="Search" />
-                                </form>
-                            </li>
-                            <li className="menu">
-                                <a className="fa-bars">Menu</a>
-                            </li>
-                        </ul>
-                    </nav>
-                </header>
+                <Header/>
                 <article className="post">
                     <header>
                         <div className="title">
                             <h1>Registration</h1>
                         </div>
                     </header>
-                    <p>
-                            <label htmlFor="email">Email address: </label>
+                    <form>
+                        <label htmlFor="email">Email address: </label>
                             <input
                                 type="text"
                                 id="email"
                                 name="email"
                                 placeholder="Email address"
                                 value={email}
-                                onInput={EmailInput}
+                                onChange={EmailInput}
                                 required
                             />
-                    </p>
 
-                    <p>
                         <label htmlFor="password">Password: </label>
                         <input
                             type="password"
@@ -123,8 +95,6 @@ export function Registration() {
                             className={passwordsDontMatchStyle}
                             required
                         />
-                    </p>
-                    <p>
                         <label htmlFor="comnfirmed_password">Confirm Password: </label>
                         <input
                             type="password"
@@ -135,53 +105,44 @@ export function Registration() {
                             className={passwordsDontMatchStyle}
                             required
                         />
-                    </p>
-                    <p>
-                            <label htmlFor="username">Username: </label>
-                            <input
-                                type="text"
-                                id="username"
-                                name="username"
-                                placeholder="username"
-                                value={username}
-                                onInput={UsernameInput}
-                                required
-                            />
-                    </p>
-
-                    <p>
-                            <label htmlFor="firstname">Firstname: </label>
-                            <input
-                                type="text"
-                                id="firstname"
-                                name="firstname"
-                                value={firstName}
-                                onInput={FirstNameInput}
-                                placeholder="Firstname"
-                            />
-                    </p>
-                    <p>
-                            <label htmlFor="lastname">Lastname: </label>
-                            <input
-                                type="text"
-                                id="lastname"
-                                name="lastname"
-                                value={lastName}
-                                onInput={LastNameInput}
-                                placeholder="Lastname"
-                            />
-                    </p>
-                <p>
-                    <label htmlFor="phone">Phone Number: </label>
-                    <input
-                        type="text"
-                        id="phone"
-                        name="phone"
-                        value={phone}
-                        onInput={PhoneInput}
-                        placeholder="Phone Number"
-                    />
-                </p>
+                        <label htmlFor="username">Username: </label>
+                        <input
+                            type="text"
+                            id="username"
+                            name="username"
+                            placeholder="username"
+                            value={username}
+                            onInput={UsernameInput}
+                            required
+                        />
+                        <label htmlFor="firstname">Firstname: </label>
+                        <input
+                            type="text"
+                            id="firstname"
+                            name="firstname"
+                            value={firstName}
+                            onInput={FirstNameInput}
+                            placeholder="Firstname"
+                        />
+                        <label htmlFor="lastname">Lastname: </label>
+                        <input
+                            type="text"
+                            id="lastname"
+                            name="lastname"
+                            value={lastName}
+                            onInput={LastNameInput}
+                            placeholder="Lastname"
+                        />
+                        <label htmlFor="phone">Phone Number: </label>
+                        <input
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            value={phone}
+                            onInput={PhoneInput}
+                            placeholder="Phone Number"
+                        />
+                </form>
                 <div>
                     <button onClick={() =>{
                         CheckIfPasswordsMatch();
