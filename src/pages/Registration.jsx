@@ -144,7 +144,7 @@ export function Registration() {
                         />
                 </form>
                 <div>
-                    <button onClick={() =>{
+                    <button type="button" className="btn btn-primary" onClick={() =>{
                         CheckIfPasswordsMatch();
                         if(passwordsMatch === true) {
                             registerUser();
@@ -156,7 +156,7 @@ export function Registration() {
 
                 {
                     !passwordsMatch && (
-                        <p className="error-message-values">
+                        <p className="text-danger">
                             Passwords do not match!
                         </p>
                     )
