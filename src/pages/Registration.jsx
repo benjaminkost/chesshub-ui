@@ -95,7 +95,7 @@ export function Registration() {
                             className={passwordsDontMatchStyle}
                             required
                         />
-                        <label htmlFor="comnfirmed_password">Confirm Password: </label>
+                        <label htmlFor="confirmed_password">Confirm Password: </label>
                         <input
                             type="password"
                             id="confirmed_password"
@@ -144,7 +144,7 @@ export function Registration() {
                         />
                 </form>
                 <div>
-                    <button type="button" className="btn btn-primary" onClick={() =>{
+                    <button id="buttonRegistration" type="button" className="btn btn-primary" onClick={() =>{
                         CheckIfPasswordsMatch();
                         if(passwordsMatch === true) {
                             registerUser();

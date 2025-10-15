@@ -12,6 +12,7 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
+    "@vitest/browser": "^3.2.4",
     "axios": "^1.8.4",
     "bootstrap": "^5.3.8",
     "form-data": "^4.0.2",
