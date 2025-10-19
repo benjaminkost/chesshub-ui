@@ -1,6 +1,6 @@
 import {useState} from "react";
 import {_post} from "../../client/apiChessHubCoreClient.js";
-import {Header} from "../components/Header.jsx";
+import {Header} from "./Header.jsx";
 
 export function Registration() {
     const [email, setEmail] = useState("");
