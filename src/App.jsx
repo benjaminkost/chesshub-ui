@@ -1,5 +1,4 @@
-import './styles/App.css'
-import { Registration } from "./pages/Registration.jsx";
+import { Registration } from "./components/Registration.jsx";
 import {BrowserRouter, Route, Routes} from "react-router";
 import { Login } from "./pages/Login.jsx";
 import {UploadImage} from "./pages/UploadImage.jsx";

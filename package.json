@@ -12,14 +12,19 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
+    "@mui/icons-material": "^7.3.4",
+    "@mui/material": "^7.3.4",
+    "@tailwindcss/vite": "^4.1.14",
     "@vitest/browser": "^3.2.4",
     "axios": "^1.8.4",
-    "bootstrap": "^5.3.8",
     "form-data": "^4.0.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router": "^7.5.0",
     "react-router-dom": "^7.6.0",
+    "tailwindcss": "^4.1.14",
     "tanstack": "^1.0.0"
   },
   "devDependencies": {
