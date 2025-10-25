@@ -17,7 +17,7 @@ WORKDIR /app/react-app/
 COPY --from=BUILD_IMAGE /app/react-app/dist/ /app/react-app/dist/
 
 COPY package.json .
-COPY vite.config.js .
+COPY vite.config.ts .
 
 RUN npm install javascript
 

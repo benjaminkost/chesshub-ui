@@ -1,5 +1,5 @@
-import {_post} from "../../client/apiChessScoresheetDigitalizationClient";
-import {useState} from "react";
+import {_post} from "../../bff/clients/apiChessScoresheetDigitalizationClient.ts";
+import {type ChangeEvent, useState} from "react";
 import {Link} from "react-router-dom";
 
 export function UploadImage() {
@@ -7,10 +7,14 @@ export function UploadImage() {
     const [file, setFile] = useState(null);
     const [fileUploaded, setFileUploaded] = useState(true);
 
-    const handleFile = (event) => {
-        setFile(event.target.files[0]);
-        setFileUploaded(true);
-        console.log(file);
+    const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
+        if(event.target.files && event.target.files[0] ) {
+            const selectedFile = event.target.files[0]
+
+            setFile(selectedFile);
+            setFileUploaded(true);
+            console.log(file);
+        }
     }
 
     const uploadImage = () => {
@@ -73,7 +77,7 @@ export function UploadImage() {
                     <p>
                         <button onClick={uploadImage}>Upload Image</button>
                     </p>
-                    <p className="error-message-values">
+                    <p>
                         {
                             !fileUploaded && "No File selected"
                         }

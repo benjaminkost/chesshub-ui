@@ -1,23 +1,25 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
-import {Registration} from "../../src/components/Registration.jsx";
-import { expect, describe, it, vi} from "vitest";
+import { render, screen} from "@testing-library/react";
+import {Registration} from "../../src/components/Registration.tsx";
+import {expect, describe, it, vi, beforeEach } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import {MemoryRouter} from "react-router-dom";
-import userEvent from '@testing-library/user-event';
-
-vi.mock('../../client/apiChessHubCoreClient.js', () => (
-    {_post: vi.fn(),
-    }));
-
-import {_post} from "../../client/apiChessHubCoreClient.js";
+import { userEvent } from '@testing-library/user-event';
+import {_post} from "../../bff/clients/apiChessHubCoreClient.js";
 
 describe("Registration", () => {
+    vi.mock('../../bff/clients/apiChessHubCoreClient.ts', () => ({
+        _post: vi.fn(),
+    }));
+
+    beforeEach(() => {
+        vi.mocked(_post).mockReset();
+    });
 
     it("renders without crashing", () => {
         render(
             <MemoryRouter>
-             <Registration/>
+                <Registration/>
             </MemoryRouter>
         );
 
@@ -27,6 +29,12 @@ describe("Registration", () => {
 
     it("Put in different passwords and press register button returns error message", async ()  => {
         const user = userEvent.setup();
+
+        render(
+            <MemoryRouter>
+                <Registration/>
+            </MemoryRouter>
+        );
 
         const inputElementPassword = screen.getByLabelText("Password:")
         const inputElementConfirmedPassword = screen.getByLabelText(/Confirm Password/i)
@@ -51,10 +59,10 @@ describe("Registration", () => {
             </MemoryRouter>
         );
 
-        _post.mockResolvedValue(true);
+        vi.mocked(_post).mockReturnValue(true);
 
         const inputElementPassword = screen.getByLabelText("Password:")
-        const inputElementConfirmedPassword = screen.getByLabelText(/Confirm Password/i)
+        const inputElementConfirmedPassword = screen.getByLabelText("Confirm Password:")
 
         const testPasswordInput = "a"
         const testConfirmedPasswordInput = "a"
@@ -63,7 +71,8 @@ describe("Registration", () => {
         await user.type(inputElementConfirmedPassword, testConfirmedPasswordInput)
 
         await user.click(document.getElementById("buttonRegistration"))
+        const successMessage = await screen.findByText("User registered!")
 
-        expect(screen.getByText("User registered!")).toBeInTheDocument()
+        expect(successMessage).toBeInTheDocument()
     })
 })

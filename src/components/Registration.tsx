@@ -1,5 +1,5 @@
-import {useState} from "react";
-import {_post} from "../../client/apiChessHubCoreClient.js";
+import React, {useState} from "react";
+import {_post} from "../../bff/clients/apiChessHubCoreClient.ts";
 import {Header} from "./Header.jsx";
 
 export function Registration() {
@@ -15,31 +15,31 @@ export function Registration() {
     const [userRegistered, setUserRegistered] = useState(false);
 
     // Methods
-    const EmailInput = (event) => {
+    const EmailInput = (event:React.ChangeEvent<HTMLInputElement>) => {
        setEmail(event.target.value);
     };
 
-    const PasswordInput = (event) => {
+    const PasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
     };
 
-    const ConfirmPasswordInput = (event) => {
+    const ConfirmPasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setConfirmPassword(event.target.value);
     }
 
-    const UsernameInput = (event) => {
+    const UsernameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setUsername(event.target.value);
     };
 
-    const FirstNameInput = (event) => {
+    const FirstNameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setFirstName(event.target.value);
     }
 
-    const LastNameInput = (event) => {
+    const LastNameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLastName(event.target.value);
     }
 
-    const PhoneInput = (event) => {
+    const PhoneInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPhone(event.target.value);
     }
 
@@ -160,14 +160,14 @@ export function Registration() {
                             Passwords do not match!
                         </p>
                     )
-                }
+                 }
                  {
                         passwordsMatch && userRegistered && (
                             <p>
                                 User registered!
                             </p>
                         )
-                    }
+                 }
                 </article>
             </>
         )

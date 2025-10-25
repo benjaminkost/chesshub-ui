@@ -8,7 +8,8 @@ export default defineConfig({
       tailwindcss()
   ],
   test: {
-    environment: 'jsdom',
+      globals: true,
+      environment: 'jsdom',
   },
   preview: {
     host: true,
