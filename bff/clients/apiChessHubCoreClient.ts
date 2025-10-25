@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const baseURL = import.meta.env.VITE_CHESSHUB_CORE_BASEURL;
+const baseURL:string = import.meta.env.VITE_CHESSHUB_CORE_BASEURL;
 
 const apiClient = axios.create({
     baseURL: baseURL,
@@ -11,7 +11,7 @@ const apiClient = axios.create({
 });
 
 // API calls
-const _get = async (url, config = {}) => {
+const _get = async (url:string, config = {}) => {
     try {
         apiClient.get(url, config).then(res => {
             console.log(res);
@@ -27,7 +27,7 @@ const _get = async (url, config = {}) => {
     }
 }
 
-const _post = (url, config = {}) => {
+const _post = (url:string, config = {}):boolean => {
     try {
         apiClient.post(url, config).then(res => {
             console.log(res);
@@ -43,7 +43,7 @@ const _post = (url, config = {}) => {
     return true;
 }
 
-const _delete = (url, config = {}) => {
+const _delete = (url:string, config = {}):boolean => {
     try {
         apiClient.delete(url, config).then(res => {
             console.log(res);
@@ -59,7 +59,7 @@ const _delete = (url, config = {}) => {
     return true;
 }
 
-const _update = (url, config = {}) => {
+const _update = (url:string, config = {}):boolean => {
     try {
         apiClient.put(url, config).then(res => {
             console.log(res);

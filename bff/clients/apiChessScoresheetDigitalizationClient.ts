@@ -1,11 +1,11 @@
-import axios from 'axios'
-const baseURL = import.meta.env.VITE_CHESS_SCORESHEET_DIGITALIZATION_BASEURL;
+import axios from 'axios';
+const baseURL:string = import.meta.env.VITE_CHESS_SCORESHEET_DIGITALIZATION_BASEURL;
 
 const apiClient = axios.create({
     baseURL: baseURL
 })
 
-export const _post = (url, config = {}) => {
+export const _post = (url:string, config = {}) => {
     try {
         return apiClient.post(url, config)
             .then((response) => {
@@ -31,7 +31,12 @@ export const _post = (url, config = {}) => {
                 link.click();
 
                 // Clean up and remove the link
-                link.parentNode.removeChild(link);
+                if( link.parentNode == null)
+                {
+                    console.log("No download link could be created")
+                } else{
+                    link.parentNode.removeChild(link);
+                }
         })
             .catch(err => {
                 console.log(err)

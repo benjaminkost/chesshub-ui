@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "noImplicitAny": true,
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "allowImportingTsExtensions": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["src/**/*", "tests/**/*","bff/**/*", "vite.config.ts"]
+}
