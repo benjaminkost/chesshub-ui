@@ -1,8 +1,13 @@
 import React, {useState} from "react";
 import {_post} from "../../bff/clients/apiChessHubCoreClient.ts";
-import {Header} from "./Header.jsx";
+import {Header, NavLink} from "../components/Header.js";
 
 export function Registration() {
+    const linksValues: NavLink[] = [
+        { to: "/auth/register", label: "Register"},
+        { to: "/auth/login", label: "Login"}
+    ];
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -66,7 +71,7 @@ export function Registration() {
 
     return (
             <>
-                <Header/>
+                <Header links={linksValues}/>
                 <article className="post">
                     <header>
                         <div className="title">

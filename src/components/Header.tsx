@@ -1,32 +1,48 @@
 import {Link} from "react-router-dom";
+import {HomeIcon} from "./HomeIcon.tsx";
+import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import Container from "@mui/material/Container";
+import React from "react";
+import Button from "@mui/material/Button";
 
-export function Header() {
+export interface NavLink {
+    to: string;
+    label: string;
+}
+
+interface HeaderProps {
+    links: NavLink[];
+}
+
+export function Header({ links = [] }: HeaderProps) {
+
     return (
-        <header id="header">
-            <h1><a href="/">ChessHub</a></h1>
-            <nav className="links">
-                <ul>
-                    <li>
-                        <Link to = "/auth/register">Register</Link>
-                    </li>
-                    <li>
-                        <Link to = "/uploadImage">Upload Image</Link>
-                    </li>
-                </ul>
-            </nav>
-            <nav className="main">
-                <ul>
-                    <li className="search">
-                        <a className="fa-search">Search</a>
+        <>
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+                <Container maxWidth="xl">
+                    <Toolbar>
+                        <HomeIcon/>
+                        <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "flex" }}}>
+                            <Button
+                            sx = {{color: "white", display: "block"}}
+                            >
+                                {
+                                    links.map((link) => (
+                                        <Link to={link.to}>{link.label}</Link>
+                                    ))
+                                }
+                            </Button>
+                        </Box>
                         <form id="search" method="get" action="#">
                             <input type="text" name="query" placeholder="Search" />
                         </form>
-                    </li>
-                    <li className="menu">
-                        <a className="fa-bars">Menu</a>
-                    </li>
-                </ul>
-            </nav>
-        </header>
+                    </Toolbar>
+                </Container>
+            </AppBar>
+        </Box>
+        </>
     )
 }

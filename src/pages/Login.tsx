@@ -41,7 +41,6 @@ export function Login() {
 
     return (
         <Box className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100">
-            {/* Header */}
             <AppBar
                 position="static"
                 color="transparent"

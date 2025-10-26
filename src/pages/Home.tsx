@@ -1,25 +1,15 @@
 import { Link } from "react-router-dom";
+import {Header, NavLink} from "../components/Header.tsx";
 
 export function Home() {
+    const linksValues: NavLink[] = [
+        { to: "/auth/register", label: "Register"},
+        { to: "/auth/login", label: "Login"}
+    ];
 
     return (
         <>
-            <header id="header">
-                <h1><a href="/">ChessHub</a></h1>
-                <nav className="main">
-                    <ul>
-                        <li className="search">
-                            <a className="fa-search">Search</a>
-                            <form id="search" method="get" action="#">
-                                <input type="text" name="query" placeholder="Search" />
-                            </form>
-                        </li>
-                        <li className="menu">
-                            <a className="fa-bars">Menu</a>
-                        </li>
-                    </ul>
-                </nav>
-            </header>
+            <Header links={linksValues}/>
             <article className="post">
                 <header>
                     <div className="title">
