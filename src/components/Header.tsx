@@ -1,4 +1,4 @@
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import {HomeIcon} from "./HomeIcon.tsx";
 import Box from "@mui/material/Box";
 import AppBar from "@mui/material/AppBar";
@@ -17,28 +17,29 @@ interface HeaderProps {
 }
 
 export function Header({ links = [] }: HeaderProps) {
+    const navigate = useNavigate();
 
     return (
         <>
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
+        <Box
+            sx={{
+                minHeight: "10vh",
+                display: "flex",
+        }}>
+            <AppBar position="static"
+            sx ={{
+            }}>
                 <Container maxWidth="xl">
                     <Toolbar>
                         <HomeIcon/>
-                        <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "flex" }}}>
-                            <Button
-                            sx = {{color: "white", display: "block"}}
-                            >
-                                {
-                                    links.map((link) => (
-                                        <Link to={link.to}>{link.label}</Link>
-                                    ))
-                                }
-                            </Button>
-                        </Box>
-                        <form id="search" method="get" action="#">
-                            <input type="text" name="query" placeholder="Search" />
-                        </form>
+                        <Button
+                            color={"inherit"}
+                            variant={"contained"}
+                            sx={{ ml: "auto" }}
+                            onClick={() => navigate("/auth/login")}
+                        >
+                            Login
+                        </Button>
                     </Toolbar>
                 </Container>
             </AppBar>

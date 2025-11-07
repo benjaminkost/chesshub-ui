@@ -11,11 +11,6 @@ export function Home() {
         <>
             <Header links={linksValues}/>
             <article className="post">
-                <header>
-                    <div className="title">
-                        <h1>ChessHub Home</h1>
-                    </div>
-                </header>
                 <nav className="links">
                     <ul>
                         <li>
