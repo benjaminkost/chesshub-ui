@@ -1,20 +1,34 @@
+import { Stack, Button } from "@mui/material";
 import {Link} from "react-router-dom";
+import bild from '@/assets/images/black_pawn.png';
+import MenuIcon from '@mui/icons-material/Menu';
 
-export function Header() {
+class Props{
+    loggedIn: Boolean
+}
+
+export function Header({loggedIn}: Props) {
+
+    if (loggedIn){
+
+    }
+
     return (
         <>
-            <button id={"menuButton"}>
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <div id={"homePageButton"}>
-                <img src={"src/assets/images/black_pawn.png"} alt={"Black Pawn"}/>
+            <Stack direction={"row"} spacing={2} >
                 <h1>ChessHub</h1>
-            </div>
-            <br/>
-            <br/>
-
+                <Button id={"menuButton"} startIcon={<MenuIcon />} variant={"text"}>
+                </Button>
+                {
+                    loggedIn &&
+                    <div id={"profile"}>
+                        <img src={bild} alt={"Profile"} width={100}/>
+                    </div>
+                }
+                <div id={"homePageButton"}>
+                    <img src={bild} alt={"Black Pawn"} width={100}/>
+                </div>
+            </Stack>
         </>
     )
 }

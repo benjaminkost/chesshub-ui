@@ -66,7 +66,7 @@ export function Registration() {
 
     return (
             <>
-                <Header/>
+                <Header loggedIn={true}/>
                 <article className="post">
                     <header>
                         <div className="title">
