@@ -1,34 +1,47 @@
-import { AppBar, IconButton, Toolbar, Typography, Box } from "@mui/material";
-import {Link} from "react-router-dom";
-import MenuIcon from '@mui/icons-material/Menu';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Box,
+    Button } from "@mui/material";
+import ProfileComponent from "./ProfileComponent.js";
+import SearchFieldComponent from "./SearchFieldComponent.js";
+import MenuButton from "./MenuButton.js";
 
-class Props{
-    loggedIn: Boolean
+interface Props{
+    loggedIn: boolean
 }
 
 export function Header({loggedIn}: Props) {
 
-    if (loggedIn){
-
-    }
-
     return (
-        <>
-            <AppBar position={"static"} color={"success"}>
-                <Toolbar variant={"dense"}>
-                    <IconButton id={"menuButton"} >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography
-                        variant="h5"
-                    >ChessHub</Typography>
-                    <Box sx={{flexGrow: 1}} />
-                    <IconButton>
-                        <AccountCircleIcon />
-                    </IconButton>
-                </Toolbar>
-            </AppBar>
-        </>
+        <AppBar position={"sticky"}
+                sx={{
+                    "background-color": "#bdbdbd",
+                    color: "#424242"
+                }}
+        >
+            <Toolbar
+                variant={"dense"}
+            >
+                <MenuButton/>
+                <Typography
+                    variant="h5"
+                >ChessHub</Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                {loggedIn ?
+                    <>
+                    <SearchFieldComponent/>
+                    <ProfileComponent/>
+                    </>
+                    :
+                    <Button
+                        variant={"outlined"}
+                        color={"inherit"}>
+                        Login
+                    </Button>
+                }
+            </Toolbar>
+        </AppBar>
     )
 }
