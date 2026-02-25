@@ -8,11 +8,12 @@ import ProfileComponent from "./ProfileComponent.js";
 import SearchFieldComponent from "./SearchFieldComponent.js";
 import MenuButton from "./MenuButton.js";
 
-interface Props{
-    loggedIn: boolean
+interface HeaderProps{
+    loggedIn: boolean;
+    menuElements?: string[];
 }
 
-export function Header({loggedIn}: Props) {
+export function Header({loggedIn, menuElements = ["Profile", "My Account", "Logout"]}: HeaderProps) {
 
     return (
         <AppBar position={"sticky"}
@@ -32,7 +33,7 @@ export function Header({loggedIn}: Props) {
                 {loggedIn ?
                     <>
                     <SearchFieldComponent/>
-                    <ProfileComponent/>
+                    <ProfileComponent menuElements={menuElements}/>
                     </>
                     :
                     <Button
