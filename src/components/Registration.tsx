@@ -66,13 +66,10 @@ export function Registration() {
 
     return (
             <>
-                <Header/>
-                <article className="post">
-                    <header>
-                        <div className="title">
-                            <h1>Registration</h1>
-                        </div>
-                    </header>
+                <Header loggedIn={true}/>
+                    <div className="title">
+                        <h1>Registration</h1>
+                    </div>
                     <form>
                         <label htmlFor="email">Email address: </label>
                             <input
@@ -168,7 +165,6 @@ export function Registration() {
                             </p>
                         )
                  }
-                </article>
             </>
         )
 }
