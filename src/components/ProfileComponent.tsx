@@ -3,10 +3,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import React from "react";
 
 interface ProfileProps {
-    menuElements: string[];
+    menuElements?: string[];
 }
 
-function ProfileComponent( {menuElements}:ProfileProps) {
+export const defaultMenuElements = ["Profil", "Mein Account", "Logout"];
+
+function ProfileComponent( {menuElements=defaultMenuElements}:ProfileProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 

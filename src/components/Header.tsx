@@ -4,30 +4,37 @@ import {
     Typography,
     Box,
     Button } from "@mui/material";
-import ProfileComponent from "./ProfileComponent.js";
+import ProfileComponent, {defaultMenuElements} from "./ProfileComponent.js";
 import SearchFieldComponent from "./SearchFieldComponent.js";
-import MenuButton from "./MenuButton.js";
+import MenuButton, {defaultDrawerElements} from "./MenuButton.js";
 
 interface HeaderProps{
     loggedIn: boolean;
     menuElements?: string[];
+    drawerElements?: string[];
 }
 
-export function Header({loggedIn, menuElements = ["Profile", "My Account", "Logout"]}: HeaderProps) {
+export function Header({loggedIn, menuElements = defaultMenuElements, drawerElements = defaultDrawerElements}: HeaderProps) {
 
     return (
         <AppBar position={"sticky"}
                 sx={{
                     "background-color": "#bdbdbd",
-                    color: "#424242"
+                    color: "#424242",
+                    height: 80
                 }}
         >
             <Toolbar
                 variant={"dense"}
+                sx={{top: 20, bottom: 20}}
             >
-                <MenuButton/>
+                {
+                    loggedIn &&
+                    <MenuButton drawerElements={drawerElements}/>
+                }
                 <Typography
                     variant="h5"
+                    sx={{alignItems: 'center'}}
                 >ChessHub</Typography>
                 <Box sx={{ flexGrow: 1 }} />
                 {loggedIn ?

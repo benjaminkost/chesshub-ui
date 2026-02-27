@@ -10,11 +10,12 @@ function SearchFieldComponent() {
         >
             <TextField
                 id="standard-basic"
-                label="Standard"
                 placeholder={"Search... "}
                 variant={"standard"}
                 size={"small"}
                 sx={{
+                    top: 10,
+                    alignItems: "center",
                     mb: 2,
                     '.MuiFormLabel-root': {color: "inherit" },
                     '.MuiInputBase-input': { color: 'inherit' },
