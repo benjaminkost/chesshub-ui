@@ -1,6 +1,8 @@
 import React, {useState} from "react";
 import {_post} from "../../bff/clients/apiChessHubCoreClient.ts";
 import {Header} from "./Header.jsx";
+import Footer from "./Footer.js";
+import {Box, Button } from "@mui/material";
 
 export function Registration() {
     const [email, setEmail] = useState("");
@@ -141,14 +143,14 @@ export function Registration() {
                         />
                 </form>
                 <div>
-                    <button id="buttonRegistration" type="button" className="btn btn-primary" onClick={() =>{
+                    <Button id="buttonRegistration" type="button" className="btn btn-primary" onClick={() =>{
                         CheckIfPasswordsMatch();
                         if(passwordsMatch === true) {
                             registerUser();
                         }
                     }}>
                         Register
-                    </button>
+                    </Button>
                 </div>
 
                 {
@@ -165,6 +167,13 @@ export function Registration() {
                             </p>
                         )
                  }
+                 <Box sx={{
+                     flexGrow: 1,
+                     minHeight: "67vh"
+                 }}>
+
+                 </Box>
+                 <Footer/>
             </>
         )
 }
