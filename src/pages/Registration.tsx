@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {_post} from "../../bff/clients/apiChessHubCoreClient.ts";
 import {Header} from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
-import {Box, Button } from "@mui/material";
+import {Box, Button, Link, Paper, TextField, Typography } from "@mui/material";
 
 export function Registration() {
     const [email, setEmail] = useState("");
@@ -55,37 +55,112 @@ export function Registration() {
     }
 
     const registerUser = async () => {
-        const payload = {
-            username: username,
-            firstName: firstName,
-            lastName: lastName,
-            email: email,
-            password: password,
-            phone: phone
+        CheckIfPasswordsMatch()
+        if(passwordsMatch === true) {
+            const payload = {
+                username: username,
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password,
+                phone: phone
             }
-        setUserRegistered(_post('/auth/register', payload));
+
+            setUserRegistered(_post('/auth/register', payload));
+        }
+    }
+
+    let statusMessage;
+
+    if(!passwordsMatch){
+        statusMessage = (<Typography sx={{
+            color: "red"
+        }}>
+            Passwords do not match!
+        </Typography>);
+    } else if(passwordsMatch && userRegistered){
+        statusMessage = (
+                <Typography
+                    sx={{
+                        color: "green"
+                    }}
+                >
+                    User registered!
+                </Typography>
+            );
+    } else {
+        statusMessage = (<p><br/></p>);
+    }
+
+    let registerButton;
+
+    if (email && password && confirmPassword && username){
+        registerButton = (<Button
+            id="buttonRegistration"
+            type="button"
+            onClick={registerUser}
+            sx={{
+                color: "white",
+                backgroundColor: "gray"
+            }}
+        >
+            Register
+        </Button>);
+    } else {
+        registerButton = (<Button
+            id="buttonRegistration"
+            type="button"
+            sx={{
+                color: "white",
+                backgroundColor: "#cfcfcf",
+                "&:click": {}
+            }}
+        >
+            Register
+        </Button>);
     }
 
     return (
             <>
                 <Header loggedIn={true}/>
-                    <div className="title">
-                        <h1>Registration</h1>
-                    </div>
-                    <form>
-                        <label htmlFor="email">Email address: </label>
-                            <input
-                                type="text"
-                                id="email"
-                                name="email"
-                                placeholder="Email address"
-                                value={email}
-                                onChange={EmailInput}
-                                required
-                            />
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
+                >
+                    <Paper sx={{
+                        display: "flex",
+                        mt: 4,
+                        flexGrow: 1,
+                        flexDirection: "column",
+                        gap: 2,
+                        maxWidth: "sm",
+                        maxHeight: "sm",
+                        mb: 3,
+                        backgroundColor: "lightgray",
+                        padding: 5
+                    }}>
+                        <Typography variant={"h5"}
+                        >
+                            Registration
+                        </Typography>
+                        <TextField
+                            label={"Email address"}
+                            type="text"
+                            id="email"
+                            name="email"
+                            value={email}
+                            onChange={EmailInput}
+                            required
+                            sx={{
+                                backgroundColor: "white"
+                            }}
+                        />
 
-                        <label htmlFor="password">Password: </label>
-                        <input
+                        <TextField
+                            label={"Password"}
                             type="password"
                             id="password"
                             name="password"
@@ -93,9 +168,12 @@ export function Registration() {
                             onInput={PasswordInput}
                             className={passwordsDontMatchStyle}
                             required
+                            sx={{
+                                backgroundColor: "white"
+                            }}
                         />
-                        <label htmlFor="confirmed_password">Confirm Password: </label>
-                        <input
+                        <TextField
+                            label={"Confirmed Password"}
                             type="password"
                             id="confirmed_password"
                             name="confirmed_password"
@@ -103,77 +181,73 @@ export function Registration() {
                             onInput={ConfirmPasswordInput}
                             className={passwordsDontMatchStyle}
                             required
+                            sx={{
+                                backgroundColor: "white"
+                            }}
                         />
-                        <label htmlFor="username">Username: </label>
-                        <input
+                        <TextField
+                            label={"Username"}
                             type="text"
                             id="username"
                             name="username"
-                            placeholder="username"
                             value={username}
                             onInput={UsernameInput}
                             required
+                            sx={{
+                                backgroundColor: "white"
+                            }}
                         />
-                        <label htmlFor="firstname">Firstname: </label>
-                        <input
+                        <TextField
+                            label={"Firstname"}
                             type="text"
                             id="firstname"
                             name="firstname"
                             value={firstName}
                             onInput={FirstNameInput}
-                            placeholder="Firstname"
+                            sx={{
+                                backgroundColor: "white"
+                            }}
                         />
-                        <label htmlFor="lastname">Lastname: </label>
-                        <input
+                        <TextField
+                            label={"Lastname"}
                             type="text"
                             id="lastname"
                             name="lastname"
                             value={lastName}
                             onInput={LastNameInput}
-                            placeholder="Lastname"
+                            sx={{
+                                backgroundColor: "white"
+                            }}
                         />
-                        <label htmlFor="phone">Phone Number: </label>
-                        <input
+                        <TextField
+                            label={"Phone Number"}
                             type="text"
                             id="phone"
                             name="phone"
                             value={phone}
                             onInput={PhoneInput}
-                            placeholder="Phone Number"
+                            sx={{
+                                backgroundColor: "white"
+                            }}
                         />
-                </form>
-                <div>
-                    <Button id="buttonRegistration" type="button" className="btn btn-primary" onClick={() =>{
-                        CheckIfPasswordsMatch();
-                        if(passwordsMatch === true) {
-                            registerUser();
-                        }
-                    }}>
-                        Register
-                    </Button>
-                </div>
-
-                {
-                    !passwordsMatch && (
-                        <p className="text-danger">
-                            Passwords do not match!
-                        </p>
-                    )
-                 }
-                 {
-                        passwordsMatch && userRegistered && (
-                            <p>
-                                User registered!
-                            </p>
-                        )
-                 }
-                 <Box sx={{
-                     flexGrow: 1,
-                     minHeight: "67vh"
-                 }}>
-
-                 </Box>
-                 <Footer/>
+                        {registerButton}
+                        <Link
+                            href={"/auth/login"}
+                            sx={{
+                                mt: -2,
+                                color: "gray",
+                                display: "inline-block",
+                                textAlign: "center"
+                            }}
+                        >
+                            Log dich hier ein
+                        </Link>
+                        <Box>
+                            {statusMessage}
+                        </Box>
+                    </Paper>
+                </Box>
+                <Footer/>
             </>
         )
 }
