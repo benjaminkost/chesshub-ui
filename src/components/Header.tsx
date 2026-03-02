@@ -7,6 +7,7 @@ import {
 import ProfileComponent, {defaultMenuElements} from "./ProfileComponent.js";
 import SearchFieldComponent from "./SearchFieldComponent.js";
 import MenuButton, {defaultDrawerElements} from "./MenuButton.js";
+import { Link } from "react-router-dom";
 
 interface HeaderProps{
     loggedIn: boolean;
@@ -34,8 +35,15 @@ export function Header({loggedIn, menuElements = defaultMenuElements, drawerElem
                 }
                 <Typography
                     variant="h5"
-                    sx={{alignItems: 'center'}}
-                >ChessHub</Typography>
+                    sx={{
+                        alignItems: 'center',
+                        "&:hover": {color: "primary.main"}
+                    }}
+                    to={"/"}
+                    component={Link}
+                    >
+                    ChessHub
+                </Typography>
                 <Box sx={{ flexGrow: 1 }} />
                 {loggedIn ?
                     <>
