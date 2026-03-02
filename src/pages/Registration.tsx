@@ -1,13 +1,10 @@
 import React, {useState} from "react";
 import {_post} from "../../bff/clients/apiChessHubCoreClient.ts";
-import {Header, NavLink} from "../components/Header.js";
+import {Header} from "../components/Header.tsx";
+import Footer from "../components/Footer.tsx";
+import {Box, Button } from "@mui/material";
 
 export function Registration() {
-    const linksValues: NavLink[] = [
-        { to: "/auth/register", label: "Register"},
-        { to: "/auth/login", label: "Login"}
-    ];
-
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
@@ -71,13 +68,10 @@ export function Registration() {
 
     return (
             <>
-                <Header links={linksValues}/>
-                <article className="post">
-                    <header>
-                        <div className="title">
-                            <h1>Registration</h1>
-                        </div>
-                    </header>
+                <Header loggedIn={true}/>
+                    <div className="title">
+                        <h1>Registration</h1>
+                    </div>
                     <form>
                         <label htmlFor="email">Email address: </label>
                             <input
@@ -149,14 +143,14 @@ export function Registration() {
                         />
                 </form>
                 <div>
-                    <button id="buttonRegistration" type="button" className="btn btn-primary" onClick={() =>{
+                    <Button id="buttonRegistration" type="button" className="btn btn-primary" onClick={() =>{
                         CheckIfPasswordsMatch();
                         if(passwordsMatch === true) {
                             registerUser();
                         }
                     }}>
                         Register
-                    </button>
+                    </Button>
                 </div>
 
                 {
@@ -173,7 +167,13 @@ export function Registration() {
                             </p>
                         )
                  }
-                </article>
+                 <Box sx={{
+                     flexGrow: 1,
+                     minHeight: "67vh"
+                 }}>
+
+                 </Box>
+                 <Footer/>
             </>
         )
 }

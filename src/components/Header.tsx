@@ -1,49 +1,63 @@
-import {useNavigate} from "react-router-dom";
-import {HomeIcon} from "./HomeIcon.tsx";
-import Box from "@mui/material/Box";
-import AppBar from "@mui/material/AppBar";
-import Toolbar from "@mui/material/Toolbar";
-import Container from "@mui/material/Container";
-import React from "react";
-import Button from "@mui/material/Button";
+import {
+    AppBar,
+    Toolbar,
+    Typography,
+    Box,
+    Button } from "@mui/material";
+import ProfileComponent, {defaultMenuElements} from "./ProfileComponent.js";
+import SearchFieldComponent from "./SearchFieldComponent.js";
+import MenuButton, {defaultDrawerElements} from "./MenuButton.js";
+import { Link } from "react-router-dom";
 
-export interface NavLink {
-    to: string;
-    label: string;
+interface HeaderProps{
+    loggedIn: boolean;
+    menuElements?: string[];
+    drawerElements?: string[];
 }
 
-interface HeaderProps {
-    links: NavLink[];
-}
-
-export function Header({ links = [] }: HeaderProps) {
-    const navigate = useNavigate();
+export function Header({loggedIn, menuElements = defaultMenuElements, drawerElements = defaultDrawerElements}: HeaderProps) {
 
     return (
-        <>
-        <Box
-            sx={{
-                minHeight: "10vh",
-                display: "flex",
-        }}>
-            <AppBar position="static"
-            sx ={{
-            }}>
-                <Container maxWidth="xl">
-                    <Toolbar>
-                        <HomeIcon/>
-                        <Button
-                            color={"inherit"}
-                            variant={"contained"}
-                            sx={{ ml: "auto" }}
-                            onClick={() => navigate("/auth/login")}
-                        >
-                            Login
-                        </Button>
-                    </Toolbar>
-                </Container>
-            </AppBar>
-        </Box>
-        </>
+        <AppBar position={"sticky"}
+                sx={{
+                    "background-color": "#bdbdbd",
+                    color: "#424242",
+                    height: 80
+                }}
+        >
+            <Toolbar
+                variant={"dense"}
+                sx={{top: 20, bottom: 20}}
+            >
+                {
+                    loggedIn &&
+                    <MenuButton drawerElements={drawerElements}/>
+                }
+                <Typography
+                    variant="h5"
+                    sx={{
+                        alignItems: 'center',
+                        "&:hover": {color: "primary.main"}
+                    }}
+                    to={"/"}
+                    component={Link}
+                    >
+                    ChessHub
+                </Typography>
+                <Box sx={{ flexGrow: 1 }} />
+                {loggedIn ?
+                    <>
+                    <SearchFieldComponent/>
+                    <ProfileComponent menuElements={menuElements}/>
+                    </>
+                    :
+                    <Button
+                        variant={"outlined"}
+                        color={"inherit"}>
+                        Login
+                    </Button>
+                }
+            </Toolbar>
+        </AppBar>
     )
 }
