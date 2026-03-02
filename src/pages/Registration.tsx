@@ -142,6 +142,9 @@ export function Registration() {
                         padding: 5
                     }}>
                         <Typography variant={"h5"}
+                                    sx={{
+                                        color: "#424242"
+                                    }}
                         >
                             Registration
                         </Typography>
