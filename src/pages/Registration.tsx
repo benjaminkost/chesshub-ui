@@ -112,9 +112,8 @@ export function Registration() {
             type="button"
             sx={{
                 color: "white",
-                backgroundColor: "#cfcfcf",
-                "&:click": {}
-            }}
+                backgroundColor: "#cfcfcf"
+        }}
         >
             Register
         </Button>);
