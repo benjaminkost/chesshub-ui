@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {_post} from "../../bff/clients/apiChessHubCoreClient.ts";
-import {Header} from "./Header.jsx";
-import Footer from "./Footer.js";
+import {Header} from "../components/Header.tsx";
+import Footer from "../components/Footer.tsx";
 import {Box, Button } from "@mui/material";
 
 export function Registration() {

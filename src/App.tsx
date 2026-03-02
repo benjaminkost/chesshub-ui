@@ -1,4 +1,4 @@
-import { Registration } from "./components/Registration.tsx";
+import { Registration } from "./pages/Registration.tsx";
 import {BrowserRouter, Route, Routes} from "react-router";
 import { Login } from "./pages/Login.tsx";
 import {UploadImage} from "./pages/UploadImage.tsx";

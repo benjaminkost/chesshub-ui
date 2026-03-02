@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen} from "@testing-library/react";
-import {Registration} from "../../src/components/Registration.tsx";
+import {Registration} from "../../src/pages/Registration.tsx";
 import {expect, describe, it, vi, beforeEach } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import {MemoryRouter} from "react-router-dom";

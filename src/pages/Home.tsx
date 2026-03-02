@@ -1,29 +1,30 @@
-import { Link } from "react-router-dom";
+import {Header} from "../components/Header.tsx";
+import Footer from "../components/Footer.js";
+import {Box, Typography} from "@mui/material";
+import React from "react";
 
 export function Home() {
 
     return (
         <>
-            <article className="post">
-                <header>
-                    <div className="title">
-                        <h1>ChessHub Home</h1>
-                    </div>
-                </header>
-                <nav className="links">
-                    <ul>
-                        <li>
-                            <Link to = "/auth/register">Register</Link>
-                        </li>
-                        <li>
-                            <Link to = "/auth/login">Login</Link>
-                        </li>
-                        <li>
-                            <Link to = "/uploadImage">Upload Image</Link>
-                        </li>
-                    </ul>
-                </nav>
-            </article>
+            <Header loggedIn={false} />
+
+            <Box sx={{
+                flexGrow: 1,
+                display: "flex",
+                minHeight: "80.5vh",
+                alignItems: "center",
+                justifyContent: "center"
+            }}>
+                <Typography color={"#bdbdbd"} variant={"h1"}
+                            sx={{
+                                textAlign: "center"
+                            }}
+                >
+                    Schach-Partien können nun einfach gespeichert, analysiert und historisiert werden
+                </Typography>
+            </Box>
+            <Footer/>
         </>
     )
 }
