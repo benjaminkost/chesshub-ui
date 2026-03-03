@@ -3,6 +3,7 @@ import {_post} from "../../bff/clients/apiChessHubCoreClient.ts";
 import {Header} from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
 import {Box, Button, Link, Paper, TextField, Typography } from "@mui/material";
+import {useNavigate} from "react-router";
 
 export function Registration() {
     const [email, setEmail] = useState("");
@@ -12,9 +13,10 @@ export function Registration() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
-    const [passwordsMatch, setPasswordsMatch] = useState(true);
-    const passwordsDontMatchStyle = !passwordsMatch ? "field-style error" : "field-style";
+    const [passwordsMatch, setPasswordsMatch] = useState(false);
     const [userRegistered, setUserRegistered] = useState(false);
+    const [buttonClicked, setButtonClicked] = useState(false);
+    const navigate = useNavigate();
 
     // Methods
     const EmailInput = (event:React.ChangeEvent<HTMLInputElement>) => {
@@ -25,8 +27,8 @@ export function Registration() {
         setPassword(event.target.value);
     };
 
-    const ConfirmPasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setConfirmPassword(event.target.value);
+    const ConfirmPasswordInput = (value:string) => {
+        setConfirmPassword(value);
     }
 
     const UsernameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,8 +47,9 @@ export function Registration() {
         setPhone(event.target.value);
     }
 
-    const CheckIfPasswordsMatch = () => {
-        setPasswordsMatch(true);
+    const CheckIfPasswordsMatch = (confirmPassword: string) => {
+
+
         if (password === confirmPassword) {
             setPasswordsMatch(true);
         } else {
@@ -54,8 +57,28 @@ export function Registration() {
         }
     }
 
+    let statusMessage;
+
+    if(!passwordsMatch && buttonClicked){
+        statusMessage = (<Typography sx={{
+            color: "red"
+        }}>
+            Passwords do not match!
+        </Typography>);
+    } else if(buttonClicked && !userRegistered){
+        statusMessage = (<Typography sx={{
+            color: "red"
+        }}>
+            User konnte nicht gespeichert werden
+        </Typography>);
+    }
+        else{
+        statusMessage = (<p><br/></p>);
+    }
+
     const registerUser = async () => {
-        CheckIfPasswordsMatch()
+        setButtonClicked(true);
+
         if(passwordsMatch === true) {
             const payload = {
                 username: username,
@@ -65,31 +88,25 @@ export function Registration() {
                 password: password,
                 phone: phone
             }
+            console.log("Here 1");
 
-            setUserRegistered(_post('/auth/register', payload));
+            const value= await _post('/auth/register', payload);
+
+            setUserRegistered(value);
+
+            if (value){
+                console.log("Here 3");
+                navigate("/");
+            }
         }
     }
 
-    let statusMessage;
+    const handleConfirmedPassword = (event:React.ChangeEvent<HTMLInputElement>) => {
+        const newConfirmedPasswordValue = event.target.value;
 
-    if(!passwordsMatch){
-        statusMessage = (<Typography sx={{
-            color: "red"
-        }}>
-            Passwords do not match!
-        </Typography>);
-    } else if(passwordsMatch && userRegistered){
-        statusMessage = (
-                <Typography
-                    sx={{
-                        color: "green"
-                    }}
-                >
-                    User registered!
-                </Typography>
-            );
-    } else {
-        statusMessage = (<p><br/></p>);
+        ConfirmPasswordInput(newConfirmedPasswordValue);
+
+        CheckIfPasswordsMatch(newConfirmedPasswordValue);
     }
 
     let registerButton;
@@ -167,8 +184,7 @@ export function Registration() {
                             id="password"
                             name="password"
                             value={password}
-                            onInput={PasswordInput}
-                            className={passwordsDontMatchStyle}
+                            onChange={PasswordInput}
                             required
                             sx={{
                                 backgroundColor: "white"
@@ -180,8 +196,7 @@ export function Registration() {
                             id="confirmed_password"
                             name="confirmed_password"
                             value={confirmPassword}
-                            onInput={ConfirmPasswordInput}
-                            className={passwordsDontMatchStyle}
+                            onChange={handleConfirmedPassword}
                             required
                             sx={{
                                 backgroundColor: "white"
@@ -193,7 +208,7 @@ export function Registration() {
                             id="username"
                             name="username"
                             value={username}
-                            onInput={UsernameInput}
+                            onChange={UsernameInput}
                             required
                             sx={{
                                 backgroundColor: "white"
@@ -205,7 +220,7 @@ export function Registration() {
                             id="firstname"
                             name="firstname"
                             value={firstName}
-                            onInput={FirstNameInput}
+                            onChange={FirstNameInput}
                             sx={{
                                 backgroundColor: "white"
                             }}
@@ -216,7 +231,7 @@ export function Registration() {
                             id="lastname"
                             name="lastname"
                             value={lastName}
-                            onInput={LastNameInput}
+                            onChange={LastNameInput}
                             sx={{
                                 backgroundColor: "white"
                             }}
@@ -227,7 +242,7 @@ export function Registration() {
                             id="phone"
                             name="phone"
                             value={phone}
-                            onInput={PhoneInput}
+                            onChange={PhoneInput}
                             sx={{
                                 backgroundColor: "white"
                             }}
@@ -238,7 +253,6 @@ export function Registration() {
                             sx={{
                                 mt: -2,
                                 color: "gray",
-                                display: "inline-block",
                                 textAlign: "center"
                             }}
                         >

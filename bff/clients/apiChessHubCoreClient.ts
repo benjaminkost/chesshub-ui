@@ -27,20 +27,22 @@ const _get = async (url:string, config = {}) => {
     }
 }
 
-const _post = (url:string, config = {}):boolean => {
+const _post = async (url:string, config = {}):Promise<boolean> => {
     try {
-        apiClient.post(url, config).then(res => {
-            console.log(res);
-            return true
-        })
-            .catch(err => {
-                console.log(err);
-                return false;
-            });
+        // Warten auf die Antwort von Axios
+        const res = await apiClient.post(url, config);
+
+        console.log('Server Response:', res);
+
+        // Axios wirft bei 4xx/5xx automatisch einen Fehler,
+        // daher landen wir hier nur bei 2xx Statuscodes.
+        return res.status >= 200 && res.status < 300;
+
     } catch (error) {
+        // Hier landen alle Netzwerkfehler oder 4xx/5xx Antworten
         console.error('Error when Sending:', error);
+        return false;
     }
-    return true;
 }
 
 const _delete = (url:string, config = {}):boolean => {
