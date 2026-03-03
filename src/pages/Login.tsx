@@ -1,139 +1,134 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import {
-    AppBar,
-    Toolbar,
-    Typography,
-    Container,
-    Box,
-    Paper,
-    TextField,
-    Button,
-    CircularProgress,
-    Alert,
-} from "@mui/material";
-import { _post } from "../../bff/clients/apiChessHubCoreClient.ts";
+import {Header} from "../components/Header.js";
+import Footer from "../components/Footer.js";
+import React, {useState} from "react";
+import {Box, Paper, TextField, Typography, Button, Link } from "@mui/material";
+import {_post} from "../../bff/clients/apiChessHubCoreClient.js";
+import {useNavigate} from "react-router";
+
 
 export function Login() {
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
     const navigate = useNavigate();
 
-    const loginUser = async () => {
-        setLoading(true);
-        setError("");
-        const payload = { usernameOrEmail: emailOrUsername, password };
-
-        try {
-            const response = await _post("/auth/login", payload);
-            // ✅ Handle success (redirect or store token)
-            console.log("Login success:", response);
-            navigate("/uploadImage");
-        } catch (err) {
-            setError("Invalid credentials. Please try again.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
+    const emailOrUsernameInput = (event:React.ChangeEvent<HTMLInputElement>) => {
+        setEmailOrUsername(event.target.value);
     };
 
-    return (
-        <Box className="min-h-screen flex flex-col bg-gradient-to-b from-gray-50 to-gray-100">
-            <AppBar
-                position="static"
-                color="transparent"
-                elevation={1}
-                className="border-b border-gray-200 backdrop-blur-md"
-            >
-                <Toolbar className="flex justify-between items-center max-w-7xl mx-auto w-full px-4">
-                    <Typography
-                        variant="h5"
-                        component={Link}
-                        to="/"
-                        className="font-bold text-gray-800 no-underline hover:text-indigo-600 transition-colors"
-                    >
-                        ChessHub
-                    </Typography>
-                    <Box className="flex space-x-4">
-                        <Button
-                            component={Link}
-                            to="/auth/register"
-                            variant="outlined"
-                            color="primary"
-                            className="rounded-xl"
-                        >
-                            Register
-                        </Button>
-                    </Box>
-                </Toolbar>
-            </AppBar>
+    const passwordInput = (event:React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(event.target.value);
+    };
 
-            {/* Login Card */}
-            <Container className="flex-grow flex justify-center items-center py-12">
+    const login = async () => {
+        const payload = {
+            emailOrUsername: emailOrUsername,
+            password: password
+        }
+        if(_post("auth/signin", payload)) {
+            navigate("/");
+        }
+    }
+
+    let loginButton;
+
+    if(emailOrUsername && password){
+        loginButton = (
+            <Button
+                onClick={login}
+                sx={{
+                    backgroundColor: "gray",
+                    color: "white"
+                }}
+            >
+                Login
+            </Button>
+        );
+    } else {
+        loginButton = (
+            <Button
+                sx={{
+                    backgroundColor: "#cfcfcf",
+                    color: "white"
+                }}
+            >
+                Login
+            </Button>
+        );
+    }
+
+    return (
+        <>
+            <Header loggedIn={false}/>
+            <Box sx={{
+                flexGrow: 1,
+                minHeight: "14vh"
+            }}/>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+            >
                 <Paper
-                    elevation={4}
-                    className="p-10 rounded-2xl max-w-md w-full bg-white/70 backdrop-blur-md shadow-lg"
+                    sx={{
+                        display: "flex",
+                        mt: 4,
+                        flexGrow: 1,
+                        flexDirection: "column",
+                        gap: 2,
+                        maxWidth: "sm",
+                        maxHeight: "sm",
+                        mb: 3,
+                        backgroundColor: "lightgray",
+                        padding: 5
+                    }}
                 >
-                    <Typography
-                        variant="h4"
-                        className="text-center font-bold text-gray-800 mb-6"
+                    <Typography variant={"h5"}
+                                sx={{
+                                    mb: 3,
+                                    color: "#424242"
+                                }}
                     >
                         Login
                     </Typography>
-
-                    {error && (
-                        <Alert severity="error" className="mb-4">
-                            {error}
-                        </Alert>
-                    )}
-
-                    <Box className="space-y-4">
-                        <TextField
-                            fullWidth
-                            label="Email or Username"
-                            variant="outlined"
-                            value={emailOrUsername}
-                            onChange={(e) => setEmailOrUsername(e.target.value)}
-                            required
-                        />
-                        <TextField
-                            fullWidth
-                            type="password"
-                            label="Password"
-                            variant="outlined"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </Box>
-
-                    <Button
-                        fullWidth
-                        variant="contained"
-                        color="primary"
-                        onClick={loginUser}
-                        disabled={loading}
-                        className="mt-6 py-2 rounded-xl"
+                    <TextField
+                        label={"Email or Username"}
+                        type={"text"}
+                        required
+                        value={emailOrUsername}
+                        onInput={emailOrUsernameInput}
+                        sx={{
+                            backgroundColor: "white"
+                        }}
+                    />
+                    <TextField
+                        label={"password"}
+                        type={"password"}
+                        required
+                        value={password}
+                        onInput={passwordInput}
+                        sx={{
+                            backgroundColor: "white"
+                        }}
+                    />
+                    {loginButton}
+                    <Link
+                        href={"/auth/register"}
+                        sx={{
+                            color: "gray",
+                            textAlign: "center"
+                        }}
                     >
-                        {loading ? <CircularProgress size={24} color="inherit" /> : "Login"}
-                    </Button>
-
-                    <Typography
-                        variant="body2"
-                        className="text-center text-gray-600 mt-6"
-                    >
-                        Don't have an account?{" "}
-                        <Link
-                            to="/auth/register"
-                            className="text-indigo-600 hover:underline"
-                        >
-                            Register here
-                        </Link>
-                    </Typography>
+                        Register dich
+                    </Link>
                 </Paper>
-            </Container>
-        </Box>
+            </Box>
+            <Box sx={{
+                flexGrow: 1,
+                minHeight: "14vh"
+            }}/>
+            <Footer/>
+        </>
     );
 }
