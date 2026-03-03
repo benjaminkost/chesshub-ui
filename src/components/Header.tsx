@@ -8,6 +8,7 @@ import ProfileComponent, {defaultMenuElements} from "./ProfileComponent.js";
 import SearchFieldComponent from "./SearchFieldComponent.js";
 import MenuButton, {defaultDrawerElements} from "./MenuButton.js";
 import { Link } from "react-router-dom";
+import {useNavigate} from "react-router";
 
 interface HeaderProps{
     loggedIn: boolean;
@@ -16,6 +17,12 @@ interface HeaderProps{
 }
 
 export function Header({loggedIn, menuElements = defaultMenuElements, drawerElements = defaultDrawerElements}: HeaderProps) {
+
+    const navigate = useNavigate();
+
+    const loginButton = () => {
+        navigate("/auth/signin");
+    }
 
     return (
         <AppBar position={"sticky"}
@@ -53,7 +60,9 @@ export function Header({loggedIn, menuElements = defaultMenuElements, drawerElem
                     :
                     <Button
                         variant={"outlined"}
-                        color={"inherit"}>
+                        color={"inherit"}
+                        onClick={loginButton}
+                    >
                         Login
                     </Button>
                 }
