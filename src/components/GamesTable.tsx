@@ -1,4 +1,4 @@
-import {Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow } from "@mui/material";
+import {Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
 import React from "react";
 
 interface Row {
@@ -11,6 +11,11 @@ interface Row {
 
 interface Rows {
     rows: Row[]
+}
+
+interface Headcell {
+    id: string,
+    label: string
 }
 
 export const defaultGamesTableData: Row[] = [
@@ -67,8 +72,18 @@ export const defaultGamesTableData: Row[] = [
 export function GamesTable({rows}: Rows ){
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
+    const [orderBy, setOrderBy] = React.useState('datum');
 
-    const tableHeaders = ["Weiß", "Schwarz", "Datum", "Eröffnung", "Züge"];
+    type Order = 'asc' | 'desc';
+    const [order, setOrder] = React.useState<Order>('asc');
+
+    const tableHeaders: readonly Headcell[] = [
+        {id: "weiß", label: "Weiß"},
+        {id: "schwarz", label: "Schwarz"},
+        {id: "datum", label: "Datum"},
+        {id: "eröffnung", label: "Eröffnung"},
+        {id: "züge", label: "Züge"}
+    ];
 
     const cutMoveString = (moves: string):string => {
         if (moves.length > 30) return moves.substring(0,120)+ " ...";
@@ -115,8 +130,14 @@ export function GamesTable({rows}: Rows ){
                                              backgroundColor: "dimgray",
                                              color: "white"
                                          }}
+                                         sortDirection={orderBy === elem.id ? order : false}
                                      >
-                                         {elem}
+                                         <TableSortLabel
+                                             active={orderBy === elem.id}
+                                             direction={orderBy === elem.id ? order : "asc"}
+                                         >
+                                             {elem.label}
+                                         </TableSortLabel>
                                      </TableCell>
                                     )
                                     )
