@@ -13,14 +13,14 @@ interface Rows {
     rows: Row[]
 }
 
-interface Headcell {
+interface HeadCell {
     id: string,
     label: string
 }
 
 export const defaultGamesTableData: Row[] = [
     {
-        whitePGN: "Benjamin Kostka",
+        whitePGN: "Aenjamin Kostka",
         blackPGN: "Lukas Zander",
         datePGN: new Date(13,11,2002),
         opening: "Scotch Opening",
@@ -46,7 +46,7 @@ export const defaultGamesTableData: Row[] = [
     {
         whitePGN: "Benjamin Moritz Aurelius Kostka",
         blackPGN: "Lukas Zander",
-        datePGN: new Date(13,11,2002) ,
+        datePGN: new Date(2002,10,13) ,
         opening: "Scotch Opening",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
             "exd5 cxd5 4. Nc3 Nc6 5. Bb5 Nf6 6. Nge2 " +
@@ -77,7 +77,7 @@ export function GamesTable({rows}: Rows ){
     type Order = 'asc' | 'desc';
     const [order, setOrder] = React.useState<Order>('asc');
 
-    const tableHeaders: readonly Headcell[] = [
+    const tableHeaders: readonly HeadCell[] = [
         {id: "weiß", label: "Weiß"},
         {id: "schwarz", label: "Schwarz"},
         {id: "datum", label: "Datum"},
@@ -103,6 +103,46 @@ export function GamesTable({rows}: Rows ){
         setPage(0);
     }
 
+    const handleRequestSort = (
+        event: React.MouseEvent<unknown>,
+        id: string
+        )=> {
+        const isAsc =  orderBy === id && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc')
+        setOrderBy(id);
+    }
+
+    const compareElem = (a: Row, b: Row) => {
+
+        const columnMap: Record<string, keyof Row> = {
+            "weiß": "whitePGN",
+            "schwarz": "blackPGN",
+            "datum": "datePGN",
+            "eröffnung": "opening",
+            "züge": "movePGN"
+        };
+
+        const property = columnMap[orderBy] || "datePGN";
+
+        const elemA = a[property];
+        const elemB = b[property];
+
+        if (elemA == undefined || elemB == undefined) return 0;
+
+        const modifier = order == 'asc' ? 1 : -1;
+
+        console.log("orderBy: %s, elemA: %s, elemB: %s", orderBy, elemA, elemB);
+
+        if (typeof elemA == 'string' && typeof elemB == 'string'){
+            return elemA.localeCompare(elemB, 'de', {numeric: true})* modifier;
+        }
+
+        if (elemA < elemB) return -1 * modifier;
+        if (elemA > elemB) return 1 * modifier;
+
+        return 0;
+    }
+
     return(
         <>
             <Paper
@@ -123,7 +163,7 @@ export function GamesTable({rows}: Rows ){
                             <TableRow
                             >
                                 {
-                                    tableHeaders.map( (elem, index) => (
+                                    tableHeaders.map((elem, index) => (
                                      <TableCell
                                          key={index}
                                          sx={{
@@ -135,6 +175,7 @@ export function GamesTable({rows}: Rows ){
                                          <TableSortLabel
                                              active={orderBy === elem.id}
                                              direction={orderBy === elem.id ? order : "asc"}
+                                             onClick={(event) => handleRequestSort(event, elem.id)}
                                          >
                                              {elem.label}
                                          </TableSortLabel>
@@ -147,6 +188,7 @@ export function GamesTable({rows}: Rows ){
                         <TableBody>
                             {
                                 rows
+                                    .sort(compareElem)
                                     .slice(page, page*rowsPerPage+rowsPerPage)
                                     .map( (row) => (
                                     <TableRow hover>
