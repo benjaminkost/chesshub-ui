@@ -3,6 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import Divider from '@mui/material/Divider';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import {useNavigate} from "react-router";
 
 interface MenuButtonProps{
     drawerElements?: string[];
@@ -12,9 +13,14 @@ export const defaultDrawerElements = ["Partie erstellen", "Eigene Partien", "Man
 
 export default function MenuButton({drawerElements=defaultDrawerElements}:MenuButtonProps) {
     const [open, setOpen] = React.useState(false);
+    const navigate = useNavigate();
 
     const toggleDrawer = (newOpen: boolean) => () => {
         setOpen(newOpen);
+    }
+
+    const openPage = () => {
+        navigate("/ownGamesHistory");
     }
 
     const drawerHTMLElements = (
@@ -22,7 +28,9 @@ export default function MenuButton({drawerElements=defaultDrawerElements}:MenuBu
           <List>
               {drawerElements?.map((elem, index) => (
             <ListItem key={index}>
-                <ListItemButton>
+                <ListItemButton
+                    onClick={openPage} // TODO: Button basiert die navigation definieren (wie kann man ein input bei einer Button Funktion definieren)
+                >
                     <ListItemText primary={elem}/>
                 </ListItemButton>
             </ListItem>

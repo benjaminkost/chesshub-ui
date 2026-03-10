@@ -74,23 +74,23 @@ export function GamesTable({rows}: Rows ){
         {
             field: "id",
             headerName: "ID",
-            width: 30
+            width: 70
         },
         {
             field: "whitePGN",
             headerName: "Weiß",
-            width: 100
+            width: 150
         },
         {
             field: "blackPGN",
             headerName: "Schwarz",
-            width: 100
+            width: 150
         },
         {
             field: "datePGN",
             headerName: "Datum",
             type: "date",
-            width: 80
+            width: 100
         },
         {
             field: "opening",
@@ -100,7 +100,7 @@ export function GamesTable({rows}: Rows ){
         {
             field: "movePGN",
             headerName: "Züge",
-            width: 900
+            width: 780
         }
     ];
 
