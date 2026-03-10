@@ -1,7 +1,9 @@
-import {Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TablePagination, TableRow, TableSortLabel } from "@mui/material";
+import { Paper } from "@mui/material";
 import React from "react";
+import {DataGrid, GridColDef} from "@mui/x-data-grid";
 
 interface Row {
+    id: number,
     whitePGN: string,
     blackPGN: string,
     datePGN: Date,
@@ -13,14 +15,10 @@ interface Rows {
     rows: Row[]
 }
 
-interface HeadCell {
-    id: string,
-    label: string
-}
-
 export const defaultGamesTableData: Row[] = [
     {
-        whitePGN: "Aenjamin Kostka",
+        id: 1,
+        whitePGN: "Filip Topov",
         blackPGN: "Lukas Zander",
         datePGN: new Date(13,11,2002),
         opening: "Scotch Opening",
@@ -44,9 +42,10 @@ export const defaultGamesTableData: Row[] = [
             "76. Kxd5 Ka6 77. Ke6 Kb7 78. d5 Kc8 79. d6 Kb7 80. d7 Kc6 " +
             "81. d8=Q Kb7 82. Qd3 Ka8 83. Qa6# 1-0"},
     {
+        id: 2,
         whitePGN: "Benjamin Moritz Aurelius Kostka",
         blackPGN: "Lukas Zander",
-        datePGN: new Date(2002,10,13) ,
+        datePGN: new Date(2002,10,13),
         opening: "Scotch Opening",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
             "exd5 cxd5 4. Nc3 Nc6 5. Bb5 Nf6 6. Nge2 " +
@@ -70,78 +69,40 @@ export const defaultGamesTableData: Row[] = [
 ];
 
 export function GamesTable({rows}: Rows ){
-    const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(10);
-    const [orderBy, setOrderBy] = React.useState('datum');
 
-    type Order = 'asc' | 'desc';
-    const [order, setOrder] = React.useState<Order>('asc');
-
-    const tableHeaders: readonly HeadCell[] = [
-        {id: "weiß", label: "Weiß"},
-        {id: "schwarz", label: "Schwarz"},
-        {id: "datum", label: "Datum"},
-        {id: "eröffnung", label: "Eröffnung"},
-        {id: "züge", label: "Züge"}
-    ];
-
-    const cutMoveString = (moves: string):string => {
-        if (moves.length > 30) return moves.substring(0,120)+ " ...";
-
-        return moves;
-    }
-
-    const handlePageChange = (
-        _event: React.MouseEvent<HTMLButtonElement> | null,
-        newPage: number
-    ) => {
-        setPage(newPage)
-    }
-
-    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(+event.target.value);
-        setPage(0);
-    }
-
-    const handleRequestSort = (
-        event: React.MouseEvent<unknown>,
-        id: string
-        )=> {
-        const isAsc =  orderBy === id && order === 'asc';
-        setOrder(isAsc ? 'desc' : 'asc')
-        setOrderBy(id);
-    }
-
-    const compareElem = (a: Row, b: Row) => {
-
-        const columnMap: Record<string, keyof Row> = {
-            "weiß": "whitePGN",
-            "schwarz": "blackPGN",
-            "datum": "datePGN",
-            "eröffnung": "opening",
-            "züge": "movePGN"
-        };
-
-        const property = columnMap[orderBy] || "datePGN";
-
-        const elemA = a[property];
-        const elemB = b[property];
-
-        if (elemA == undefined || elemB == undefined) return 0;
-
-        const modifier = order == 'asc' ? 1 : -1;
-
-        console.log("orderBy: %s, elemA: %s, elemB: %s", orderBy, elemA, elemB);
-
-        if (typeof elemA == 'string' && typeof elemB == 'string'){
-            return elemA.localeCompare(elemB, 'de', {numeric: true})* modifier;
+    const columns: GridColDef<(typeof rows)[number]>[] = [
+        {
+            field: "id",
+            headerName: "ID",
+            width: 30
+        },
+        {
+            field: "whitePGN",
+            headerName: "Weiß",
+            width: 100
+        },
+        {
+            field: "blackPGN",
+            headerName: "Schwarz",
+            width: 100
+        },
+        {
+            field: "datePGN",
+            headerName: "Datum",
+            type: "date",
+            width: 80
+        },
+        {
+            field: "opening",
+            headerName: "Eröffnung",
+            width: 120
+        },
+        {
+            field: "movePGN",
+            headerName: "Züge",
+            width: 900
         }
-
-        if (elemA < elemB) return -1 * modifier;
-        if (elemA > elemB) return 1 * modifier;
-
-        return 0;
-    }
+    ];
 
     return(
         <>
@@ -155,76 +116,18 @@ export function GamesTable({rows}: Rows ){
                     overflow: "hidden"
             }}
             >
-                <TableContainer sx={{
-                    maxHeight: 500
-                }}>
-                    <Table stickyHeader>
-                        <TableHead>
-                            <TableRow
-                            >
-                                {
-                                    tableHeaders.map((elem, index) => (
-                                     <TableCell
-                                         key={index}
-                                         sx={{
-                                             backgroundColor: "dimgray",
-                                             color: "white"
-                                         }}
-                                         sortDirection={orderBy === elem.id ? order : false}
-                                     >
-                                         <TableSortLabel
-                                             active={orderBy === elem.id}
-                                             direction={orderBy === elem.id ? order : "asc"}
-                                             onClick={(event) => handleRequestSort(event, elem.id)}
-                                         >
-                                             {elem.label}
-                                         </TableSortLabel>
-                                     </TableCell>
-                                    )
-                                    )
-                                }
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {
-                                rows
-                                    .sort(compareElem)
-                                    .slice(page, page*rowsPerPage+rowsPerPage)
-                                    .map( (row) => (
-                                    <TableRow hover>
-                                        <TableCell>
-                                            {row.whitePGN}
-                                        </TableCell>
-                                        <TableCell>
-                                            {row.blackPGN}
-                                        </TableCell>
-                                        <TableCell>
-                                            {row.datePGN.toDateString()}
-                                        </TableCell>
-                                        <TableCell>
-                                            {row.opening}
-                                        </TableCell>
-                                        <TableCell>
-                                            {cutMoveString(row.movePGN)}
-                                        </TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                    <TableFooter>
-                        <TableRow>
-                            <TablePagination
-                                count={rows.length}
-                                onPageChange={handlePageChange}
-                                page={page}
-                                rowsPerPage={rowsPerPage}
-                                rowsPerPageOptions={[1,5,10,25]}
-                                onRowsPerPageChange={handleChangeRowsPerPage}
-                            />
-                        </TableRow>
-                    </TableFooter>
-                </TableContainer>
+                <DataGrid
+                    columns={columns}
+                    rows={rows}
+                    initialState={{
+                        pagination: {
+                            paginationModel: {
+                                pageSize: 5,
+                            },
+                        }
+                    }}
+                    pageSizeOptions={[1,5,10,25,100]}
+                />
             </Paper>
         </>
     )
