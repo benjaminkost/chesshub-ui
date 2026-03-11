@@ -74,33 +74,39 @@ export function GamesTable({rows}: Rows ){
         {
             field: "id",
             headerName: "ID",
-            width: 70
+            resizable: false,
+            flex: 0.75
         },
         {
             field: "whitePGN",
             headerName: "Weiß",
-            width: 150
+            resizable: false,
+            flex: 2
         },
         {
             field: "blackPGN",
             headerName: "Schwarz",
-            width: 150
+            resizable: false,
+            flex: 2
         },
         {
             field: "datePGN",
             headerName: "Datum",
             type: "date",
-            width: 100
+            resizable: false,
+            flex: 1.5
         },
         {
             field: "opening",
             headerName: "Eröffnung",
-            width: 120
+            resizable: false,
+            flex: 2
         },
         {
             field: "movePGN",
             headerName: "Züge",
-            width: 780
+            resizable: false,
+            flex: 5
         }
     ];
 
@@ -108,15 +114,21 @@ export function GamesTable({rows}: Rows ){
         <>
             <Paper
                 sx={{
-                    mt: 3,
-                    mr: 3,
-                    mb: 3,
-                    ml: 3,
+                    m: "20px 20px 20px 20px",
                     maxWidth: "100%",
                     overflow: "hidden"
             }}
             >
                 <DataGrid
+                    sx={{
+                        '& .MuiDataGrid-columnHeader': {
+                            backgroundColor: 'gray',
+                            color: "white"
+                        },
+                        '& .MuiDataGrid-filler': {
+                            backgroundColor: 'gray!important',
+                        }
+                    }}
                     columns={columns}
                     rows={rows}
                     initialState={{
@@ -127,6 +139,7 @@ export function GamesTable({rows}: Rows ){
                         }
                     }}
                     pageSizeOptions={[1,5,10,25,100]}
+                    disableRowSelectionOnClick
                 />
             </Paper>
         </>
