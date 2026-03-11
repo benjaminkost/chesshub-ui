@@ -8,11 +8,13 @@ interface Row {
     blackPGN: string,
     datePGN: Date,
     opening: string,
+    team: string,
     movePGN: string
 }
 
-interface Rows {
-    rows: Row[]
+interface GameTableProps {
+    rows: Row[],
+    ownGamesOrTeamGames: boolean
 }
 
 export const defaultGamesTableData: Row[] = [
@@ -22,6 +24,7 @@ export const defaultGamesTableData: Row[] = [
         blackPGN: "Lukas Zander",
         datePGN: new Date(13,11,2002),
         opening: "Scotch Opening",
+        team: "SV Empor",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
             "exd5 cxd5 4. Nc3 Nc6 5. Bb5 Nf6 6. Nge2 " +
             "Bg4 7. O-O e6 8. f3 Bf5 9. a3 a6 10. Ba4 b5 11. " +
@@ -43,10 +46,11 @@ export const defaultGamesTableData: Row[] = [
             "81. d8=Q Kb7 82. Qd3 Ka8 83. Qa6# 1-0"},
     {
         id: 2,
-        whitePGN: "Benjamin Moritz Aurelius Kostka",
+        whitePGN: "Benjamin Kostka",
         blackPGN: "Lukas Zander",
         datePGN: new Date(2002,10,13),
         opening: "Scotch Opening",
+        team: "SV Kreuzberg",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
             "exd5 cxd5 4. Nc3 Nc6 5. Bb5 Nf6 6. Nge2 " +
             "Bg4 7. O-O e6 8. f3 Bf5 9. a3 a6 10. Ba4 b5 11. " +
@@ -68,80 +72,82 @@ export const defaultGamesTableData: Row[] = [
             "81. d8=Q Kb7 82. Qd3 Ka8 83. Qa6# 1-0"}
 ];
 
-export function GamesTable({rows}: Rows ){
+const columns: GridColDef[] = [
+    { field: "id", headerName: "ID", resizable: false, flex: 0.75 },
+    { field: "whitePGN", headerName: "Weiß", resizable: false, flex: 2 },
+    { field: "blackPGN", headerName: "Schwarz", resizable: false, flex: 2 },
+    // Fehlendes flex und resizable ergänzt, auch wenn versteckt:
+    { field: "team", headerName: "Mannschaft", resizable: false, flex: 2 },
+    { field: "datePGN", headerName: "Datum", type: "date", resizable: false, flex: 1.5 },
+    { field: "opening", headerName: "Eröffnung", resizable: false, flex: 2 },
+    { field: "movePGN", headerName: "Züge", resizable: false, flex: 5 }
+];
 
-    const columns: GridColDef<(typeof rows)[number]>[] = [
-        {
-            field: "id",
-            headerName: "ID",
-            resizable: false,
-            flex: 0.75
-        },
-        {
-            field: "whitePGN",
-            headerName: "Weiß",
-            resizable: false,
-            flex: 2
-        },
-        {
-            field: "blackPGN",
-            headerName: "Schwarz",
-            resizable: false,
-            flex: 2
-        },
-        {
-            field: "datePGN",
-            headerName: "Datum",
-            type: "date",
-            resizable: false,
-            flex: 1.5
-        },
-        {
-            field: "opening",
-            headerName: "Eröffnung",
-            resizable: false,
-            flex: 2
-        },
-        {
-            field: "movePGN",
-            headerName: "Züge",
-            resizable: false,
-            flex: 5
-        }
-    ];
+export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
+
+    const userName = "Benjamin Kostka"; // TODO: muss später mit user daten ausgelesen werden
+    const userTeam = "SV Empor"; // TODO: muss später mit user daten ausgelesen werden
+
+    const displayRows = React.useMemo(()=> {
+        if (ownGamesOrTeamGames) return rows.filter((elem) =>
+            elem.whitePGN == userName || elem.blackPGN == userName);
+
+        return rows;
+    }, [rows, ownGamesOrTeamGames, userName]);
+
+    const filterModel = React.useMemo(() => {
+        if (ownGamesOrTeamGames) return { items: []};
+
+        return {
+            items: [
+                {
+                    field: 'team',
+                    operator: 'equals',
+                    value: userTeam
+                }
+            ]
+        };
+    },[ownGamesOrTeamGames, userTeam]);
+
+    const columnVisibilityModel = React.useMemo(() => {
+        if (ownGamesOrTeamGames) return { };
+
+        return {
+             team: false
+        };
+    },[ownGamesOrTeamGames]);
 
     return(
-        <>
-            <Paper
-                sx={{
-                    m: "20px 20px 20px 20px",
-                    maxWidth: "100%",
-                    overflow: "hidden"
+        <Paper
+            sx={{
+                m: 3,
+                maxWidth: "100%"
             }}
-            >
-                <DataGrid
-                    sx={{
-                        '& .MuiDataGrid-columnHeader': {
-                            backgroundColor: 'gray',
-                            color: "white"
+        >
+            <DataGrid
+                sx={{
+                    '& .MuiDataGrid-columnHeader': {
+                        backgroundColor: 'gray',
+                        color: "white"
+                    },
+                    '& .MuiDataGrid-filler': {
+                        backgroundColor: 'gray!important',
+                    }
+                }}
+                filterModel={filterModel}
+                columnVisibilityModel={columnVisibilityModel}
+                columns={columns}
+                rows={displayRows}
+                initialState={{
+                    pagination: {
+                        paginationModel: {
+                            pageSize: 5,
                         },
-                        '& .MuiDataGrid-filler': {
-                            backgroundColor: 'gray!important',
-                        }
-                    }}
-                    columns={columns}
-                    rows={rows}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 5,
-                            },
-                        }
-                    }}
-                    pageSizeOptions={[1,5,10,25,100]}
-                    disableRowSelectionOnClick
-                />
-            </Paper>
-        </>
+                    }
+                }}
+                pageSizeOptions={[1,5,10,25,100]}
+                disableRowSelectionOnClick
+            />
+        </Paper>
     )
 }

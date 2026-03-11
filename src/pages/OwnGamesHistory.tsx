@@ -4,12 +4,15 @@ import {Header} from "../components/Header.js";
 import Footer from "../components/Footer.js";
 import { Box } from "@mui/material";
 
-function GamesHistory() {
+export default function OwnGamesHistory() {
 
     return (
         <>
             <Header loggedIn={true} />
-            <GamesTable rows={defaultGamesTableData}/>
+            <GamesTable
+                rows={defaultGamesTableData} // TODO: muss später aus der datenbank ausgelesen werden
+                ownGamesOrTeamGames={true}
+            />
             <Box
                 sx={{
                     flexGrow: 1,
@@ -20,5 +23,3 @@ function GamesHistory() {
         </>
     )
 }
-
-export default GamesHistory

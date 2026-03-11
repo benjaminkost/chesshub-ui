@@ -19,8 +19,17 @@ export default function MenuButton({drawerElements=defaultDrawerElements}:MenuBu
         setOpen(newOpen);
     }
 
-    const openPage = () => {
-        navigate("/ownGamesHistory");
+    const openPage = (name:string) => {
+        switch(name) {
+            case "Partie erstellen":
+                break;
+            case "Eigene Partien":
+                navigate("/ownGamesHistory");
+                break;
+            case "Mannschaftspartien":
+                navigate("/teamGamesHistory")
+                break;
+        }
     }
 
     const drawerHTMLElements = (
@@ -29,7 +38,7 @@ export default function MenuButton({drawerElements=defaultDrawerElements}:MenuBu
               {drawerElements?.map((elem, index) => (
             <ListItem key={index}>
                 <ListItemButton
-                    onClick={openPage} // TODO: Button basiert die navigation definieren (wie kann man ein input bei einer Button Funktion definieren)
+                    onClick={() => openPage(elem)} // TODO: Button basiert die navigation definieren (wie kann man ein input bei einer Button Funktion definieren)
                 >
                     <ListItemText primary={elem}/>
                 </ListItemButton>
