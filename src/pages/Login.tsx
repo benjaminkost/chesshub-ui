@@ -103,7 +103,7 @@ export function Login() {
                         }}
                     />
                     <TextField
-                        label={"password"}
+                        label={"Password"}
                         type={"password"}
                         required
                         value={password}
