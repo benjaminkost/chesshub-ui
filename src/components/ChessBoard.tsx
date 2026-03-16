@@ -12,7 +12,7 @@ interface ChessBoardProps{
     config?: Config;
 }
 
-export default function ChessBoard({heightWidth=900, contained=false, config={}}: ChessBoardProps) {
+export default function ChessBoard({heightWidth=600, contained=false, config={}}: ChessBoardProps) {
     const ref = React.useRef<HTMLDivElement>(null);
     const [api, setApi] = React.useState<Api | null>(null);
 
