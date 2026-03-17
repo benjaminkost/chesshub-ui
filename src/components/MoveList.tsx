@@ -4,19 +4,23 @@ import GameNavBar from "./GameNavBar.js";
 interface MoveListProps {
     width?: number,
     height?: number,
-    pgnMoves: string[]
+    pgnMoves: string[],
+    onMoveBack: () => void,
+    onMoveForward: () => void,
+    onBackToStart: () => void,
+    onForwardToEnd: () => void
 }
 
-export default function MoveList({width=200, height=600, pgnMoves}:MoveListProps) {
+export default function MoveList({width=200, height=600, pgnMoves, onMoveBack, onBackToStart, onMoveForward, onForwardToEnd}:MoveListProps) {
 
 
     return (
         <Box sx={{
             width: width,
             height: height,
-            backgroundColor: "dimgray",
+            backgroundColor: "gray",
             color: "white",
-            overflow: "scroll",
+            overflowY: "scroll",
             ml: 5
         }}>
             {
@@ -32,14 +36,14 @@ export default function MoveList({width=200, height=600, pgnMoves}:MoveListProps
                                 display: "flex"
                             }}
                         >
-                            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "black"}}>{moveCount}</Box>
+                            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray"}}>{moveCount}</Box>
                             <Box sx={{padding: 1, flex: 4, "&:hover": {backgroundColor: "lightgray"}}} key={move}>{move}</Box>
                             {blackMove && <Box sx={{padding: 1, flex: 4, "&:hover": {backgroundColor: "lightgray"}}}>{blackMove}</Box>}
                         </Box>
                     )
                 })
             }
-            <GameNavBar />
+            <GameNavBar onMoveBack={onMoveBack} onMoveForward={onMoveForward} onBackToStart={onBackToStart} onForwardToEnd={onForwardToEnd} />
         </Box>
     );
 }
