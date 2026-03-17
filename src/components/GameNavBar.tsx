@@ -22,7 +22,7 @@ export default function GameNavBar({onForwardToEnd, onMoveForward, onMoveBack, o
                 position: "sticky",
                 bottom: 0,
                 backgroundColor: "black",
-                boxShadow: "0 -5px 10px rgb(0,0,0,0.1)",
+                borderTop: "1px solid rgba(255,255,255,0.15)"
             }}
         >
             <IconButton sx={{flex: 1, color: "white"}} onClick={onBackToStart}>
