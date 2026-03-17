@@ -1,5 +1,6 @@
 import {Box} from "@mui/material";
 import GameNavBar from "./GameNavBar.js";
+import React from "react";
 
 interface MoveListProps {
     width?: number,
@@ -8,11 +9,11 @@ interface MoveListProps {
     onMoveBack: () => void,
     onMoveForward: () => void,
     onBackToStart: () => void,
-    onForwardToEnd: () => void
+    onForwardToEnd: () => void,
+    handleSetMoveIndex: (index: number) => void;
 }
 
-export default function MoveList({width=200, height=600, pgnMoves, onMoveBack, onBackToStart, onMoveForward, onForwardToEnd}:MoveListProps) {
-
+export default function MoveList({width=200, height=600, pgnMoves, onMoveBack, onBackToStart, onMoveForward, onForwardToEnd, handleSetMoveIndex}:MoveListProps) {
 
     return (
         <Box sx={{
@@ -24,7 +25,7 @@ export default function MoveList({width=200, height=600, pgnMoves, onMoveBack, o
             ml: 5
         }}>
             {
-                pgnMoves.map((move, index) => {
+                pgnMoves.map((whiteMove, index) => {
                     if (index % 2 !== 0) return null;
 
                     const moveCount = Math.floor(index/2) + 1;
@@ -37,8 +38,8 @@ export default function MoveList({width=200, height=600, pgnMoves, onMoveBack, o
                             }}
                         >
                             <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray"}}>{moveCount}</Box>
-                            <Box sx={{padding: 1, flex: 4, "&:hover": {backgroundColor: "lightgray"}}} key={move}>{move}</Box>
-                            {blackMove && <Box sx={{padding: 1, flex: 4, "&:hover": {backgroundColor: "lightgray"}}}>{blackMove}</Box>}
+                            <Box key={index} onClick={() => handleSetMoveIndex(index)} sx={{padding: 1, flex: 4, "&:hover": {backgroundColor: "lightgray"}}}>{whiteMove}</Box>
+                            {blackMove && <Box key={index+1} onClick={() => handleSetMoveIndex(index+1)} sx={{padding: 1, flex: 4, "&:hover": {backgroundColor: "lightgray"}}}>{blackMove}</Box>}
                         </Box>
                     )
                 })

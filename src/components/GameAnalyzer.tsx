@@ -31,6 +31,10 @@ export default function GameAnalyzer({pgn}: GameAnalyzerProps) {
         setMoveIndex(pgnMoves.length-1);
     };
 
+    const handleSetMoveIndex = (index: number) => {
+        setMoveIndex(index);
+    };
+
     const allFens = React.useMemo(() => {
         const chess = new Chess();
 
@@ -58,7 +62,9 @@ export default function GameAnalyzer({pgn}: GameAnalyzerProps) {
                       onMoveBack={handleMoveBack}
                       onMoveForward={handleMoveForward}
                       onForwardToEnd={handleForwardToEnd}
-                      onBackToStart={handleBackToStart}/>
+                      onBackToStart={handleBackToStart}
+                      handleSetMoveIndex={handleSetMoveIndex}
+            />
         </Box>
     );
 }
