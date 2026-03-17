@@ -5,6 +5,7 @@ import {UploadImage} from "./pages/UploadImage.tsx";
 import {Home} from "./pages/Home.tsx";
 import OwnGamesHistory from "./pages/OwnGamesHistory.js";
 import TeamGamesHistory from "./pages/TeamGamesHistory.js";
+import ViewSingleGame from "./pages/ViewSingleGame.js";
 
 export function App() {
 
@@ -21,6 +22,7 @@ export function App() {
                       <Route path="/uploadImage" element={< UploadImage />} />
                       <Route path="/ownGamesHistory" element={< OwnGamesHistory />} />
                       <Route path="/teamGamesHistory" element={< TeamGamesHistory />} />
+                      <Route path="/view-game" element={< ViewSingleGame /> } />
                   </Routes>
               </main>
           </BrowserRouter>
