@@ -48,7 +48,7 @@ http://localhost:5173/
 | Endpoint                                      | Description                                                                            |
 |-----------------------------------------------|----------------------------------------------------------------------------------------|
 | /auth/register, /auth/signup                  | Register a User                                                                        |
-| /uploadImage/api/auth/login, /api/auth/signin | Login a User                                                                           |
+| /auth/login, /auth/signin | Login a User                                                                           |
 | /uploadImage                                  | Upload image of chess scoresheet to be transfered into digital representation with CNN |
 | /ownGamesHistory                              | View all for your saved games                                                          |
 | /teamGamesHistory                             | View all games from teams you are in                                                   |
