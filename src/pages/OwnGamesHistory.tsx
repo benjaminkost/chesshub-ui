@@ -1,8 +1,8 @@
 import {GamesTable} from "../components/GamesTable.js";
-import {defaultGamesTableData} from "../components/GamesTable.js";
 import {Header} from "../components/Header.js";
 import Footer from "../components/Footer.js";
 import { Box } from "@mui/material";
+import {dummyGamesTableData} from "../dummyData.js";
 
 export default function OwnGamesHistory() {
 
@@ -10,7 +10,7 @@ export default function OwnGamesHistory() {
         <>
             <Header loggedIn={true} />
             <GamesTable
-                rows={defaultGamesTableData} // TODO: muss später aus der datenbank ausgelesen werden
+                rows={dummyGamesTableData} // TODO: muss später aus der datenbank ausgelesen werden
                 ownGamesOrTeamGames={true}
             />
             <Box

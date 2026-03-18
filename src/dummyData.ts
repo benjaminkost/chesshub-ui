@@ -1,10 +1,20 @@
-import {Club} from "../src/components/ClubsTable.js";
-import {Row} from "../src/components/GamesTable.js";
+import {Club, ClubAffiliation, MemberStatus} from "./components/ClubsTable.js";
+import {Row} from "./components/GamesTable.js";
 
-export const dummyClubs: Club[] = [
+export const dummyAllClubs: Club[] = [
     {id: 1, name: "SV Empor", address: "Straße 1", president: "Benjamin Kostka"},
     {id: 2, name: "SV Brauereien", address: "Straße 2", president: "Lukas Zander"},
-    {id: 1, name: "Bayern München", address: "Straße 3", president: "Filip Topic"}
+    {id: 3, name: "Bayern München", address: "Straße 3", president: "Filip Topic"},
+    {id: 4, name: "Bayern München 2", address: "Straße 4", president: "Filip Topic"},
+    {id: 5, name: "Bayern München 3", address: "Straße 5", president: "Filip Topic"},
+    {id: 6, name: "Bayern München 4", address: "Straße 6", president: "Filip Topic"},
+    {id: 7, name: "Bayern München 5", address: "Straße 7", president: "Filip Topic"}
+];
+
+export const dummyClubAffiliation: ClubAffiliation[] = [
+    {id: 1, name: "SV Empor", address: "Straße 1", president: "Benjamin Kostka", status: MemberStatus.MEMBER},
+    {id: 2, name: "SV Brauereien", address: "Straße 2", president: "Lukas Zander", status: MemberStatus.APPLICANT},
+    {id: 3, name: "Bayern München", address: "Straße 3", president: "Filip Topic", status: MemberStatus.FORMER_MEMBER}
 ];
 
 export const dummyPgn = "[Event \"?\"]\n" +

@@ -3,7 +3,7 @@ import React from "react";
 import Footer from "../components/Footer.js";
 import { Box } from "@mui/material";
 import GameAnalyzer from "../components/GameAnalyzer.js";
-import {dummyPgn} from "../../bff/dummyData.js";
+import {dummyPgn} from "../dummyData.js";
 
 export default function ViewSingleGame() {
     return (

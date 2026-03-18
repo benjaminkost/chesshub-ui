@@ -6,6 +6,7 @@ import {Home} from "./pages/Home.tsx";
 import OwnGamesHistory from "./pages/OwnGamesHistory.js";
 import TeamGamesHistory from "./pages/TeamGamesHistory.js";
 import ViewSingleGame from "./pages/ViewSingleGame.js";
+import ClubAffiliation from "./pages/ClubAffiliation.js";
 
 export function App() {
 
@@ -23,6 +24,7 @@ export function App() {
                       <Route path="/ownGamesHistory" element={< OwnGamesHistory />} />
                       <Route path="/teamGamesHistory" element={< TeamGamesHistory />} />
                       <Route path="/view-game" element={< ViewSingleGame /> } />
+                      <Route path="/club-affiliation" element={< ClubAffiliation />} />
                   </Routes>
               </main>
           </BrowserRouter>
