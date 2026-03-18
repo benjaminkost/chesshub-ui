@@ -24,6 +24,7 @@ __Option A__
 docker compose up -d
 ```
 OR
+
 __Option B__
 ```bash
 npm i
@@ -36,6 +37,8 @@ __Option A__
 ```url
 http://localhost:9000/
 ```
+OR
+
 __Option B__
 ```url
 http://localhost:5173/
