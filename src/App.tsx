@@ -7,6 +7,7 @@ import OwnGamesHistory from "./pages/OwnGamesHistory.js";
 import TeamGamesHistory from "./pages/TeamGamesHistory.js";
 import ViewSingleGame from "./pages/ViewSingleGame.js";
 import ClubAffiliation from "./pages/ClubAffiliation.js";
+import TeamManagement from "./pages/TeamManagement.js";
 
 export function App() {
 
@@ -25,6 +26,7 @@ export function App() {
                       <Route path="/teamGamesHistory" element={< TeamGamesHistory />} />
                       <Route path="/view-game" element={< ViewSingleGame /> } />
                       <Route path="/club-affiliation" element={< ClubAffiliation />} />
+                      <Route path={"/team-management"} element={< TeamManagement />} />
                   </Routes>
               </main>
           </BrowserRouter>

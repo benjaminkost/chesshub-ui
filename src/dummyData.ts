@@ -1,5 +1,6 @@
 import {Club, ClubAffiliation, MemberStatus} from "./components/ClubsTable.js";
 import {Row} from "./components/GamesTable.js";
+import {Member, MemberRole, Team} from "./components/TeamManagementTable.js";
 
 export const dummyAllClubs: Club[] = [
     {id: 1, name: "SV Empor", address: "Straße 1", president: "Benjamin Kostka"},
@@ -87,4 +88,26 @@ export const dummyGamesTableData: Row[] = [
             "76. Kxd5 Ka6 77. Ke6 Kb7 78. d5 Kc8 79. d6 Kb7 80. d7 Kc6 " +
             "81. d8=Q Kb7 82. Qd3 Ka8 83. Qa6# 1-0"}
 ];
+
+export const allUsers: Member[] = [
+    {id: 1, name: "Benjamin Kostka", roles: [MemberRole.PLAYER, MemberRole.ADMIN]},
+    {id: 2, name: "Lukas Zander", roles: [MemberRole.PLAYER, MemberRole.HEAD_COACH]},
+    {id: 3, name: "Filip Topic", roles: [MemberRole.PLAYER, MemberRole.CAPTAIN]},
+    {id: 4, name: "Sebastian Kostka", roles: []},
+    {id: 5, name: "Kurt Zander", roles: []},
+    {id: 6, name: "Ursula Topic", roles: []},
+];
+
+export const teamMembersOfDummyTeam: Member[] = [
+    {id: 1, name: "Benjamin Kostka", roles: [MemberRole.PLAYER, MemberRole.ADMIN]},
+    {id: 2, name: "Lukas Zander", roles: [MemberRole.PLAYER, MemberRole.HEAD_COACH]},
+    {id: 3, name: "Filip Topic", roles: [MemberRole.PLAYER, MemberRole.CAPTAIN]},
+];
+
+export const dummyTeam: Team = {
+    id: 1,
+    club: {id: 1, name: "Dummy Club", address: "Straße 1", president: "Benjamin Kostka"},
+    name: "Mannschaft 1",
+    members: teamMembersOfDummyTeam
+}
 
