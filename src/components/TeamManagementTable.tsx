@@ -1,8 +1,9 @@
-import { Paper, Box, Button, Autocomplete, TextField, Stack, Chip, Typography } from "@mui/material";
-import {DataGrid, GridColDef, GridFooterContainer} from "@mui/x-data-grid";
+import { Paper, Box, Button, Autocomplete, TextField, Typography } from "@mui/material";
+import {DataGrid, GridColDef, GridFooterContainer, GridRowId} from "@mui/x-data-grid";
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
 import {Club} from "./ClubsTable.js";
+import MemberRoleManager from "./MemberRoleManager.js";
 
 export enum MemberRole{
     ADMIN="Admin",
@@ -30,52 +31,35 @@ interface TeamManagementTableProps {
     allUsers: Member[];
 }
 
-const colorForMemberRole = (role: MemberRole):string=> {
+const cssForMemberRole = (role: MemberRole)=> {
     switch (role) {
         case MemberRole.ADMIN:
-            return "red";
+            return {
+                backgroundColor: "red",
+                color: "white"
+            };
         case MemberRole.HEAD_COACH:
-            return "orange";
+            return {
+                backgroundColor: "orange",
+                color: "white"
+            };
         case MemberRole.CAPTAIN:
-            return "purple";
+            return {
+                backgroundColor: "purple",
+                color: "white"
+            };
         case MemberRole.PLAYER:
-            return "blue";
+            return {
+                backgroundColor: "blue",
+                color: "white"
+            };
         case MemberRole.RESERVE:
-            return "lightblue";
+            return {
+                backgroundColor: "lightblue",
+                color: "white"
+            };
     }
 }
-
-const handleDeleteRole = () => {
-
-}
-
-const clubsTableColumns: GridColDef[] = [
-    {field: "id", headerName: "ID", resizable: false, flex: 1},
-    {field: "name", headerName: "Spielername", resizable: false, flex: 2},
-    {field: "roles", headerName: "Rollen", resizable: false, flex: 2,
-        renderCell: (params) => {
-            const rolesOfUser = params.value as MemberRole[];
-
-        return (
-            <Stack direction={"row"} spacing={1}>
-                {
-                    rolesOfUser.map((role) => (
-                        <Chip
-                            key={role}
-                            label={role}
-                            sx={{
-                                backgroundColor: colorForMemberRole(role)
-                            }}
-                            onDelete={handleDeleteRole}
-                        >
-                        </Chip>
-                    ))
-                }
-            </Stack>
-        )
-        }
-    }
-];
 
 export default function TeamManagementTable({team, allUsers}: TeamManagementTableProps) {
     const [currentMembers, setCurrentMembers] = React.useState<Member[]>(team.members);
@@ -85,13 +69,44 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
         setCurrentMembers([...currentMembers, newMember]);
     };
 
+    const addRole = (rowId: GridRowId, role: MemberRole) => {
+        setCurrentMembers(prev => prev.map(m => m.id === rowId ? { ...m, roles: [...m.roles, role] } : m));
+    };
+
+    const deleteRole = (rowId: GridRowId, role: MemberRole) => {
+        setCurrentMembers(prev => prev.map(m => m.id === rowId ? { ...m, roles: m.roles.filter(r => r !== role) } : m));
+    };
+
+    const clubsTableColumns: GridColDef[] = [
+        {field: "id", headerName: "ID", resizable: false, flex: 1},
+        {field: "name", headerName: "Spielername", resizable: false, flex: 2},
+        {field: "roles", headerName: "Rollen", resizable: false, flex: 2,
+            renderCell: (params) => {
+
+            return <MemberRoleManager
+                rolesOfUser={params.value as MemberRole[]}
+                onAddRole={(role) => addRole(params.id, role)}
+                onDeleteRole={(role) => deleteRole(params.id, role)}
+                cssForMemberRole={cssForMemberRole}
+            />
+            }
+        }
+    ];
+
     return (
         <>
-            <Box sx={{display: "flex", flexDirection: "column"}}>
-                <Typography>Mannschafts-ID: {team.id}</Typography>
-                <Typography>Mannschaftsname: {team.name}</Typography>
-                <Typography>Verein: {team.club.name}</Typography>
-            </Box>
+            <Paper sx={{display: "flex", flexDirection: "row", m: 2, p: 2, width: "fit-content", backgroundColor: "lightgray"}}>
+                <Box sx={{display: "flex", flexDirection: "column"}}>
+                    <Typography sx={{fontWeight: "bold"}}>Mannschafts-ID:</Typography>
+                    <Typography sx={{fontWeight: "bold"}}>Mannschaftsname:</Typography>
+                    <Typography sx={{fontWeight: "bold"}}>Verein:</Typography>
+                </Box>
+                <Box sx={{display: "flex", flexDirection: "column", ml: 2}}>
+                    <Typography>{team.id}</Typography>
+                    <Typography>{team.name}</Typography>
+                    <Typography>{team.club.name}</Typography>
+                </Box>
+            </Paper>
             <Paper
                 sx={{
                     m: 2,
@@ -161,7 +176,7 @@ function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUse
                                 }}
                                 onClick={() => addUserToTeam(selectedUser)}
                             >
-                                Anfragen
+                                Hinzufügen
                             </Button>
                         </>
                         :
