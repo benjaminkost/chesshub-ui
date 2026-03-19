@@ -9,7 +9,7 @@ interface MenuButtonProps{
     drawerElements?: string[];
 }
 
-export const defaultDrawerElements = ["Partie erstellen", "Eigene Partien", "Mannschaftspartien"];
+export const defaultDrawerElements = ["Partie erstellen", "Eigene Partien", "Mannschaftspartien", "Vereinszugehörigkeit"];
 
 export default function MenuButton({drawerElements=defaultDrawerElements}:MenuButtonProps) {
     const [open, setOpen] = React.useState(false);
@@ -27,7 +27,10 @@ export default function MenuButton({drawerElements=defaultDrawerElements}:MenuBu
                 navigate("/ownGamesHistory");
                 break;
             case "Mannschaftspartien":
-                navigate("/teamGamesHistory")
+                navigate("/teamGamesHistory");
+                break;
+            case "Vereinszugehörigkeit":
+                navigate("/club-affiliation");
                 break;
         }
     }
