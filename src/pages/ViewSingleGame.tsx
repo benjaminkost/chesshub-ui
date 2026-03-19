@@ -13,7 +13,7 @@ export default function ViewSingleGame() {
                 flexGrow: 1,
                 minHeight: "3vh"
             }}/>
-            <GameAnalyzer pgn={dummyPgn} />
+            <GameAnalyzer game={dummyPgn} />
             <Box sx={{
                 flexGrow: 1,
                 minHeight: "3.5vh"

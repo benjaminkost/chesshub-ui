@@ -2,29 +2,7 @@ import { Paper, Box, Button, Autocomplete, TextField } from "@mui/material";
 import {DataGrid, GridColDef, GridFooterContainer} from "@mui/x-data-grid";
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
-import ClubAffiliation from "../pages/ClubAffiliation.js";
-
-export enum MemberStatus{
-    APPLICANT,
-    MEMBER,
-    FORMER_MEMBER,
-    BANNED
-}
-
-export interface Club{
-    id: number;
-    name: string;
-    address: string;
-    president?: string;
-}
-
-export interface ClubAffiliation{
-    id: number;
-    name: string;
-    address: string;
-    president?: string;
-    status: MemberStatus
-}
+import {ClubAffiliation, Club, MemberStatus} from "../types/club.js";
 
 interface ClubsTableProps {
     allClubs: Club[];

@@ -2,29 +2,8 @@ import { Paper, Box, Button, Autocomplete, TextField, Typography } from "@mui/ma
 import {DataGrid, GridColDef, GridFooterContainer, GridRowId} from "@mui/x-data-grid";
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
-import {Club} from "./ClubsTable.js";
 import MemberRoleManager from "./MemberRoleManager.js";
-
-export enum MemberRole{
-    ADMIN="Admin",
-    CAPTAIN="Kapitän",
-    HEAD_COACH="Trainer",
-    PLAYER="Spieler",
-    RESERVE="Ersatzspieler"
-}
-
-export interface Member{
-    id: number;
-    name: string;
-    roles: MemberRole[];
-}
-
-export interface Team {
-    id: number;
-    club: Club;
-    name: string;
-    members: Member[];
-}
+import {Member, MemberRole, Team} from "../types/team.js";
 
 interface TeamManagementTableProps {
     team: Team;
