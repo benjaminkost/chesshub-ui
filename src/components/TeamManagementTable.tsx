@@ -90,8 +90,8 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
 
     const clubsTableColumns = React.useMemo<GridColDef[]>(()=>[
         {field: "id", headerName: "ID", resizable: false, flex: 1},
-        {field: "name", headerName: "Spielername", resizable: false, flex: 2},
-        {field: "roles", headerName: "Rollen", resizable: false, flex: 2,
+        {field: "name", headerName: "Spielername", resizable: false, flex: 4},
+        {field: "roles", headerName: "Rollen", resizable: false, flex: 6,
             renderCell: (params) => {
 
             return <MemberRoleManager
