@@ -58,15 +58,26 @@ const cssForMemberRole = (role: MemberRole)=> {
                 backgroundColor: "lightblue",
                 color: "white"
             };
+        default:
+            return {
+                backgroundColor: "black",
+                color: "white"
+            }
     }
 }
 
 export default function TeamManagementTable({team, allUsers}: TeamManagementTableProps) {
     const [currentMembers, setCurrentMembers] = React.useState<Member[]>(team.members);
 
-    const addUserToTeam = (newMember: Member) => {
-        newMember.roles = [...newMember.roles, MemberRole.PLAYER];
-        setCurrentMembers([...currentMembers, newMember]);
+    const addUserToTeam = (selectedUser: Member | null) => {
+        if (!selectedUser) return;
+
+        const memberToAdd:Member = {
+            ...selectedUser,
+            roles: [...selectedUser.roles, MemberRole.PLAYER]
+        }
+
+        setCurrentMembers([...currentMembers, memberToAdd]);
     };
 
     const addRole = (rowId: GridRowId, role: MemberRole) => {
@@ -77,7 +88,7 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
         setCurrentMembers(prev => prev.map(m => m.id === rowId ? { ...m, roles: m.roles.filter(r => r !== role) } : m));
     };
 
-    const clubsTableColumns: GridColDef[] = [
+    const clubsTableColumns = React.useMemo<GridColDef[]>(()=>[
         {field: "id", headerName: "ID", resizable: false, flex: 1},
         {field: "name", headerName: "Spielername", resizable: false, flex: 2},
         {field: "roles", headerName: "Rollen", resizable: false, flex: 2,
@@ -91,7 +102,7 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
             />
             }
         }
-    ];
+    ],[currentMembers]);
 
     return (
         <>
@@ -128,6 +139,7 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
                             membersInTeam={currentMembers}
                             addUserToTeam={addUserToTeam}/>
                     }}
+                    getRowHeight={() => 'auto'}
                 />
             </Paper>
         </>
@@ -145,6 +157,14 @@ function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUse
     const membersInTeamIds = new Set(membersInTeam.map((m) => m.id))
     const usersNotApartOfTeam = allUsers.filter((member) => !membersInTeamIds.has(member.id));
     const [selectedUser, setSelectedUser] = React.useState(null);
+
+    const handleOnClick = () => {
+        if (selectedUser){
+            addUserToTeam(selectedUser);
+            setClicked(false);
+            setSelectedUser(null);
+        }
+    }
 
     return (
         <GridFooterContainer>
@@ -174,7 +194,7 @@ function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUse
                                     mr: 1,
                                     ml: 1
                                 }}
-                                onClick={() => addUserToTeam(selectedUser)}
+                                onClick={handleOnClick}
                             >
                                 Hinzufügen
                             </Button>
