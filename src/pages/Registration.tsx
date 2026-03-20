@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {_post} from "../../bff/clients/apiChessHubCoreClient.ts";
-import {Header} from "../components/Header.tsx";
-import Footer from "../components/Footer.tsx";
+import {_post} from "@/../bff/clients/apiChessHubCoreClient";
+import {Header} from "@/components/Header";
+import Footer from "@/components/Footer";
 import {Box, Button, Link, Paper, TextField, Typography } from "@mui/material";
-import {useNavigate} from "react-router";
+import {useNavigate} from "react-router-dom";
 
 export function Registration() {
     const [email, setEmail] = useState("");
@@ -79,7 +79,7 @@ export function Registration() {
     const registerUser = async () => {
         setButtonClicked(true);
 
-        if(passwordsMatch === true) {
+        if(passwordsMatch) {
             const payload = {
                 username: username,
                 firstName: firstName,

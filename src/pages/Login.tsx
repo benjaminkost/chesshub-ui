@@ -1,9 +1,9 @@
-import {Header} from "../components/Header.js";
-import Footer from "../components/Footer.js";
+import {Header} from "@/components/Header";
+import Footer from "@/components/Footer";
 import React, {useState} from "react";
 import {Box, Paper, TextField, Typography, Button, Link } from "@mui/material";
-import {_post} from "../../bff/clients/apiChessHubCoreClient.js";
-import {useNavigate} from "react-router";
+import {_post} from "@/../bff/clients/apiChessHubCoreClient";
+import {useNavigate} from "react-router-dom";
 
 
 export function Login() {
@@ -24,7 +24,7 @@ export function Login() {
             emailOrUsername: emailOrUsername,
             password: password
         }
-        if(_post("auth/signin", payload)) {
+        if(await _post("auth/signin", payload)) {
             navigate("/");
         }
     }

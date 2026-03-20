@@ -1,8 +1,8 @@
-import {Header} from "../components/Header.js";
-import {allUsers, dummyTeam} from "../dummyData.js";
+import {Header} from "@/components/Header";
+import {allUsers, dummyTeam} from "@/dummyData";
 import {Box} from "@mui/material";
-import Footer from "../components/Footer.js";
-import TeamManagementTable from "../components/TeamManagementTable.js";
+import Footer from "@/components/Footer";
+import TeamManagementTable from "@/components/TeamManagementTable";
 
 export default function TeamManagement(){
     return (

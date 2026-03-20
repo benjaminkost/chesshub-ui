@@ -3,7 +3,7 @@ import {DataGrid, GridColDef, GridFooterContainer, GridRowId} from "@mui/x-data-
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
 import MemberRoleManager from "./MemberRoleManager.js";
-import {Member, MemberRole, Team} from "../types/team.js";
+import {Member, MemberRole, Team} from "@/types/team";
 
 interface TeamManagementTableProps {
     team: Team;
@@ -135,7 +135,7 @@ function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUse
     const [clicked, setClicked] = React.useState(false);
     const membersInTeamIds = new Set(membersInTeam.map((m) => m.id))
     const usersNotApartOfTeam = allUsers.filter((member) => !membersInTeamIds.has(member.id));
-    const [selectedUser, setSelectedUser] = React.useState(null);
+    const [selectedUser, setSelectedUser] = React.useState<Member | null>(null);
 
     const handleOnClick = () => {
         if (selectedUser){
@@ -162,9 +162,16 @@ function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUse
                                 fullWidth
                                 freeSolo
                                 options={usersNotApartOfTeam}
-                                getOptionLabel={(member:Member) => `${member.name} (${member.id})`}
+                                getOptionLabel={(option:Member | string) => {
+                                    return typeof option === 'string' ? option : `${option.name} (${option.id})`
+                                }}
                                 renderInput={(params) => <TextField{...params}/>}
-                                onChange={(event, selectedUser:Member) => setSelectedUser(selectedUser)}
+                                onChange={(event, selectedUser:Member | string | null) => {
+                                    typeof selectedUser === 'string' ?
+                                        console.log("String was tipped in no User selected")
+                                        :
+                                        setSelectedUser(selectedUser)
+                                }}
                             />
                             <Button
                                 sx={{

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stack, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import {MemberRole} from "./TeamManagementTable.js";
+import {MemberRole} from "@/types/team";
 
 interface MemberRoleManagerProps {
     rolesOfUser: MemberRole[];

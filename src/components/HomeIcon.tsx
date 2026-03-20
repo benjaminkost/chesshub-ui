@@ -10,6 +10,10 @@ export function HomeIcon(){
                     variant="h5"
                     component={Link}
                     to="/"
+                    sx={{
+                        alignItems: 'center',
+                        "&:hover": {color: "primary.main"}
+                    }}
                 >
                     <a href="/">ChessHub</a>
                 </Typography>

@@ -1,8 +1,8 @@
-import {GamesTable} from "../components/GamesTable.js";
-import {Header} from "../components/Header.js";
-import Footer from "../components/Footer.js";
+import {GamesTable} from "@/components/GamesTable";
+import {Header} from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Box } from "@mui/material";
-import {dummyGamesTableData} from "../dummyData.js";
+import {dummyGamesTableData} from "@/dummyData";
 
 export default function OwnGamesHistory() {
 

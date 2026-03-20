@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import "../styles/App.css";
+import "@/styles/App.css";
 
 interface FooterProps{
     media?: string[],

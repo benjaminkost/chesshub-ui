@@ -1,5 +1,5 @@
-import {Header} from "../components/Header.tsx";
-import Footer from "../components/Footer.js";
+import {Header} from "@/components/Header";
+import Footer from "@/components/Footer";
 import {Box, Typography} from "@mui/material";
 import React from "react";
 

@@ -1,8 +1,8 @@
-import { Paper, Box, Button, Autocomplete, TextField } from "@mui/material";
+import {Autocomplete, Box, Button, Paper, TextField} from "@mui/material";
 import {DataGrid, GridColDef, GridFooterContainer} from "@mui/x-data-grid";
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
-import {ClubAffiliation, Club, MemberStatus} from "../types/club.js";
+import {Club, ClubAffiliation, MemberStatus} from "@/types/club";
 
 interface ClubsTableProps {
     allClubs: Club[];
@@ -64,9 +64,13 @@ const clubsTableColumns: GridColDef[] = [
 export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
     const [currentClubs, setCurrentClubs] = React.useState<ClubAffiliation[]>(clubsOfUser);
 
-    const addClubToUser = (newClub: ClubAffiliation) => {
-        newClub.status = MemberStatus.APPLICANT;
-        setCurrentClubs([...currentClubs, newClub]);
+    const addClubToUser = (newClub: Club | null | undefined) => {
+        if (newClub){
+            const newClubAffiliation:ClubAffiliation = {...newClub, status: MemberStatus.APPLICANT}
+            setCurrentClubs([...currentClubs, newClubAffiliation]);
+        } else {
+            console.warn("Selected club was null or undefined");
+        }
     };
 
     return (
@@ -99,14 +103,14 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
 interface AddClubToAffiliation {
     allClubs: Club[],
     clubsOfUser: ClubAffiliation[],
-    addClubToUser: (club: ClubAffiliation) => void
+    addClubToUser: (club: Club | null | undefined) => void
 }
 
 function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: AddClubToAffiliation){
     const [clicked, setClicked] = React.useState(false);
     const clubsOfUserIds = new Set(clubsOfUser.map((c) => c.id))
     const clubsUserIsNotApart = allClubs.filter((club) => !clubsOfUserIds.has(club.id));
-    const [selectedClub, setSelectedClub] = React.useState(null);
+    const [selectedClub, setSelectedClub] = React.useState<Club | null>();
 
     return (
         <GridFooterContainer>
@@ -125,9 +129,16 @@ function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: AddClubToA
                                 fullWidth
                                 freeSolo
                                 options={clubsUserIsNotApart}
-                                getOptionLabel={(club:Club) => `${club.name} (${club.id})`}
+                                getOptionLabel={(option:Club | string) => {
+                                    return typeof option === 'string' ? option : `${option.name} (${option.id})`
+                                }}
                                 renderInput={(params) => <TextField{...params}/>}
-                                onChange={(event, selectedClub:Club) => setSelectedClub(selectedClub)}
+                                onChange={(event, selectedClub:Club | string | null) => {
+                                    typeof selectedClub === 'string' ?
+                                        console.log("String was tipped in no Club selected")
+                                        :
+                                        setSelectedClub(selectedClub)
+                                }}
                             />
                             <Button
                                 sx={{

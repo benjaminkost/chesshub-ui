@@ -1,9 +1,9 @@
-import {Header} from "../components/Header.js";
+import {Header} from "@/components/Header";
 import React from "react";
-import Footer from "../components/Footer.js";
+import Footer from "@/components/Footer";
 import { Box } from "@mui/material";
-import GameAnalyzer from "../components/GameAnalyzer.js";
-import {dummyPgn} from "../dummyData.js";
+import GameAnalyzer from "@/components/GameAnalyzer";
+import {dummyPgn} from "@/dummyData";
 
 export default function ViewSingleGame() {
     return (
@@ -13,7 +13,7 @@ export default function ViewSingleGame() {
                 flexGrow: 1,
                 minHeight: "3vh"
             }}/>
-            <GameAnalyzer game={dummyPgn} />
+            <GameAnalyzer pgn={dummyPgn} />
             <Box sx={{
                 flexGrow: 1,
                 minHeight: "3.5vh"

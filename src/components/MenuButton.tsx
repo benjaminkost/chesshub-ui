@@ -3,7 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import React from "react";
 import Divider from '@mui/material/Divider';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import {useNavigate} from "react-router";
+import {useNavigate} from "react-router-dom";
 
 interface MenuButtonProps{
     drawerElements?: string[];

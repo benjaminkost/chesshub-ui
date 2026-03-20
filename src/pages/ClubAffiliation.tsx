@@ -1,9 +1,9 @@
-import {Header} from "../components/Header.js";
+import {Header} from "@/components/Header";
 import {Box} from "@mui/material";
-import Footer from "../components/Footer.js";
+import Footer from "@/components/Footer";
 import React from "react";
 import ClubsTable from "../components/ClubsTable.js";
-import {dummyAllClubs, dummyClubAffiliation} from "../dummyData.js";
+import {dummyAllClubs, dummyClubAffiliation} from "@/dummyData";
 
 export default function ClubAffiliation(){
 

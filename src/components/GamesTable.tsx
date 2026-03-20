@@ -1,6 +1,6 @@
 import { Paper } from "@mui/material";
 import React from "react";
-import {DataGrid, GridColDef} from "@mui/x-data-grid";
+import {DataGrid, GridColDef, GridColumnVisibilityModel} from "@mui/x-data-grid";
 
 export interface Row {
     id: number,
@@ -21,7 +21,6 @@ const columns: GridColDef[] = [
     { field: "id", headerName: "ID", resizable: false, flex: 0.75 },
     { field: "whitePGN", headerName: "Weiß", resizable: false, flex: 2 },
     { field: "blackPGN", headerName: "Schwarz", resizable: false, flex: 2 },
-    // Fehlendes flex und resizable ergänzt, auch wenn versteckt:
     { field: "team", headerName: "Mannschaft", resizable: false, flex: 2 },
     { field: "datePGN", headerName: "Datum", type: "date", resizable: false, flex: 1.5 },
     { field: "opening", headerName: "Eröffnung", resizable: false, flex: 2 },
@@ -32,6 +31,15 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
 
     const userName = "Benjamin Kostka"; // TODO: muss später mit user daten ausgelesen werden
     const userTeam = "SV Empor"; // TODO: muss später mit user daten ausgelesen werden
+    const [columnVisibilityModel, setColumnVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
+
+    React.useEffect(() => {
+        if (ownGamesOrTeamGames){
+            setColumnVisibilityModel({team: true});
+        } else {
+            setColumnVisibilityModel({team: false});
+        }
+    },[ownGamesOrTeamGames]);
 
     const displayRows = React.useMemo(()=> {
         if (ownGamesOrTeamGames) return rows.filter((elem) =>
@@ -53,14 +61,6 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
             ]
         };
     },[ownGamesOrTeamGames, userTeam]);
-
-    const columnVisibilityModel = React.useMemo(() => {
-        if (ownGamesOrTeamGames) return { };
-
-        return {
-             team: false
-        };
-    },[ownGamesOrTeamGames]);
 
     return(
         <Paper
