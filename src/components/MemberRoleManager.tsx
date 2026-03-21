@@ -39,7 +39,6 @@ export default function MemberRoleManager ({rolesOfUser, onAddRole, onDeleteRole
                 />
             ))}
 
-            {/* Plus-Button nur zeigen, wenn es noch Rollen zum Hinzufügen gibt */}
             {rolesUserDoesNotHave.length > 0 && (
                 <>
                     <IconButton size="small" onClick={handleClick} color="primary">

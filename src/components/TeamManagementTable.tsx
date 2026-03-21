@@ -1,4 +1,14 @@
-import { Paper, Box, Button, Autocomplete, TextField, Typography } from "@mui/material";
+import {
+    Alert,
+    Autocomplete,
+    Box,
+    Button,
+    Paper,
+    Snackbar,
+    SnackbarCloseReason,
+    TextField,
+    Typography
+} from "@mui/material";
 import {DataGrid, GridColDef, GridFooterContainer, GridRowId} from "@mui/x-data-grid";
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
@@ -10,7 +20,7 @@ interface TeamManagementTableProps {
     allUsers: Member[];
 }
 
-const cssForMemberRole = (role: MemberRole)=> {
+const cssForMemberRole = (role: MemberRole) => {
     switch (role) {
         case MemberRole.ADMIN:
             return {
@@ -47,11 +57,12 @@ const cssForMemberRole = (role: MemberRole)=> {
 
 export default function TeamManagementTable({team, allUsers}: TeamManagementTableProps) {
     const [currentMembers, setCurrentMembers] = React.useState<Member[]>(team.members);
+    const [openSnackbar, setOpenSnackbar] = React.useState<boolean>();
 
     const addUserToTeam = (selectedUser: Member | null) => {
         if (!selectedUser) return;
 
-        const memberToAdd:Member = {
+        const memberToAdd: Member = {
             ...selectedUser,
             roles: [...selectedUser.roles, MemberRole.PLAYER]
         }
@@ -60,31 +71,71 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
     };
 
     const addRole = (rowId: GridRowId, role: MemberRole) => {
-        setCurrentMembers(prev => prev.map(m => m.id === rowId ? { ...m, roles: [...m.roles, role] } : m));
+        setCurrentMembers(prev => prev.map(m => m.id === rowId ? {...m, roles: [...m.roles, role]} : m));
     };
 
     const deleteRole = (rowId: GridRowId, role: MemberRole) => {
-        setCurrentMembers(prev => prev.map(m => m.id === rowId ? { ...m, roles: m.roles.filter(r => r !== role) } : m));
-    };
+        if (role === MemberRole.ADMIN) {
+            const adminCount = currentMembers.filter((m) => m.roles.includes(MemberRole.ADMIN)).length;
 
-    const clubsTableColumns = React.useMemo<GridColDef[]>(()=>[
-        {field: "id", headerName: "ID", resizable: false, flex: 1},
-        {field: "name", headerName: "Spielername", resizable: false, flex: 4},
-        {field: "roles", headerName: "Rollen", resizable: false, flex: 6,
-            renderCell: (params) => {
-
-            return <MemberRoleManager
-                rolesOfUser={params.value as MemberRole[]}
-                onAddRole={(role) => addRole(params.id, role)}
-                onDeleteRole={(role) => deleteRole(params.id, role)}
-                cssForMemberRole={cssForMemberRole}
-            />
+            if (adminCount == 1){
+                setOpenSnackbar(true);
+                return
             }
         }
-    ],[currentMembers]);
+
+        setCurrentMembers((prev) =>
+            prev.map((m) =>
+                m.id === rowId ?
+                    {...m, roles: m.roles.filter(r => r !== role)}
+                    :
+                    m
+            )
+        );
+    };
+
+    const handleClose =  (event: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
+        if (reason === "clickaway") return;
+        setOpenSnackbar(false);
+    }
+
+    const clubsTableColumns = React.useMemo<GridColDef[]>(() => [
+        {field: "id", headerName: "ID", resizable: false, flex: 1},
+        {field: "name", headerName: "Spielername", resizable: false, flex: 4},
+        {
+            field: "roles", headerName: "Rollen", resizable: false, flex: 6,
+            renderCell: (params) => {
+
+                return <MemberRoleManager
+                    rolesOfUser={params.value as MemberRole[]}
+                    onAddRole={(role) => addRole(params.id, role)}
+                    onDeleteRole={(role) => deleteRole(params.id, role)}
+                    cssForMemberRole={cssForMemberRole}
+                />
+            }
+        }
+    ], [currentMembers]);
 
     return (
         <>
+            <Snackbar
+                open={openSnackbar}
+                autoHideDuration={4000}
+                onClose={handleClose}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert
+                    severity={"warning"}
+                    sx={{
+                        border: "solid 1px",
+                        borderColor: "orange",
+                        backgroundColor: 'hsl(39, 100%, 60%)',
+                        color: "white"
+                    }}
+                >
+                    There has to be at least one Admin
+                </Alert>
+            </Snackbar>
             <Paper sx={{display: "flex", flexDirection: "row", m: 2, p: 2, width: "fit-content", backgroundColor: "lightgray"}}>
                 <Box sx={{display: "flex", flexDirection: "column"}}>
                     <Typography sx={{fontWeight: "bold"}}>Mannschafts-ID:</Typography>
