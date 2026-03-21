@@ -1,7 +1,5 @@
 import React, {useState} from "react";
-import {_post} from "@/../bff/clients/apiChessHubCoreClient";
-import {Header} from "@/components/Header";
-import Footer from "@/components/Footer";
+import {_post} from "../../bff/clients/apiChessHubCoreClient";
 import {Box, Button, Link, Paper, TextField, Typography } from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
@@ -138,7 +136,6 @@ export function Registration() {
 
     return (
             <>
-                <Header loggedIn={true}/>
                 <Box
                     sx={{
                         display: "flex",
@@ -263,7 +260,6 @@ export function Registration() {
                         </Box>
                     </Paper>
                 </Box>
-                <Footer/>
             </>
         )
 }

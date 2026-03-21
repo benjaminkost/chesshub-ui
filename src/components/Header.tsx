@@ -9,7 +9,7 @@ import MenuButton, {defaultDrawerElements} from "./MenuButton";
 import {useNavigate} from "react-router-dom";
 import {HomeIcon} from "@/components/HomeIcon";
 
-interface HeaderProps{
+export interface HeaderProps{
     loggedIn: boolean;
     menuElements?: string[];
     drawerElements?: string[];

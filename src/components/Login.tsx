@@ -1,5 +1,3 @@
-import {Header} from "@/components/Header";
-import Footer from "@/components/Footer";
 import React, {useState} from "react";
 import {Box, Paper, TextField, Typography, Button, Link } from "@mui/material";
 import {_post} from "@/../bff/clients/apiChessHubCoreClient";
@@ -58,7 +56,6 @@ export function Login() {
 
     return (
         <>
-            <Header loggedIn={false}/>
             <Box sx={{
                 flexGrow: 1,
                 minHeight: "14vh"
@@ -124,11 +121,6 @@ export function Login() {
                     </Link>
                 </Paper>
             </Box>
-            <Box sx={{
-                flexGrow: 1,
-                minHeight: "14vh"
-            }}/>
-            <Footer/>
         </>
     );
 }
