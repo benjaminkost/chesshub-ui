@@ -1,10 +1,10 @@
-import {_post} from "../../bff/clients/apiChessScoresheetDigitalizationClient.ts";
+import {_post} from "@/../bff/clients/apiChessScoresheetDigitalizationClient";
 import {type ChangeEvent, useState} from "react";
 import {Link} from "react-router-dom";
 
 export function UploadImage() {
 
-    const [file, setFile] = useState(null);
+    const [file, setFile] = useState<File>();
     const [fileUploaded, setFileUploaded] = useState(true);
 
     const handleFile = (event: ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +18,7 @@ export function UploadImage() {
     }
 
     const uploadImage = () => {
-        if(file !== null) {
+        if(file) {
             const formData = new FormData();
             formData.append("file", file);
             _post('/image/upload', formData);

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import ChessBoard from "./ChessBoard.js";
-import MoveList from "./MoveList.js";
-import {pgnStringToMoveList} from "../../bff/pgnStringToMoveList.js";
+import ChessBoard from "./ChessBoard";
+import MoveList from "./MoveList";
+import {pgnStringToMoveList} from "@/../bff/pgnStringToMoveList";
 import React from "react";
 import {Chess} from "chess.js";
 

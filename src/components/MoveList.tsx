@@ -1,5 +1,5 @@
 import {Box} from "@mui/material";
-import GameNavBar from "./GameNavBar.js";
+import GameNavBar from "./GameNavBar";
 import React from "react";
 
 interface MoveListProps {
