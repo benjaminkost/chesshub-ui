@@ -1,6 +1,7 @@
-import {Club, ClubAffiliation, MemberStatus} from "./types/club.js";
+import {Club, ClubAffiliation, ClubTeams, MemberStatus} from "./types/club.js";
 import {Row} from "./components/GamesTable.js";
-import {Member, MemberRole, Team} from "./types/team.js";
+import {Team} from "./types/team.js";
+import {Member, MemberRole} from "@/types/user";
 
 export const dummyAllClubs: Club[] = [
     {id: 1, name: "SV Empor", address: "Straße 1", president: "Benjamin Kostka"},
@@ -108,6 +109,13 @@ export const dummyTeam: Team = {
     id: 1,
     club: {id: 1, name: "Dummy Club", address: "Straße 1", president: "Benjamin Kostka"},
     name: "Mannschaft 1",
-    members: teamMembersOfDummyTeam
+    members: teamMembersOfDummyTeam,
+    admin: teamMembersOfDummyTeam[0]
 }
 
+export const dummyClubTeams: ClubTeams = {
+    id: 1,
+    name: "1. Mannschaft",
+    president: allUsers[0].name,
+    teams: [dummyTeam]
+}

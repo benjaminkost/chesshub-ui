@@ -13,7 +13,8 @@ import {DataGrid, GridColDef, GridFooterContainer, GridRowId} from "@mui/x-data-
 import React from "react";
 import AddIcon from '@mui/icons-material/Add';
 import MemberRoleManager from "./MemberRoleManager.js";
-import {Member, MemberRole, Team} from "@/types/team";
+import {Team} from "@/types/team";
+import {Member, MemberRole} from "@/types/user.js";
 
 interface TeamManagementTableProps {
     team: Team;

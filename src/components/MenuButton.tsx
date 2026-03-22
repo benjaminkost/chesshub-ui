@@ -9,7 +9,7 @@ interface MenuButtonProps{
     drawerElements?: string[];
 }
 
-export const defaultDrawerElements = ["Partie erstellen", "Eigene Partien", "Mannschaftspartien", "Vereinszugehörigkeit"];
+export const defaultDrawerElements = ["Partie erstellen", "Eigene Partien", "Mannschaftspartien", "Vereinszugehörigkeit", "Vereinsverwaltung"];
 
 export default function MenuButton({drawerElements=defaultDrawerElements}:MenuButtonProps) {
     const [open, setOpen] = React.useState(false);
@@ -31,6 +31,9 @@ export default function MenuButton({drawerElements=defaultDrawerElements}:MenuBu
                 break;
             case "Vereinszugehörigkeit":
                 navigate("/club-affiliation");
+                break;
+            case "Vereinsverwaltung":
+                navigate("/club-management");
                 break;
         }
     }
