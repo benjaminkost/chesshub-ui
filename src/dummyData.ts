@@ -1,7 +1,7 @@
 import {Club, ClubAffiliation, ClubTeams, MemberStatus} from "./types/club.js";
 import {Row} from "./components/GamesTable.js";
 import {Team} from "./types/team.js";
-import {Member, MemberRole} from "@/types/user";
+import {Member, MemberRole, User} from "@/types/user";
 
 export const dummyAllClubs: Club[] = [
     {id: 1, name: "SV Empor", address: "Straße 1", president: "Benjamin Kostka"},
@@ -90,7 +90,7 @@ export const dummyGamesTableData: Row[] = [
             "81. d8=Q Kb7 82. Qd3 Ka8 83. Qa6# 1-0"}
 ];
 
-export const allUsers: Member[] = [
+export const allMembers: Member[] = [
     {id: 1, name: "Benjamin Kostka", roles: [MemberRole.PLAYER, MemberRole.ADMIN]},
     {id: 2, name: "Lukas Zander", roles: [MemberRole.PLAYER, MemberRole.HEAD_COACH]},
     {id: 3, name: "Filip Topic", roles: [MemberRole.PLAYER, MemberRole.CAPTAIN]},
@@ -110,12 +110,21 @@ export const dummyTeam: Team = {
     club: {id: 1, name: "Dummy Club", address: "Straße 1", president: "Benjamin Kostka"},
     name: "Mannschaft 1",
     members: teamMembersOfDummyTeam,
-    admin: teamMembersOfDummyTeam[0]
+    admin: {id: 1, name: "Benjamin Kostka", userName: "bkostka", email: "mail@ben-kostka.de"}
 }
 
 export const dummyClubTeams: ClubTeams = {
     id: 1,
     name: "1. Mannschaft",
-    president: allUsers[0].name,
+    president: allMembers[0].name,
     teams: [dummyTeam]
 }
+
+export const allUsers: User[] = [
+    {id: 1, name: "Benjamin Kostka", userName: "b", email: "a"},
+    {id: 2, name: "Lukas Zander", userName: "b", email: "a"},
+    {id: 3, name: "Filip Topic", userName: "b", email: "a"},
+    {id: 4, name: "Sebastian Kostka", userName: "b", email: "a"},
+    {id: 5, name: "Kurt Zander", userName: "b", email: "a"},
+    {id: 6, name: "Ursula Topic", userName: "b", email: "a"}
+];

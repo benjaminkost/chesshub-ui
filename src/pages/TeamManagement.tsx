@@ -1,11 +1,11 @@
-import {allUsers, dummyTeam} from "@/dummyData";
+import {allMembers, dummyTeam} from "@/dummyData";
 import TeamManagementTable from "@/components/TeamManagementTable";
 import PageLayout from "@/components/PageLayout";
 
 export default function TeamManagement(){
     return (
         <PageLayout loggedIn={true} children={<TeamManagementTable
-            allUsers={allUsers}
+            allUsers={allMembers}
             team={dummyTeam}
         />} />
     );
