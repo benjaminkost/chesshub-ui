@@ -1,3 +1,5 @@
+import {Team} from "@/types/team";
+
 export enum MemberStatus{
     APPLICANT,
     MEMBER,
@@ -18,4 +20,11 @@ export interface ClubAffiliation{
     address: string;
     president?: string;
     status: MemberStatus
+}
+
+export interface ClubTeams {
+    id: number;
+    name: string;
+    president?: string;
+    teams: Team[];
 }

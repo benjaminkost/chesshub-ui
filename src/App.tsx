@@ -8,6 +8,7 @@ import ClubAffiliation from "./pages/ClubAffiliation";
 import TeamManagement from "./pages/TeamManagement";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "@/pages/RegistrationPage";
+import ClubManagement from "@/pages/ClubManagement";
 
 export function App() {
 
@@ -27,6 +28,7 @@ export function App() {
                       <Route path="/view-game" element={< ViewSingleGame /> } />
                       <Route path="/club-affiliation" element={< ClubAffiliation />} />
                       <Route path={"/team-management"} element={< TeamManagement />} />
+                      <Route path={"/club-management"} element={< ClubManagement />} />
                   </Routes>
               </main>
           </BrowserRouter>
