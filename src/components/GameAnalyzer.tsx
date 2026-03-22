@@ -13,28 +13,6 @@ export default function GameAnalyzer({pgn}: GameAnalyzerProps) {
     const pgnMoves = pgnStringToMoveList(pgn);
     const [moveIndex, setMoveIndex] = React.useState(0);
 
-    const handleMoveBack = () => {
-        if (moveIndex == 0) return;
-        setMoveIndex(moveIndex-1);
-    };
-
-    const handleMoveForward = () => {
-        if (moveIndex == pgnMoves.length-1) return;
-        setMoveIndex(moveIndex+1);
-    }
-
-    const handleBackToStart = () => {
-        setMoveIndex(0);
-    };
-
-    const handleForwardToEnd = () => {
-        setMoveIndex(pgnMoves.length-1);
-    };
-
-    const handleSetMoveIndex = (index: number) => {
-        setMoveIndex(index);
-    };
-
     const allFens = React.useMemo(() => {
         const chess = new Chess();
 
@@ -55,15 +33,13 @@ export default function GameAnalyzer({pgn}: GameAnalyzerProps) {
     return (
         <Box sx={{
             display: "flex",
-            justifyContent: "center"
+            justifyContent: "center",
+            m: 2
         }}>
             <ChessBoard config={{fen: allFens[moveIndex], movable: {free: false}}}/>
             <MoveList pgnMoves={pgnMoves}
-                      onMoveBack={handleMoveBack}
-                      onMoveForward={handleMoveForward}
-                      onForwardToEnd={handleForwardToEnd}
-                      onBackToStart={handleBackToStart}
-                      handleSetMoveIndex={handleSetMoveIndex}
+                      setMoveIndex={setMoveIndex}
+                      moveIndex={moveIndex}
             />
         </Box>
     );

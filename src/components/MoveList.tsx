@@ -6,14 +6,33 @@ interface MoveListProps {
     width?: number,
     height?: number,
     pgnMoves: string[],
-    onMoveBack: () => void,
-    onMoveForward: () => void,
-    onBackToStart: () => void,
-    onForwardToEnd: () => void,
-    handleSetMoveIndex: (index: number) => void;
+    setMoveIndex: (moveIndex:number) => void,
+    moveIndex: number
 }
 
-export default function MoveList({width=200, height=600, pgnMoves, onMoveBack, onBackToStart, onMoveForward, onForwardToEnd, handleSetMoveIndex}:MoveListProps) {
+export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex, moveIndex}:MoveListProps) {
+
+    const handleMoveBack = () => {
+        if (moveIndex == 0) return;
+        setMoveIndex(moveIndex-1);
+    };
+
+    const handleMoveForward = () => {
+        if (moveIndex == pgnMoves.length-1) return;
+        setMoveIndex(moveIndex+1);
+    }
+
+    const handleBackToStart = () => {
+        setMoveIndex(0);
+    };
+
+    const handleForwardToEnd = () => {
+        setMoveIndex(pgnMoves.length-1);
+    };
+
+    const handleSetMoveIndex = (index: number) => {
+        setMoveIndex(index);
+    };
 
     return (
     <Box
@@ -52,7 +71,7 @@ export default function MoveList({width=200, height=600, pgnMoves, onMoveBack, o
             }
         </Box>
         <Box sx={{flexShrink: 0}}>
-            <GameNavBar onMoveBack={onMoveBack} onMoveForward={onMoveForward} onBackToStart={onBackToStart} onForwardToEnd={onForwardToEnd} />
+            <GameNavBar onMoveBack={handleMoveBack} onMoveForward={handleMoveForward} onBackToStart={handleBackToStart} onForwardToEnd={handleForwardToEnd} />
         </Box>
     </Box>
 );
