@@ -12,6 +12,7 @@ import MemberRoleManager from "./MemberRoleManager.js";
 import {Team} from "@/types/team";
 import {Member, MemberRole} from "@/types/user.js";
 import {AddUserToTeamSearchBar} from "@/components/TableAddButton";
+import {useNavigate} from "react-router-dom";
 
 interface TeamManagementTableProps {
     team: Team;
@@ -56,6 +57,7 @@ const cssForMemberRole = (role: MemberRole) => {
 export default function TeamManagementTable({team, allUsers}: TeamManagementTableProps) {
     const [currentMembers, setCurrentMembers] = React.useState<Member[]>(team.members);
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>();
+    const navigate = useNavigate();
 
     const addUserToTeam = (selectedUser: Member | null) => {
         if (!selectedUser) return;
@@ -143,7 +145,13 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
                 <Box sx={{display: "flex", flexDirection: "column", ml: 2}}>
                     <Typography>{team.id}</Typography>
                     <Typography>{team.name}</Typography>
-                    <Typography>{team.club.name}</Typography>
+                    <Typography onClick={() => navigate("/club-management")}
+                                sx={{
+                                    "&:hover":
+                                        {color: "blue", cursor: "pointer"}
+                                }}>
+                        {team.club.name}
+                    </Typography>
                 </Box>
             </Paper>
             <Paper
