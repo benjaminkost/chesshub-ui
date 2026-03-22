@@ -1,20 +1,17 @@
 import {
     Alert,
-    Autocomplete,
     Box,
-    Button,
     Paper,
     Snackbar,
     SnackbarCloseReason,
-    TextField,
     Typography
 } from "@mui/material";
-import {DataGrid, GridColDef, GridFooterContainer, GridRowId} from "@mui/x-data-grid";
+import {DataGrid, GridColDef, GridRowId} from "@mui/x-data-grid";
 import React from "react";
-import AddIcon from '@mui/icons-material/Add';
 import MemberRoleManager from "./MemberRoleManager.js";
 import {Team} from "@/types/team";
 import {Member, MemberRole} from "@/types/user.js";
+import {AddUserToTeamSearchBar} from "@/components/TableAddButton";
 
 interface TeamManagementTableProps {
     team: Team;
@@ -175,77 +172,4 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
             </Paper>
         </>
     )
-}
-
-interface AddUserToTeamSearchBarProps {
-    allUsers: Member[],
-    membersInTeam: Member[],
-    addUserToTeam: (newMember: Member) => void
-}
-
-function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUserToTeamSearchBarProps){
-    const [clicked, setClicked] = React.useState(false);
-    const membersInTeamIds = new Set(membersInTeam.map((m) => m.id))
-    const usersNotApartOfTeam = allUsers.filter((member) => !membersInTeamIds.has(member.id));
-    const [selectedUser, setSelectedUser] = React.useState<Member | null>(null);
-
-    const handleOnClick = () => {
-        if (selectedUser){
-            addUserToTeam(selectedUser);
-            setClicked(false);
-            setSelectedUser(null);
-        }
-    }
-
-    return (
-        <GridFooterContainer>
-            <Box
-                sx={{
-                    p: 1,
-                    display: "flex",
-                    justifyContent: "center",
-                    width: "100%"
-                }}
-            >
-                {
-                    clicked ?
-                        <>
-                            <Autocomplete
-                                fullWidth
-                                freeSolo
-                                options={usersNotApartOfTeam}
-                                getOptionLabel={(option:Member | string) => {
-                                    return typeof option === 'string' ? option : `${option.name} (${option.id})`
-                                }}
-                                renderInput={(params) => <TextField{...params}/>}
-                                onChange={(event, selectedUser:Member | string | null) => {
-                                    typeof selectedUser === 'string' ?
-                                        console.log("String was tipped in no User selected")
-                                        :
-                                        setSelectedUser(selectedUser)
-                                }}
-                            />
-                            <Button
-                                sx={{
-                                    backgroundColor: "blue",
-                                    color: "white",
-                                    mr: 1,
-                                    ml: 1
-                                }}
-                                onClick={handleOnClick}
-                            >
-                                Hinzufügen
-                            </Button>
-                        </>
-                        :
-                        <Button
-                            startIcon={<AddIcon/>}
-                            fullWidth
-                            sx={{backgroundColor: "lightgray", color: "white"}}
-                            onClick={() => clicked ? setClicked(false) : setClicked(true)}
-                        />
-                }
-            </Box>
-        </GridFooterContainer>
-    );
 }

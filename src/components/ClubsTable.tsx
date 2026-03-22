@@ -1,8 +1,8 @@
-import {Autocomplete, Box, Button, Paper, TextField} from "@mui/material";
-import {DataGrid, GridColDef, GridFooterContainer} from "@mui/x-data-grid";
+import {Box, Paper} from "@mui/material";
+import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
-import AddIcon from '@mui/icons-material/Add';
 import {Club, ClubAffiliation, MemberStatus} from "@/types/club";
+import {AddClubToAffiliation} from "@/components/TableAddButton";
 
 interface ClubsTableProps {
     allClubs: Club[];
@@ -98,69 +98,4 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
             />
         </Paper>
     )
-}
-
-interface AddClubToAffiliation {
-    allClubs: Club[],
-    clubsOfUser: ClubAffiliation[],
-    addClubToUser: (club: Club | null | undefined) => void
-}
-
-function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: AddClubToAffiliation){
-    const [clicked, setClicked] = React.useState(false);
-    const clubsOfUserIds = new Set(clubsOfUser.map((c) => c.id))
-    const clubsUserIsNotApart = allClubs.filter((club) => !clubsOfUserIds.has(club.id));
-    const [selectedClub, setSelectedClub] = React.useState<Club | null>();
-
-    return (
-        <GridFooterContainer>
-            <Box
-                sx={{
-                    p: 1,
-                    display: "flex",
-                    justifyContent: "center",
-                    width: "100%"
-                }}
-            >
-                {
-                    clicked ?
-                        <>
-                            <Autocomplete
-                                fullWidth
-                                freeSolo
-                                options={clubsUserIsNotApart}
-                                getOptionLabel={(option:Club | string) => {
-                                    return typeof option === 'string' ? option : `${option.name} (${option.id})`
-                                }}
-                                renderInput={(params) => <TextField{...params}/>}
-                                onChange={(event, selectedClub:Club | string | null) => {
-                                    typeof selectedClub === 'string' ?
-                                        console.log("String was tipped in no Club selected")
-                                        :
-                                        setSelectedClub(selectedClub)
-                                }}
-                            />
-                            <Button
-                                sx={{
-                                    backgroundColor: "blue",
-                                    color: "white",
-                                    mr: 1,
-                                    ml: 1
-                                }}
-                                onClick={() => addClubToUser(selectedClub)}
-                            >
-                                Anfragen
-                            </Button>
-                        </>
-                        :
-                    <Button
-                        startIcon={<AddIcon/>}
-                        fullWidth
-                        sx={{backgroundColor: "lightgray", color: "white"}}
-                        onClick={() => clicked ? setClicked(false) : setClicked(true)}
-                    />
-                }
-            </Box>
-        </GridFooterContainer>
-    );
 }
