@@ -47,7 +47,7 @@ export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: Add
                             />
                             <Button
                                 sx={{
-                                    backgroundColor: "blue",
+                                    backgroundColor: "lightgray",
                                     color: "white",
                                     mr: 1,
                                     ml: 1
@@ -120,7 +120,7 @@ export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}:
                             />
                             <Button
                                 sx={{
-                                    backgroundColor: "blue",
+                                    backgroundColor: "lightgray",
                                     color: "white",
                                     mr: 1,
                                     ml: 1

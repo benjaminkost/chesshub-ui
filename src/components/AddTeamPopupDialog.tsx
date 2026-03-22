@@ -12,6 +12,7 @@ import AddIcon from "@mui/icons-material/Add";
 import {GridFooterContainer} from "@mui/x-data-grid";
 import {User} from "@/types/user";
 import {Team} from "@/types/team";
+import CloseIcon from '@mui/icons-material/Close';
 
 interface AddTeamPopupDialogProps {
     allUsers: User[];
@@ -20,13 +21,12 @@ interface AddTeamPopupDialogProps {
 }
 
 export function AddTeamPopupDialog({allUsers,addTeam,currentCountOfRows}:AddTeamPopupDialogProps) {
-    const [clicked, setClicked] = React.useState<boolean>(false);
-    const open = clicked;
+    const [open, setOpen] = React.useState<boolean>(false);
     const [name, setName] = React.useState<string>();
     const [admin, setAdmin] = React.useState<User | null>();
     const addTeamButton = (typeof name === "string" && typeof admin === "object") ?
             <Button onClick={() => {
-                setClicked(false);
+                setOpen(false);
                 addTeam({id: currentCountOfRows+1, name: name, admin: admin});
             }}
                     sx={{
@@ -48,6 +48,10 @@ export function AddTeamPopupDialog({allUsers,addTeam,currentCountOfRows}:AddTeam
         setName(event.target.value);
     }
 
+    const closePopUp = () => {
+        setOpen(false);
+    }
+
     return (
         <GridFooterContainer
             sx={{
@@ -56,15 +60,25 @@ export function AddTeamPopupDialog({allUsers,addTeam,currentCountOfRows}:AddTeam
             }}
         >
         {
-            clicked ?
+            open ?
                 <>
                     <Dialog
                         open={open}
                         fullWidth
                         maxWidth={"md"}
                     >
-                        <DialogTitle sx={{borderBottom: 1, borderColor: "darkgray", mb: 2}}>Neue Mannschaft erstellen</DialogTitle>
+                        <DialogTitle>Neue Mannschaft erstellen</DialogTitle>
+                        <IconButton
+                            onClick={closePopUp}
+                            sx={{
+                            position: 'absolute',
+                            right: 8,
+                            top: 8,
+                        }}>
+                            <CloseIcon/>
+                        </IconButton>
                         <DialogContent
+                            dividers
                             sx={{
                                 gap: 2,
                                 display: "flex",
@@ -90,9 +104,11 @@ export function AddTeamPopupDialog({allUsers,addTeam,currentCountOfRows}:AddTeam
                     </Dialog>
                 </>
             :
-            <IconButton>
-                <AddIcon onClick={() => setClicked(true)}/>
-            </IconButton>
+            <Button
+                fullWidth
+                sx={{backgroundColor: "lightgray", color: "white"}}
+                startIcon={<AddIcon/>}
+                onClick={() => setOpen(true)}/>
         }
         </GridFooterContainer>
     );
