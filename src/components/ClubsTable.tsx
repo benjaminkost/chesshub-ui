@@ -2,7 +2,7 @@ import {Box, Paper} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
 import {Club, ClubAffiliation, MemberStatus} from "@/types/club";
-import {AddClubToAffiliation} from "@/components/TableAddButton";
+import {AddClubToAffiliation} from "@/components/TableSearchAndAddButton";
 
 interface ClubsTableProps {
     allClubs: Club[];

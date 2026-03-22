@@ -11,7 +11,7 @@ import React from "react";
 import MemberRoleManager from "./MemberRoleManager.js";
 import {Team} from "@/types/team";
 import {Member, MemberRole} from "@/types/user.js";
-import {AddUserToTeamSearchBar} from "@/components/TableAddButton";
+import {AddUserToTeamSearchBar} from "@/components/TableSearchAndAddButton";
 import {useNavigate} from "react-router-dom";
 
 interface TeamManagementTableProps {
