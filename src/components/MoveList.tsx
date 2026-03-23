@@ -47,7 +47,8 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
         <Box sx={{
             backgroundColor: "gray",
             color: "white",
-            overflowY: "auto"
+            overflowY: "auto",
+            flexGrow: 1
         }}>
             {
                 pgnMoves.map((whiteMove, index) => {
@@ -59,7 +60,7 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
                     return (
                         <Box
                             sx={{
-                                display: "flex"
+                                display: "flex",
                             }}
                         >
                             <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>{moveCount}</Box>
