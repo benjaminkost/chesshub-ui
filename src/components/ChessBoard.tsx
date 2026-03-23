@@ -41,3 +41,38 @@ export default function ChessBoard({heightWidth=600,
         </Box>
     );
 }
+
+//TODO: Wie kann man die api vom Chessboard außerhalb der Komponente nutzen
+interface SmartChessBoardProps extends ChessBoardProps {
+    chessBoardApi: Api;
+}
+
+export function SmartChessBoard({heightWidth=600,
+                                    contained=false,
+                                    config={},
+                                    chessBoardApi
+                                }:SmartChessBoardProps) {
+    const [api, setApi] = React.useState<Api | null>(chessBoardApi);
+    const ref = React.useRef<HTMLDivElement>(null);
+
+    React.useEffect(() => {
+        if (ref && ref.current && !api){
+            const chessGround = Chessground(ref.current,
+                {animation: {enabled: true, duration: 200}
+                    ,...config});
+            setApi(chessGround);
+        } else if(ref && ref.current && api){
+            api.set(config);
+        }
+    }, [ref]);
+
+    React.useEffect(() => {
+        api?.set(config);
+    }, [api, config]);
+
+    return (
+        <Box sx={{height: contained ? '100%' : heightWidth, width: contained ? '100%' : heightWidth}}>
+            <Box ref={ref} style={{height: '100%', width: '100%', display: 'table'}}/>
+        </Box>
+    );
+}
