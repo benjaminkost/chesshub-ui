@@ -1,9 +1,7 @@
-import {Header} from "../components/Header.js";
-import Footer from "../components/Footer.js";
 import React, {useState} from "react";
 import {Box, Paper, TextField, Typography, Button, Link } from "@mui/material";
-import {_post} from "../../bff/clients/apiChessHubCoreClient.js";
-import {useNavigate} from "react-router";
+import {_post} from "@/../bff/clients/apiChessHubCoreClient";
+import {useNavigate} from "react-router-dom";
 
 
 export function Login() {
@@ -24,7 +22,7 @@ export function Login() {
             emailOrUsername: emailOrUsername,
             password: password
         }
-        if(_post("auth/signin", payload)) {
+        if(await _post("auth/signin", payload)) {
             navigate("/");
         }
     }
@@ -58,7 +56,6 @@ export function Login() {
 
     return (
         <>
-            <Header loggedIn={false}/>
             <Box sx={{
                 flexGrow: 1,
                 minHeight: "14vh"
@@ -124,11 +121,6 @@ export function Login() {
                     </Link>
                 </Paper>
             </Box>
-            <Box sx={{
-                flexGrow: 1,
-                minHeight: "14vh"
-            }}/>
-            <Footer/>
         </>
     );
 }

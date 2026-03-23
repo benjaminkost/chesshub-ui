@@ -1,11 +1,14 @@
-import { Registration } from "./pages/Registration.tsx";
 import {BrowserRouter, Route, Routes} from "react-router";
-import { Login } from "./pages/Login.tsx";
-import {UploadImage} from "./pages/UploadImage.tsx";
-import {Home} from "./pages/Home.tsx";
-import OwnGamesHistory from "./pages/OwnGamesHistory.js";
-import TeamGamesHistory from "./pages/TeamGamesHistory.js";
-import ViewSingleGame from "./pages/ViewSingleGame.js";
+import {UploadImage} from "./pages/UploadImage";
+import {Home} from "./pages/Home";
+import OwnGamesHistory from "./pages/OwnGamesHistory";
+import TeamGamesHistory from "./pages/TeamGamesHistory";
+import ViewSingleGame from "./pages/ViewSingleGame";
+import ClubAffiliation from "./pages/ClubAffiliation";
+import TeamManagement from "./pages/TeamManagement";
+import LoginPage from "./pages/LoginPage";
+import RegistrationPage from "@/pages/RegistrationPage";
+import ClubManagement from "@/pages/ClubManagement";
 
 export function App() {
 
@@ -15,14 +18,17 @@ export function App() {
               <main>
                   <Routes>
                       <Route path="/" element={< Home />} />
-                      <Route path="/auth/register" element={< Registration />} />
-                      <Route path="/auth/signup" element={< Registration />} />
-                      <Route path="/auth/login" element={< Login />} />
-                      <Route path="/auth/signin" element={< Login />} />
+                      <Route path="/auth/register" element={< RegistrationPage />} />
+                      <Route path="/auth/signup" element={< RegistrationPage />} />
+                      <Route path="/auth/login" element={< LoginPage />} />
+                      <Route path="/auth/signin" element={< LoginPage />} />
                       <Route path="/uploadImage" element={< UploadImage />} />
                       <Route path="/ownGamesHistory" element={< OwnGamesHistory />} />
                       <Route path="/teamGamesHistory" element={< TeamGamesHistory />} />
                       <Route path="/view-game" element={< ViewSingleGame /> } />
+                      <Route path="/club-affiliation" element={< ClubAffiliation />} />
+                      <Route path={"/team-management"} element={< TeamManagement />} />
+                      <Route path={"/club-management"} element={< ClubManagement />} />
                   </Routes>
               </main>
           </BrowserRouter>

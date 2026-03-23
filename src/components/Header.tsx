@@ -1,22 +1,21 @@
 import {
     AppBar,
     Toolbar,
-    Typography,
     Box,
     Button } from "@mui/material";
-import ProfileComponent, {defaultMenuElements} from "./ProfileComponent.js";
-import SearchFieldComponent from "./SearchFieldComponent.js";
-import MenuButton, {defaultDrawerElements} from "./MenuButton.js";
-import { Link } from "react-router-dom";
-import {useNavigate} from "react-router";
+import ProfileComponent, {defaultMenuElements} from "./ProfileComponent";
+import SearchFieldComponent from "./SearchFieldComponent";
+import MenuButton, {defaultNavItems, NavItem} from "./MenuButton";
+import {useNavigate} from "react-router-dom";
+import {HomeIcon} from "@/components/HomeIcon";
 
-interface HeaderProps{
+export interface HeaderProps{
     loggedIn: boolean;
     menuElements?: string[];
-    drawerElements?: string[];
+    navItems?: NavItem[];
 }
 
-export function Header({loggedIn, menuElements = defaultMenuElements, drawerElements = defaultDrawerElements}: HeaderProps) {
+export function Header({loggedIn, menuElements = defaultMenuElements, navItems = defaultNavItems}: HeaderProps) {
 
     const navigate = useNavigate();
 
@@ -38,19 +37,9 @@ export function Header({loggedIn, menuElements = defaultMenuElements, drawerElem
             >
                 {
                     loggedIn &&
-                    <MenuButton drawerElements={drawerElements}/>
+                    <MenuButton navItems={navItems}/>
                 }
-                <Typography
-                    variant="h5"
-                    sx={{
-                        alignItems: 'center',
-                        "&:hover": {color: "primary.main"}
-                    }}
-                    to={"/"}
-                    component={Link}
-                    >
-                    ChessHub
-                </Typography>
+                <HomeIcon/>
                 <Box sx={{ flexGrow: 1 }} />
                 {loggedIn ?
                     <>
