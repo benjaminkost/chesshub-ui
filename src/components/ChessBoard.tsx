@@ -13,24 +13,27 @@ interface ChessBoardProps{
     config?: Config;
 }
 
-export default function ChessBoard({heightWidth=600, contained=false, config={}}: ChessBoardProps) {
+export default function ChessBoard({heightWidth=600,
+                                       contained=false,
+                                       config={}
+                                   }: ChessBoardProps) {
+    const [chessBoardApi, setChessBoardApi] = React.useState<Api | null>(null);
     const ref = React.useRef<HTMLDivElement>(null);
-    const [api, setApi] = React.useState<Api | null>(null);
 
     React.useEffect(() => {
-        if (ref && ref.current && !api){
+        if (ref && ref.current && !chessBoardApi){
             const chessGround = Chessground(ref.current,
                 {animation: {enabled: true, duration: 200}
                 ,...config});
-            setApi(chessGround);
-        } else if(ref && ref.current && api){
-            api.set(config);
+            setChessBoardApi(chessGround);
+        } else if(ref && ref.current && chessBoardApi){
+            chessBoardApi.set(config);
         }
     }, [ref]);
 
     React.useEffect(() => {
-        api?.set(config);
-    }, [api, config]);
+        chessBoardApi?.set(config);
+    }, [chessBoardApi, config]);
 
     return (
         <Box sx={{height: contained ? '100%' : heightWidth, width: contained ? '100%' : heightWidth}}>
