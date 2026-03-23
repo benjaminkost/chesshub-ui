@@ -5,17 +5,17 @@ import {
     Button } from "@mui/material";
 import ProfileComponent, {defaultMenuElements} from "./ProfileComponent";
 import SearchFieldComponent from "./SearchFieldComponent";
-import MenuButton, {defaultDrawerElements} from "./MenuButton";
+import MenuButton, {defaultNavItems, NavItem} from "./MenuButton";
 import {useNavigate} from "react-router-dom";
 import {HomeIcon} from "@/components/HomeIcon";
 
 export interface HeaderProps{
     loggedIn: boolean;
     menuElements?: string[];
-    drawerElements?: string[];
+    navItems?: NavItem[];
 }
 
-export function Header({loggedIn, menuElements = defaultMenuElements, drawerElements = defaultDrawerElements}: HeaderProps) {
+export function Header({loggedIn, menuElements = defaultMenuElements, navItems = defaultNavItems}: HeaderProps) {
 
     const navigate = useNavigate();
 
@@ -37,7 +37,7 @@ export function Header({loggedIn, menuElements = defaultMenuElements, drawerElem
             >
                 {
                     loggedIn &&
-                    <MenuButton drawerElements={drawerElements}/>
+                    <MenuButton navItems={navItems}/>
                 }
                 <HomeIcon/>
                 <Box sx={{ flexGrow: 1 }} />
