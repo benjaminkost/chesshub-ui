@@ -1,7 +1,7 @@
 import {Club, ClubAffiliation} from "@/types/club";
 import React from "react";
 import {GridFooterContainer} from "@mui/x-data-grid";
-import {Autocomplete, Box, Button, TextField} from "@mui/material";
+import {Autocomplete, Box, Button, ClickAwayListener, TextField} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import {Member} from "@/types/user";
 
@@ -77,7 +77,7 @@ export interface AddUserToTeamSearchBarProps {
 }
 
 export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUserToTeamSearchBarProps){
-    const [clicked, setClicked] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
     const membersInTeamIds = new Set(membersInTeam.map((m) => m.id))
     const usersNotApartOfTeam = allUsers.filter((member) => !membersInTeamIds.has(member.id));
     const [selectedUser, setSelectedUser] = React.useState<Member | null>(null);
@@ -85,9 +85,14 @@ export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}:
     const handleOnClick = () => {
         if (selectedUser){
             addUserToTeam(selectedUser);
-            setClicked(false);
+            setOpen(false);
             setSelectedUser(null);
         }
+    }
+
+    const handleClose = () => {
+        setOpen(false);
+        setSelectedUser(null);
     }
 
     return (
@@ -101,42 +106,46 @@ export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}:
                 }}
             >
                 {
-                    clicked ?
-                        <>
-                            <Autocomplete
-                                fullWidth
-                                freeSolo
-                                options={usersNotApartOfTeam}
-                                getOptionLabel={(option:Member | string) => {
-                                    return typeof option === 'string' ? option : `${option.name} (${option.id})`
-                                }}
-                                renderInput={(params) => <TextField{...params}/>}
-                                onChange={(event, selectedUser:Member | string | null) => {
-                                    typeof selectedUser === 'string' ?
-                                        console.log("String was tipped in no User selected")
-                                        :
-                                        setSelectedUser(selectedUser)
-                                }}
-                            />
-                            <Button
-                                sx={{
-                                    backgroundColor: "lightgray",
-                                    color: "white",
-                                    mr: 1,
-                                    ml: 1
-                                }}
-                                onClick={handleOnClick}
-                            >
-                                Hinzufügen
-                            </Button>
-                        </>
+                    open ?
+                        (<>
+                            <ClickAwayListener onClickAway={handleClose} >
+                                <Box sx={{display: "flex", width: "100%"}}>
+                                    <Autocomplete
+                                        fullWidth
+                                        freeSolo
+                                        options={usersNotApartOfTeam}
+                                        getOptionLabel={(option:Member | string) => {
+                                            return typeof option === 'string' ? option : `${option.name} (${option.id})`
+                                        }}
+                                        renderInput={(params) => <TextField{...params} placeholder={"Neueres Mannschaftsmitglied"}/>}
+                                        onChange={(event, selectedUser:Member | string | null) => {
+                                            typeof selectedUser === 'string' ?
+                                                console.log("String was tipped in no User selected")
+                                                :
+                                                setSelectedUser(selectedUser)
+                                        }}
+                                    />
+                                    <Button
+                                        sx={{
+                                            backgroundColor: "lightgray",
+                                            color: "white",
+                                            mr: 1,
+                                            ml: 1
+                                        }}
+                                        onClick={handleOnClick}
+                                    >
+                                        Hinzufügen
+                                    </Button>
+                                </Box>
+                            </ClickAwayListener>
+                        </>)
                         :
-                        <Button
+                        (<Button
                             startIcon={<AddIcon/>}
                             fullWidth
                             sx={{backgroundColor: "lightgray", color: "white"}}
-                            onClick={() => clicked ? setClicked(false) : setClicked(true)}
-                        />
+                            onClick={() => open ? setOpen(false) : setOpen(true)}
+                        />)
                 }
             </Box>
         </GridFooterContainer>
