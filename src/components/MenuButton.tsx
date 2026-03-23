@@ -22,7 +22,7 @@ export interface MenuButtonProps{
 }
 
 export const defaultNavItems: NavItem[] = [
-    {label: "Partie erstellen", path: "/", icon: <AddIcon/>},
+    {label: "Partie erstellen", path: "/input-game-by-chessboard", icon: <AddIcon/>},
     {label: "Eigene Partien", path: "/ownGamesHistory", icon: <HistoryIcon />},
     {label: "Mannschaftspartien", path: "/teamGamesHistory", icon: <Diversity3Icon/>},
     {label: "Vereinszugehörigkeit", path: "/club-affiliation", icon:< OtherHousesIcon/> },
