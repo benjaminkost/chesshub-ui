@@ -22,6 +22,7 @@ export default function MenuButton({drawerElements=defaultDrawerElements}:MenuBu
     const openPage = (name:string) => {
         switch(name) {
             case "Partie erstellen":
+                navigate("/input-game-by-chessboard");
                 break;
             case "Eigene Partien":
                 navigate("/ownGamesHistory");
