@@ -61,7 +61,9 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                     footer: () => < AddTeamPopupDialog
                                                         allUsers={allUsers}
                                                        addTeam={addTeam}
-                                                       currentCountOfRows={rows.length}/>
+                                                       currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
+                                                        club={club}
+                    />
                 }}
             />
         </Paper>
