@@ -4,19 +4,19 @@ import {Team} from "./types/team.js";
 import {Member, MemberRole, User} from "@/types/user";
 
 export const dummyAllClubs: Club[] = [
-    {id: 1, name: "SV Empor", address: "Straße 1", president: "Benjamin Kostka"},
-    {id: 2, name: "SV Brauereien", address: "Straße 2", president: "Lukas Zander"},
-    {id: 3, name: "Bayern München", address: "Straße 3", president: "Filip Topic"},
-    {id: 4, name: "Bayern München 2", address: "Straße 4", president: "Filip Topic"},
-    {id: 5, name: "Bayern München 3", address: "Straße 5", president: "Filip Topic"},
-    {id: 6, name: "Bayern München 4", address: "Straße 6", president: "Filip Topic"},
-    {id: 7, name: "Bayern München 5", address: "Straße 7", president: "Filip Topic"}
+    {id: 1, name: "SV Empor", address: "Straße 1", admin: "Benjamin Kostka"},
+    {id: 2, name: "SV Brauereien", address: "Straße 2", admin: "Lukas Zander"},
+    {id: 3, name: "Bayern München", address: "Straße 3", admin: "Filip Topic"},
+    {id: 4, name: "Bayern München 2", address: "Straße 4", admin: "Filip Topic"},
+    {id: 5, name: "Bayern München 3", address: "Straße 5", admin: "Filip Topic"},
+    {id: 6, name: "Bayern München 4", address: "Straße 6", admin: "Filip Topic"},
+    {id: 7, name: "Bayern München 5", address: "Straße 7", admin: "Filip Topic"}
 ];
 
 export const dummyClubAffiliation: ClubAffiliation[] = [
-    {id: 1, name: "SV Empor", address: "Straße 1", president: "Benjamin Kostka", status: MemberStatus.MEMBER},
-    {id: 2, name: "SV Brauereien", address: "Straße 2", president: "Lukas Zander", status: MemberStatus.APPLICANT},
-    {id: 3, name: "Bayern München", address: "Straße 3", president: "Filip Topic", status: MemberStatus.FORMER_MEMBER}
+    {id: 1, name: "SV Empor", address: "Straße 1", admin: "Benjamin Kostka", status: MemberStatus.MEMBER},
+    {id: 2, name: "SV Brauereien", address: "Straße 2", admin: "Lukas Zander", status: MemberStatus.APPLICANT},
+    {id: 3, name: "Bayern München", address: "Straße 3", admin: "Filip Topic", status: MemberStatus.FORMER_MEMBER}
 ];
 
 export const dummyPgn = "[Event \"?\"]\n" +
@@ -107,7 +107,7 @@ export const teamMembersOfDummyTeam: Member[] = [
 
 export const dummyTeam: Team = {
     id: 1,
-    club: {id: 1, name: "Dummy Club", address: "Straße 1", president: "Benjamin Kostka"},
+    club: {id: 1, name: "Dummy Club", address: "Straße 1", admin: "Benjamin Kostka"},
     name: "Mannschaft 1",
     members: teamMembersOfDummyTeam,
     admin: {id: 1, name: "Benjamin Kostka", userName: "bkostka", email: "mail@ben-kostka.de"}
@@ -116,7 +116,7 @@ export const dummyTeam: Team = {
 export const dummyClubTeams: ClubTeams = {
     id: 1,
     name: "1. Mannschaft",
-    president: allMembers[0].name,
+    admin: allMembers[0].name,
     teams: [dummyTeam]
 }
 

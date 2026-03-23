@@ -10,21 +10,14 @@ export enum MemberStatus{
 export interface Club{
     id: number;
     name: string;
-    address: string;
-    president?: string;
+    address?: string;
+    admin?: string;
 }
 
-export interface ClubAffiliation{
-    id: number;
-    name: string;
-    address: string;
-    president?: string;
+export interface ClubAffiliation extends Club{
     status: MemberStatus
 }
 
-export interface ClubTeams {
-    id: number;
-    name: string;
-    president?: string;
+export interface ClubTeams extends Club{
     teams: Team[];
 }

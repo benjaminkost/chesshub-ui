@@ -5,6 +5,6 @@ export interface Team {
     id: number;
     club: Club;
     name: string;
-    members: Member[];
+    members?: Member[];
     admin: User;
 }

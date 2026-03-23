@@ -13,44 +13,42 @@ import {GridFooterContainer} from "@mui/x-data-grid";
 import {User} from "@/types/user";
 import {Team} from "@/types/team";
 import CloseIcon from '@mui/icons-material/Close';
+import {Club} from "@/types/club";
 
 interface AddTeamPopupDialogProps {
     allUsers: User[];
     addTeam: (team: Team) => void;
-    currentCountOfRows: number;
+    currentHighestID: number;
+    club: Club;
 }
 
-export function AddTeamPopupDialog({allUsers,addTeam,currentCountOfRows}:AddTeamPopupDialogProps) {
+export function AddTeamPopupDialog({allUsers,addTeam,currentHighestID,club}:AddTeamPopupDialogProps) {
     const [open, setOpen] = React.useState<boolean>(false);
     const [name, setName] = React.useState<string>();
     const [admin, setAdmin] = React.useState<User | null>();
-    const addTeamButton = (typeof name === "string" && typeof admin === "object") ?
-            <Button onClick={() => {
-                setOpen(false);
-                addTeam({id: currentCountOfRows+1, name: name, admin: admin});
-            }}
-                    sx={{
-                        backgroundColor: "gray",
-                        color: "white",
-                        m: 1
-            }}>
-                Hinzufügen
-            </Button>
-        :
-            <Button sx={{
-                backgroundColor: "#cfcfcf",
-                color: "white"
-            }}>
-                Hinzufügen
-            </Button>
+    const isFormIncomplete = !name?.trim() || !admin;
 
     const nameInput = (event: React.ChangeEvent<HTMLInputElement>)=> {
         setName(event.target.value);
-    }
+    };
 
-    const closePopUp = () => {
+    const handleClose = () => {
         setOpen(false);
-    }
+        setAdmin(null);
+        setName("");
+    };
+
+    const handleAdd = () => {
+        if (name && admin){
+            addTeam({
+                id: (currentHighestID+1),
+                name: name,
+                admin: admin,
+                club: club
+            });
+            handleClose();
+        }
+    };
 
     return (
         <GridFooterContainer
@@ -69,12 +67,12 @@ export function AddTeamPopupDialog({allUsers,addTeam,currentCountOfRows}:AddTeam
                     >
                         <DialogTitle>Neue Mannschaft erstellen</DialogTitle>
                         <IconButton
-                            onClick={closePopUp}
+                            onClick={handleClose}
                             sx={{
                             position: 'absolute',
                             right: 8,
-                            top: 8,
-                        }}>
+                            top: 8}}
+                        >
                             <CloseIcon/>
                         </IconButton>
                         <DialogContent
@@ -99,7 +97,17 @@ export function AddTeamPopupDialog({allUsers,addTeam,currentCountOfRows}:AddTeam
                                 }}
                                 aria-placeholder={"Admin"}
                             />
-                            {addTeamButton}
+                            <Button
+                                onClick={handleAdd}
+                                disabled={isFormIncomplete}
+                                sx={{
+                                    backgroundColor: isFormIncomplete ? "lightgray" : "gray",
+                                    color: "white",
+                                    m: 1
+                                    }}
+                            >
+                                Hinzufügen
+                            </Button>
                         </DialogContent>
                     </Dialog>
                 </>
