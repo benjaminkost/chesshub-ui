@@ -1,6 +1,6 @@
 import { Chessground } from '@lichess-org/chessground';
 import {Api} from "@lichess-org/chessground/api";
-import React from "react";
+import React, {Key} from "react";
 import {Config} from "@lichess-org/chessground/config";
 import "@lichess-org/chessground/assets/chessground.base.css";
 import "@lichess-org/chessground/assets/chessground.brown.css";
@@ -42,33 +42,46 @@ export default function ChessBoard({heightWidth=600,
     );
 }
 
-//TODO: Wie kann man die api vom Chessboard außerhalb der Komponente nutzen
 interface SmartChessBoardProps extends ChessBoardProps {
-    chessBoardApi: Api;
+    setChessApi: (api:Api) => void;
+    setLastMove: (lastMove: Key[] | undefined) => void;
 }
 
 export function SmartChessBoard({heightWidth=600,
                                     contained=false,
                                     config={},
-                                    chessBoardApi
+                                    setChessApi,
+                                    setLastMove,
                                 }:SmartChessBoardProps) {
-    const [api, setApi] = React.useState<Api | null>(chessBoardApi);
+    const apiRef = React.useRef<Api | null>(null);
     const ref = React.useRef<HTMLDivElement>(null);
 
     React.useEffect(() => {
-        if (ref && ref.current && !api){
+        if (ref && ref.current && !apiRef.current){
             const chessGround = Chessground(ref.current,
-                {animation: {enabled: true, duration: 200}
-                    ,...config});
-            setApi(chessGround);
-        } else if(ref && ref.current && api){
-            api.set(config);
+                {animation: {enabled: true, duration: 200},
+                    ...config,
+                    events: {
+                        change: () => {
+                            setLastMove(apiRef.current?.state.lastMove);
+                        }
+                    }
+        });
+
+            apiRef.current = chessGround;
+
+            if (setChessApi) setChessApi(chessGround);
         }
-    }, [ref]);
+
+        return () => {
+            apiRef.current?.destroy();
+            apiRef.current = null
+        }
+    }, []);
 
     React.useEffect(() => {
-        api?.set(config);
-    }, [api, config]);
+        apiRef.current?.set(config);
+    }, [apiRef, config]);
 
     return (
         <Box sx={{height: contained ? '100%' : heightWidth, width: contained ? '100%' : heightWidth}}>
