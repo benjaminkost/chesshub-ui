@@ -59,13 +59,33 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
 
                     return (
                         <Box
+                            key={moveCount}
                             sx={{
                                 display: "flex",
                             }}
                         >
                             <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>{moveCount}</Box>
-                            <Box key={index} onClick={() => handleSetMoveIndex(index)} sx={{padding: 1, flex: 4, "&:hover": {backgroundColor: "lightgray"}}}>{whiteMove}</Box>
-                            {blackMove && <Box key={index+1} onClick={() => handleSetMoveIndex(index+1)} sx={{padding: 1, flex: 4, "&:hover": {backgroundColor: "lightgray"}}}>{blackMove}</Box>}
+                            <Box onClick={() => handleSetMoveIndex(index)}
+                                 sx={{padding: 1,
+                                     flex: 4,
+                                     "&:hover": {
+                                     backgroundColor: "lightgray",
+                                         cursor: "pointer"
+                                 }}}>
+                                {whiteMove}
+                            </Box>
+                            <Box onClick={
+                                () => handleSetMoveIndex(index+1) && blackMove
+                            } sx={{
+                                padding: 1,
+                                flex: 4,
+                                "&:hover": {
+                                    backgroundColor: blackMove ? "lightgray" : "transparent",
+                                    cursor: blackMove ? "pointer" : "default"
+                                }
+                            }}>
+                                {blackMove || ""}
+                            </Box>
                         </Box>
                     )
                 })
