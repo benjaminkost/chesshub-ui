@@ -121,7 +121,7 @@ export const dummyClubTeams: ClubTeams = {
 }
 
 export const allUsers: User[] = [
-    {id: 1, name: "Benjamin Kostka", userName: "b", email: "a"},
+    {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
     {id: 2, name: "Lukas Zander", userName: "b", email: "a"},
     {id: 3, name: "Filip Topic", userName: "b", email: "a"},
     {id: 4, name: "Sebastian Kostka", userName: "b", email: "a"},

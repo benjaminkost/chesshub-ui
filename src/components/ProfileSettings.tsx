@@ -1,25 +1,34 @@
-import {Box, IconButton, TextField, Typography} from "@mui/material";
+import {Box, Button, TextField, Typography} from "@mui/material";
 import React from "react";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import {User} from "@/types/user";
 
-export function ProfileSettings() {
-    const [username, setUsername] = React.useState<string>("benboomer");
-    const [name, setName] = React.useState<string>("Benjamin Kostka");
-    const [email, setEmail] = React.useState<string>("mail@ben-kostka.de");
-    const [fideID, setFideID] = React.useState<string>("1234567890");
-    const [lichessUsername, setLichessUserName] = React.useState<string>("benboomer02");
-    const [chesscomUsername, setChesscomUserName] = React.useState<string>("benboomer03");
+interface ProfileSettingsProps {
+    user: User
+}
+
+export function ProfileSettings({user}:ProfileSettingsProps) {
+    const [username, setUsername] = React.useState<string>(user.userName);
+    const [name, setName] = React.useState<string>(user.name);
+    const [email, setEmail] = React.useState<string>(user.email);
+    const [fideID, setFideID] = React.useState<string>(user.fideID ?? "");
+    const [lichessUsername, setLichessUserName] = React.useState<string>(user.lichessUsername ?? "");
+    const [chesscomUsername, setChesscomUserName] = React.useState<string>(user.chesscomUsername ?? "");
 
     return (
         <Box
             sx={{
                 display: "flex",
-                flexDirection: "row",
-                m: 2,
+                flexDirection: "column",
+                m: 3,
                 justifyContent: "center"
             }}
         >
-            <TextInputRow describingText={"Username"} initialContent={username} setInitialContent={setUsername} />
+            <TextInputRow describingText={"Benutzername"} initialContent={username} setInitialContent={setUsername} />
+            <TextInputRow describingText={"Name"} initialContent={name} setInitialContent={setName} />
+            <TextInputRow describingText={"Email"} initialContent={email} setInitialContent={setEmail} />
+            <TextInputRow describingText={"Fide-ID"} initialContent={fideID} setInitialContent={setFideID} />
+            <TextInputRow describingText={"Lichess Benutzername"} initialContent={lichessUsername} setInitialContent={setLichessUserName} />
+            <TextInputRow describingText={"Chess.com Benutzername"} initialContent={chesscomUsername} setInitialContent={setChesscomUserName} />
         </Box>
     )
 }
@@ -27,31 +36,50 @@ export function ProfileSettings() {
 interface TextInputRowProps {
     describingText: string
     initialContent: string;
-    setInitialContent: (initialContent:string) => void
+    setInitialContent: (initialContent: string) => void
 }
 
 function TextInputRow({describingText, initialContent, setInitialContent}:TextInputRowProps) {
-    let value = false;
-    const valueChanged:boolean = React.useMemo(() => {
-        return !value;
-    }, [initialContent]);
+    const [showButton, setShowButton] = React.useState<boolean>();
+    const [textValue, setTextValue] = React.useState<string>(initialContent);
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const currentTextFieldValue = event.target.value;
+        setTextValue(currentTextFieldValue);
+        if (currentTextFieldValue !== initialContent && currentTextFieldValue.trim()) {
+            setShowButton(true);
+        } else {
+            setShowButton(false);
+        }
+    }
+
+    const handleClick = () => {
+        setInitialContent(textValue);
+        setShowButton(false);
+        debugger
+    }
 
     return (
         <Box
             sx={{
-                m:1,
+                m: 1,
                 display: "flex",
-                flexDirection: "row"
-            }}
+                flexDirection: "row",
+                gap: 2
+        }}
         >
-            <Typography sx={{flex: 1}}>{describingText}</Typography>
-            <TextField sx={{flex: 2}} onChange={() => {setInitialContent(initialContent);value = !value;}}>{initialContent}</TextField>
-            {
-                value &&
-                <IconButton>
-                    <AccountCircleIcon />
-                </IconButton>
+            <Typography sx={{flex: 1, fontWeight: "bold"}}>{describingText}</Typography>
+            <TextField sx={{flex: 2}} value={textValue} onChange={handleChange} />
+            <Box sx={{width: 20, flexGrow: 1, m: 1}}>
+                {showButton && <Button onClick={handleClick}
+                         sx={{
+                             backgroundColor: "gray",
+                             color: "white"
+                }}>
+                Aktualisieren
+                </Button>
             }
+            </Box>
         </Box>
     )
 }
