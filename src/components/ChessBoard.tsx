@@ -6,6 +6,7 @@ import "@lichess-org/chessground/assets/chessground.base.css";
 import "@lichess-org/chessground/assets/chessground.brown.css";
 import "@lichess-org/chessground/assets/chessground.cburnett.css";
 import { Box } from "@mui/material";
+import * as cg from "@lichess-org/chessground/types";
 
 interface ChessBoardProps{
     heightWidth?: number;
@@ -62,8 +63,8 @@ export function SmartChessBoard({heightWidth=600,
                 {animation: {enabled: true, duration: 200},
                     ...config,
                     events: {
-                        change: () => {
-                            setLastMove(apiRef.current?.state.lastMove);
+                        move: (orig: cg.Key, dest: cg.Key) => {
+                            setLastMove([orig,dest]);
                         }
                     }
         });

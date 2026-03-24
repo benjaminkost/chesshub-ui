@@ -75,7 +75,7 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
                                 {whiteMove}
                             </Box>
                             <Box onClick={
-                                () => handleSetMoveIndex(index+1) && blackMove
+                                () => blackMove && handleSetMoveIndex(index+1)
                             } sx={{
                                 padding: 1,
                                 flex: 4,

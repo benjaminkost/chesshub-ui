@@ -13,7 +13,7 @@ export function InputGameByChessBoard(){
     const [positions, setPositions] = React.useState<string[]>([DEFAULT_POSITION]);
 
     React.useEffect(() => {
-        const chess = positions === "" ? new Chess() : new Chess(positions.at(moveIndex));
+        const chess = new Chess(positions.at(moveIndex));
         try{
             const move = chess.move({from: lastMove[0], to: lastMove[1]});
             setMoveList([... moveList, move.san]);
