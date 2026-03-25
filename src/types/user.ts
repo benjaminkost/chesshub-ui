@@ -1,3 +1,5 @@
+import {Team} from "@/types/team";
+
 export enum MemberRole{
     ADMIN="Admin",
     CAPTAIN="Kapitän",
@@ -17,4 +19,5 @@ export interface User{
     name: string;
     userName: string;
     email: string;
+    team?: Team;
 }

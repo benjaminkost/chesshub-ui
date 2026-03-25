@@ -5,12 +5,12 @@ export interface Game {
     whites: string,
     blacks: string,
     dates: Date,
+    opening?: string,
     event?: string,
     board?: string,
     moves: string
 }
 
-export interface GameSetting {
-    game: Game;
+export interface GameSetting extends Game{
     team: Team;
 }
