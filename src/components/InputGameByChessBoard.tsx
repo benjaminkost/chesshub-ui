@@ -45,6 +45,7 @@ export function InputGameByChessBoard({allClubs, user}:InputGameByChessBoardProp
         const payload = {
             "white_player_name": whitePlayer,
             "black_player_name": blackPlayer,
+            "moves": moveList.toString(),
             "event": event,
             "date": date,
             "club": club
