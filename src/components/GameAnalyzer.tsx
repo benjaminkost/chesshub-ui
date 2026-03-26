@@ -37,9 +37,9 @@ export default function GameAnalyzer({pgn}: GameAnalyzerProps) {
             m: 2
         }}>
             <ChessBoard config={{fen: allFens[moveIndex], movable: {free: false}}}/>
-            <MoveList pgnMoves={pgnMoves}
-                      setMoveIndex={setMoveIndex}
-                      moveIndex={moveIndex}
+            <MoveList moveList={pgnMoves}
+                      setCurrentPositionIndex={setMoveIndex}
+                      currentPositionIndex={moveIndex}
             />
         </Box>
     );

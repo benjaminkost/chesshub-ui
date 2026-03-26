@@ -5,34 +5,45 @@ import React from "react";
 interface MoveListProps {
     width?: number,
     height?: number,
-    pgnMoves: string[],
-    setMoveIndex: (moveIndex:number) => void,
-    moveIndex: number
+    moveList: string[],
+    currentPositionIndex: number,
+    setCurrentPositionIndex: (positionIndex:number) => void
 }
 
-export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex, moveIndex}:MoveListProps) {
+export default function MoveList({width=200, height=600, moveList, setCurrentPositionIndex, currentPositionIndex}:MoveListProps) {
+    const currentColoredBox = React.useMemo(() => {
+        return currentPositionIndex;
+    },[currentPositionIndex]);
 
     const handleMoveBack = () => {
-        if (moveIndex == 0) return;
-        setMoveIndex(moveIndex-1);
+        if (currentPositionIndex == 0) return;
+        setCurrentPositionIndex(currentPositionIndex-1);
     };
 
     const handleMoveForward = () => {
-        if (moveIndex == pgnMoves.length-1) return;
-        setMoveIndex(moveIndex+1);
+        if (currentPositionIndex == moveList.length) return;
+        setCurrentPositionIndex(currentPositionIndex+1);
     }
 
     const handleBackToStart = () => {
-        setMoveIndex(0);
+        setCurrentPositionIndex(0);
     };
 
     const handleForwardToEnd = () => {
-        setMoveIndex(pgnMoves.length-1);
+        setCurrentPositionIndex(moveList.length);
     };
 
     const handleSetMoveIndex = (index: number) => {
-        setMoveIndex(index);
+        setCurrentPositionIndex(index);
     };
+
+    const handleCurrentColorOfCurrentMoveBox = (BoxIndex:number) => {
+        if (BoxIndex === currentColoredBox-1){
+            return "black"
+        } else {
+            return "inherit";
+        }
+    }
 
     return (
     <Box
@@ -51,11 +62,11 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
             flexGrow: 1
         }}>
             {
-                pgnMoves.map((whiteMove, index) => {
+                moveList.map((whiteMove, index) => {
                     if (index % 2 !== 0) return null;
 
                     const moveCount = Math.floor(index/2) + 1;
-                    const blackMove = pgnMoves[index + 1];
+                    const blackMove = moveList[index + 1];
 
                     return (
                         <Box
@@ -68,6 +79,7 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
                             <Box onClick={() => handleSetMoveIndex(index)}
                                  sx={{padding: 1,
                                      flex: 4,
+                                     backgroundColor: handleCurrentColorOfCurrentMoveBox(index),
                                      "&:hover": {
                                      backgroundColor: "lightgray",
                                          cursor: "pointer"
@@ -79,6 +91,7 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
                             } sx={{
                                 padding: 1,
                                 flex: 4,
+                                backgroundColor: blackMove ? handleCurrentColorOfCurrentMoveBox(index+1) : "transparent",
                                 "&:hover": {
                                     backgroundColor: blackMove ? "lightgray" : "transparent",
                                     cursor: blackMove ? "pointer" : "default"
