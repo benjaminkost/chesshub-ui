@@ -6,16 +6,16 @@ import {Api} from "@lichess-org/chessground/api";
 import {Chess, DEFAULT_POSITION} from "chess.js";
 import {MetaDataForGameInput} from "@/components/MetaDataForGameInput";
 import {User} from "@/types/user";
-import {Club} from "@/types/club";
 import {_post} from "../../bff/clients/apiChessHubCoreClient";
 import {useNavigate} from "react-router-dom";
+import {Team} from "@/types/team";
 
 interface InputGameByChessBoardProps {
-    allClubs: Club[];
+    allTeams: Team[];
     user: User;
 }
 
-export function InputGameByChessBoard({allClubs, user}:InputGameByChessBoardProps){
+export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProps){
     const [moveIndex, setMoveIndex] = React.useState<number>(0);
     const [chessApi, setChessApi] = React.useState<Api | null>(null);
     const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
@@ -26,7 +26,7 @@ export function InputGameByChessBoard({allClubs, user}:InputGameByChessBoardProp
     const [date, setDate] = React.useState<Date>();
     const [event, setEvent] = React.useState<string>("");
     const [round, setRound] = React.useState<number>();
-    const [club, setClub] = React.useState<Club>();
+    const [team, setTeam] = React.useState<Team>();
     const navigate = useNavigate();
 
     React.useEffect(() => {
@@ -48,7 +48,7 @@ export function InputGameByChessBoard({allClubs, user}:InputGameByChessBoardProp
             "moves": moveList.toString(),
             "event": event,
             "date": date,
-            "club": club
+            "team": team
         };
         await _post("", payload);
         navigate("/ownGamesHistory");
@@ -89,9 +89,9 @@ export function InputGameByChessBoard({allClubs, user}:InputGameByChessBoardProp
                         setEvent={setEvent}
                         roundData={round}
                         setRound={setRound}
-                        club={club}
-                        setClub={setClub}
-                        allClubs={allClubs}
+                        team={team}
+                        setTeam={setTeam}
+                        allTeams={allTeams}
                         user={user}
                     />
                 </Grid>

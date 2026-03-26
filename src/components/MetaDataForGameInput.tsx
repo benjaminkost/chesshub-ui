@@ -1,7 +1,7 @@
 import {Autocomplete, Box, Button, Grid, TextField, Typography} from "@mui/material";
 import React from "react";
 import {User} from "@/types/user";
-import {Club} from "@/types/club";
+import {Team} from "@/types/team";
 
 interface MetaDataForGameInputProps {
     whitePlayerData: string;
@@ -14,13 +14,13 @@ interface MetaDataForGameInputProps {
     setEvent: (event: string) => void;
     roundData: number | undefined;
     setRound: (round:number) => void;
-    club: Club | undefined;
-    setClub: (club:Club | undefined) => void;
-    allClubs: Club[];
+    team: Team | undefined;
+    setTeam: (team:Team | undefined) => void;
+    allTeams: Team[];
     user: User;
 }
 
-export function MetaDataForGameInput({whitePlayerData, setWhitePlayer,blackPlayerData,setBlackPlayer,dateData,setDate,eventData,setEvent,roundData,setRound,club,setClub,allClubs,user}: MetaDataForGameInputProps) {
+export function MetaDataForGameInput({whitePlayerData, setWhitePlayer,blackPlayerData,setBlackPlayer,dateData,setDate,eventData,setEvent,roundData,setRound,team,setTeam,allTeams,user}: MetaDataForGameInputProps) {
     const handleWhitePlayer = (event: React.ChangeEvent<HTMLInputElement>)=> {
         setWhitePlayer(event.target.value);
     }
@@ -43,7 +43,7 @@ export function MetaDataForGameInput({whitePlayerData, setWhitePlayer,blackPlaye
     }
 
     const handleOwnGame = () => {
-        setClub(user.club);
+        setTeam(user.team);
     }
 
     return (
@@ -88,17 +88,17 @@ export function MetaDataForGameInput({whitePlayerData, setWhitePlayer,blackPlaye
                     <TextField fullWidth value={roundData} onChange={handleRound} />
                 </Grid>
                 <Grid size={2}>
-                    <Typography>Verein</Typography>
+                    <Typography>Mannschaft</Typography>
                 </Grid>
                 <Grid size={10}>
                     <Autocomplete renderInput={(params) => {return <TextField {...params}/>}}
-                                  value={club || null}
-                                  options={allClubs}
+                                  value={team || null}
+                                  options={allTeams}
                                   getOptionLabel={(option) => {
-                                      return `${option.name} ${option.id}`;
+                                      return `${option.club?.name} - ${option.name}`;
                                   }}
                                   onChange={(event, value) => {
-                                      value ? setClub(value) : console.warn("Input cound not be safed");
+                                      value ? setTeam(value) : console.warn("Input cound not be safed");
                                   }}
                     />
                 </Grid>
