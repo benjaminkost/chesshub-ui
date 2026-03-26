@@ -121,7 +121,7 @@ export const dummyClubTeams: ClubTeams = {
 }
 
 export const allUsers: User[] = [
-    {id: 1, name: "Benjamin Kostka", userName: "b", email: "a"},
+    {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", club: dummyAllClubs[0], team: dummyTeam},
     {id: 2, name: "Lukas Zander", userName: "b", email: "a"},
     {id: 3, name: "Filip Topic", userName: "b", email: "a"},
     {id: 4, name: "Sebastian Kostka", userName: "b", email: "a"},
