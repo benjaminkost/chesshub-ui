@@ -1,4 +1,4 @@
-import {Box, Button, TextField, Typography} from "@mui/material";
+import {Alert, Box, Button, Snackbar, SnackbarCloseReason, TextField, Typography} from "@mui/material";
 import React from "react";
 import {User} from "@/types/user";
 
@@ -13,23 +13,53 @@ export function ProfileSettings({user}:ProfileSettingsProps) {
     const [fideID, setFideID] = React.useState<string>(user.fideID ?? "");
     const [lichessUsername, setLichessUserName] = React.useState<string>(user.lichessUsername ?? "");
     const [chesscomUsername, setChesscomUserName] = React.useState<string>(user.chesscomUsername ?? "");
+    const [open, setOpen] =  React.useState<boolean>(false);
+
+    const handleNewPassword = () => {
+        setOpen(true);
+    }
+
+    const handleClose = (event: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
+        if (reason === "clickaway") return;
+        setOpen(false);
+    }
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                m: 3,
-                justifyContent: "center"
+        <>
+            <Snackbar
+                open={open}
+                autoHideDuration={4000}
+                onClose={handleClose}
+                anchorOrigin={{horizontal: "right", vertical: "top"}}
+            >
+                <Alert severity={"info"}>
+                    Email send
+                </Alert>
+            </Snackbar>
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    m: 3,
+                    justifyContent: "center"
+                }}
+            >
+                <TextInputRow describingText={"Benutzername"} initialContent={username} setInitialContent={setUsername} />
+                <TextInputRow describingText={"Name"} initialContent={name} setInitialContent={setName} />
+                <TextInputRow describingText={"Email"} initialContent={email} setInitialContent={setEmail} />
+                <TextInputRow describingText={"Fide-ID"} initialContent={fideID} setInitialContent={setFideID} />
+                <TextInputRow describingText={"Lichess Benutzername"} initialContent={lichessUsername} setInitialContent={setLichessUserName} />
+                <TextInputRow describingText={"Chess.com Benutzername"} initialContent={chesscomUsername} setInitialContent={setChesscomUserName} />
+            </Box>
+            <Button sx={{
+                mt: 2,
+                ml: 3,
+                backgroundColor: "lightgray",
+                color: "white",
             }}
-        >
-            <TextInputRow describingText={"Benutzername"} initialContent={username} setInitialContent={setUsername} />
-            <TextInputRow describingText={"Name"} initialContent={name} setInitialContent={setName} />
-            <TextInputRow describingText={"Email"} initialContent={email} setInitialContent={setEmail} />
-            <TextInputRow describingText={"Fide-ID"} initialContent={fideID} setInitialContent={setFideID} />
-            <TextInputRow describingText={"Lichess Benutzername"} initialContent={lichessUsername} setInitialContent={setLichessUserName} />
-            <TextInputRow describingText={"Chess.com Benutzername"} initialContent={chesscomUsername} setInitialContent={setChesscomUserName} />
-        </Box>
+                    onClick={handleNewPassword}
+            >Passwort zurücksetzen</Button>
+        </>
     )
 }
 
