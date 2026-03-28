@@ -16,9 +16,9 @@ interface InputGameByChessBoardProps {
 }
 
 export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProps){
-    const [moveIndex, setMoveIndex] = React.useState<number>(0);
     const [chessApi, setChessApi] = React.useState<Api | null>(null);
     const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
+    const [currentPositionIndex, setCurrentPositionIndex] = React.useState<number>(0);
     const [moveList, setMoveList] = React.useState<string[]>([]);
     const [positions, setPositions] = React.useState<string[]>([DEFAULT_POSITION]);
     const [whitePlayer, setWhitePlayer] = React.useState<string>("");
@@ -30,16 +30,30 @@ export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProp
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        const chess = new Chess(positions.at(moveIndex));
+        if (moveList.length !== currentPositionIndex){
+            setMoveList(moveList.splice(currentPositionIndex-1));
+            setPositions(positions.splice(currentPositionIndex));
+        }
+
+        const chess = new Chess(positions.at(currentPositionIndex));
         try{
             const move = chess.move({from: lastMove[0], to: lastMove[1]});
             setMoveList([... moveList, move.san]);
-            setMoveIndex(moveIndex+1);
+            setCurrentPositionIndex(currentPositionIndex+1);
             setPositions([...positions, chess.fen()]);
         } catch(e){
             chessApi?.set({fen: chess.fen()});
         }
     },[lastMove]);
+
+/*    React.useEffect(() => {
+        if (positions.length-1 == currentPositionIndex){
+            chessApi?.set({movable: {free: true}});
+        } else {
+            chessApi?.set({movable: {free: false}})
+        }
+        debugger
+    },[currentPositionIndex]);*/
 
     const handleSaveGame = async () => {
         const payload = {
@@ -68,11 +82,12 @@ export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProp
                     <Box
                         sx={{
                             display: "flex",
-                            flexDirection: "row"
+                            flexDirection: "row",
+                            mb: 2
                         }}
                     >
-                        <SmartChessBoard setChessApi={setChessApi} setLastMove={setLastMove} config={{fen: positions[moveIndex+1]}}/>
-                        <MoveList pgnMoves={moveList} setMoveIndex={setMoveIndex} moveIndex={moveIndex} />
+                        <SmartChessBoard setChessApi={setChessApi} setLastMove={setLastMove} config={{fen: positions[currentPositionIndex]}}/>
+                        <MoveList moveList={moveList} setCurrentPositionIndex={setCurrentPositionIndex} currentPositionIndex={currentPositionIndex} />
                     </Box>
                 </Grid>
                 <Grid size={2}></Grid>
@@ -98,7 +113,13 @@ export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProp
                 <Grid size={2}></Grid>
                 <Grid size={2}></Grid>
                 <Grid size={8}>
-                    <Button onClick={handleSaveGame}>Partie speichern</Button>
+                    <Button fullWidth onClick={handleSaveGame} sx={{
+                        width: 600,
+                        mt: 2,
+                        backgroundColor: "gray",
+                        color: "white"
+                    }}
+                    >Partie speichern</Button>
                 </Grid>
                 <Grid size={2}></Grid>
             </Grid>

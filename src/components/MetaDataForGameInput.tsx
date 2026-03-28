@@ -55,7 +55,13 @@ export function MetaDataForGameInput({whitePlayerData, setWhitePlayer,blackPlaye
                 justifyContent: "center"
             }}
         >
-            <Button onClick={handleOwnGame}>Mein Spiel</Button>
+            <Button onClick={handleOwnGame}
+                    sx={{
+                        backgroundColor: "gray",
+                        color: "white",
+                        mb: 2
+                    }}
+            >Mein Spiel</Button>
             <Grid container rowSpacing={1} columnSpacing={1} >
                 <Grid size={2}>
                     <Typography>Weiß</Typography>
