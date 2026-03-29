@@ -3,11 +3,20 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import React from "react";
 import {useNavigate} from "react-router-dom";
 
-interface ProfileProps {
-    menuElements?: string[];
+interface MenuElement {
+    label: string,
+    path: string
+    action?: () => void;
 }
 
-export const defaultMenuElements = ["Mein Account", "Logout"];
+interface ProfileProps {
+    menuElements?: MenuElement[];
+}
+
+export const defaultMenuElements = [
+    { label: "Mein Account", path: "/profile-settings"},
+    { label: "Logout", path: "/"}
+];
 
 function ProfileComponent( {menuElements=defaultMenuElements}:ProfileProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -15,11 +24,9 @@ function ProfileComponent( {menuElements=defaultMenuElements}:ProfileProps) {
     const navigate = useNavigate();
 
     const handleSelect = (selectedOption:string) => {
-        switch (selectedOption) {
-            case "Mein Account":
-                navigate("/profile-settings");
-                break;
-        }
+       navigate(selectedOption);
+
+        handleClose();
     }
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -48,7 +55,7 @@ function ProfileComponent( {menuElements=defaultMenuElements}:ProfileProps) {
             >
                 {
                     menuElements.map((menuElement, index) => (
-                        <MenuItem key={index} onClick={() => handleSelect(menuElement)}>{menuElement}</MenuItem>
+                        <MenuItem key={index} onClick={() => handleSelect(menuElement.path)}>{menuElement.label}</MenuItem>
                     ))
                 }
             </Menu>

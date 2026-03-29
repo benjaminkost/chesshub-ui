@@ -19,7 +19,7 @@ export function ProfileSettings({user}:ProfileSettingsProps) {
         setOpen(true);
     }
 
-    const handleClose = (event: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
+    const handleClose = (_: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
         if (reason === "clickaway") return;
         setOpen(false);
     }
@@ -44,12 +44,12 @@ export function ProfileSettings({user}:ProfileSettingsProps) {
                     justifyContent: "center"
                 }}
             >
-                <TextInputRow describingText={"Benutzername"} initialContent={username} setInitialContent={setUsername} />
-                <TextInputRow describingText={"Name"} initialContent={name} setInitialContent={setName} />
-                <TextInputRow describingText={"Email"} initialContent={email} setInitialContent={setEmail} />
-                <TextInputRow describingText={"Fide-ID"} initialContent={fideID} setInitialContent={setFideID} />
-                <TextInputRow describingText={"Lichess Benutzername"} initialContent={lichessUsername} setInitialContent={setLichessUserName} />
-                <TextInputRow describingText={"Chess.com Benutzername"} initialContent={chesscomUsername} setInitialContent={setChesscomUserName} />
+                <TextInputRow describingText={"Benutzername"} currentValue={username} setCurrentValue={setUsername} />
+                <TextInputRow describingText={"Name"} currentValue={name} setCurrentValue={setName} />
+                <TextInputRow describingText={"Email"} currentValue={email} setCurrentValue={setEmail} />
+                <TextInputRow describingText={"Fide-ID"} currentValue={fideID} setCurrentValue={setFideID} />
+                <TextInputRow describingText={"Lichess Benutzername"} currentValue={lichessUsername} setCurrentValue={setLichessUserName} />
+                <TextInputRow describingText={"Chess.com Benutzername"} currentValue={chesscomUsername} setCurrentValue={setChesscomUserName} />
             </Box>
             <Button sx={{
                 mt: 2,
@@ -65,18 +65,22 @@ export function ProfileSettings({user}:ProfileSettingsProps) {
 
 interface TextInputRowProps {
     describingText: string
-    initialContent: string;
-    setInitialContent: (initialContent: string) => void
+    currentValue: string;
+    setCurrentValue: (initialContent: string) => void
 }
 
-function TextInputRow({describingText, initialContent, setInitialContent}:TextInputRowProps) {
+function TextInputRow({describingText, currentValue, setCurrentValue}:TextInputRowProps) {
     const [showButton, setShowButton] = React.useState<boolean>();
-    const [textValue, setTextValue] = React.useState<string>(initialContent);
+    const [textValue, setTextValue] = React.useState<string>(currentValue);
+
+    React.useEffect(() => {
+        setTextValue(currentValue);
+    }, [currentValue]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const currentTextFieldValue = event.target.value;
+        const currentTextFieldValue = event.target.value.trim();
         setTextValue(currentTextFieldValue);
-        if (currentTextFieldValue !== initialContent && currentTextFieldValue.trim()) {
+        if (currentTextFieldValue !== currentValue && currentTextFieldValue !== "") {
             setShowButton(true);
         } else {
             setShowButton(false);
@@ -84,9 +88,8 @@ function TextInputRow({describingText, initialContent, setInitialContent}:TextIn
     }
 
     const handleClick = () => {
-        setInitialContent(textValue);
+        setCurrentValue(currentValue);
         setShowButton(false);
-        debugger
     }
 
     return (
