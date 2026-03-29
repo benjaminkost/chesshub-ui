@@ -1,11 +1,20 @@
-import { Box, Typography } from "@mui/material";
+import {Box, Link} from "@mui/material";
 import "@/styles/App.css";
 
-export interface FooterProps{
-    media?: string[],
+interface MediaAttributes {
+    label: string,
+    path?: string,
+    action?: string
 }
 
-export const defaultMedia = ["Über ChessHub", "Impressum"];
+export interface FooterProps{
+    media?: MediaAttributes[],
+}
+
+export const defaultMedia = [
+    {label: "Über ChessHub", path: ""},
+    { label: "Impressum", path: "/impressum"}
+];
 
 export default function Footer({media=defaultMedia}: FooterProps) {
 
@@ -27,13 +36,17 @@ export default function Footer({media=defaultMedia}: FooterProps) {
                 >
                     {
                         media.map((elem) => (
-                            <Typography key={elem} sx={{
+                            <Link key={elem.label} sx={{
                                 fontWeight: "bold",
                                 cursor: "pointer",
+                                color: "white",
+                                textDecoration: "none",
                                 "&:hover": { color: "primary.main" }
-                            }}>
-                                {elem}
-                            </Typography>
+                            }}
+                                  href={elem.path}
+                            >
+                                {elem.label}
+                            </Link>
                         ))
                     }
                 </Box>
