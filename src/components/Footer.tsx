@@ -12,7 +12,7 @@ export interface FooterProps{
 }
 
 export const defaultMedia = [
-    {label: "Über ChessHub", path: ""},
+    {label: "Über ChessHub", path: "/about"},
     { label: "Impressum", path: "/impressum"}
 ];
 

@@ -13,6 +13,7 @@ import {InputGameByChessBoardPage} from "@/pages/InputGameByChessBoardPage";
 import {ProfileSettingsPage} from "@/pages/ProfileSettingsPage";
 import {RequestNewPasswordPage} from "@/pages/RequestNewPasswordPage";
 import {Impressum} from "@/pages/Impressum";
+import {AboutChessHub} from "@/pages/AboutChessHub";
 
 export function App() {
 
@@ -37,6 +38,7 @@ export function App() {
                       <Route path={"/profile-settings"} element={<ProfileSettingsPage/>} />
                       <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
                       <Route path={"/impressum"} element={< Impressum />} />
+                      <Route path={"/about"} element={< AboutChessHub />} />
                   </Routes>
               </main>
           </BrowserRouter>
