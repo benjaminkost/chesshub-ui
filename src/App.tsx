@@ -12,6 +12,7 @@ import ClubManagement from "@/pages/ClubManagement";
 import {InputGameByChessBoardPage} from "@/pages/InputGameByChessBoardPage";
 import {ProfileSettingsPage} from "@/pages/ProfileSettingsPage";
 import {RequestNewPasswordPage} from "@/pages/RequestNewPasswordPage";
+import {Impressum} from "@/pages/Impressum";
 
 export function App() {
 
@@ -35,6 +36,7 @@ export function App() {
                       <Route path={"/input-game-by-chessboard"} element={< InputGameByChessBoardPage />} />
                       <Route path={"/profile-settings"} element={<ProfileSettingsPage/>} />
                       <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
+                      <Route path={"/impressum"} element={< Impressum />} />
                   </Routes>
               </main>
           </BrowserRouter>
