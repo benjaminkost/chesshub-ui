@@ -9,6 +9,9 @@ import TeamManagement from "./pages/TeamManagement";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "@/pages/RegistrationPage";
 import ClubManagement from "@/pages/ClubManagement";
+import {InputGameByChessBoardPage} from "@/pages/InputGameByChessBoardPage";
+import {ProfileSettingsPage} from "@/pages/ProfileSettingsPage";
+import {RequestNewPasswordPage} from "@/pages/RequestNewPasswordPage";
 
 export function App() {
 
@@ -29,6 +32,9 @@ export function App() {
                       <Route path="/club-affiliation" element={< ClubAffiliation />} />
                       <Route path={"/team-management"} element={< TeamManagement />} />
                       <Route path={"/club-management"} element={< ClubManagement />} />
+                      <Route path={"/input-game-by-chessboard"} element={< InputGameByChessBoardPage />} />
+                      <Route path={"/profile-settings"} element={<ProfileSettingsPage/>} />
+                      <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
                   </Routes>
               </main>
           </BrowserRouter>

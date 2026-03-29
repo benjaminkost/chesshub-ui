@@ -17,4 +17,7 @@ export interface User{
     name: string;
     userName: string;
     email: string;
+    fideID?: string;
+    lichessUsername?: string;
+    chesscomUsername?: string;
 }
