@@ -1,6 +1,6 @@
 import {
     Alert,
-    Box,
+    Grid,
     Paper,
     Snackbar,
     SnackbarCloseReason,
@@ -136,23 +136,42 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
                     There has to be at least one Admin
                 </Alert>
             </Snackbar>
-            <Paper sx={{display: "flex", flexDirection: "row", m: 2, p: 2, width: "fit-content", backgroundColor: "lightgray"}}>
-                <Box sx={{display: "flex", flexDirection: "column"}}>
-                    <Typography sx={{fontWeight: "bold"}}>Mannschafts-ID:</Typography>
-                    <Typography sx={{fontWeight: "bold"}}>Mannschaftsname:</Typography>
-                    <Typography sx={{fontWeight: "bold"}}>Verein:</Typography>
-                </Box>
-                <Box sx={{display: "flex", flexDirection: "column", ml: 2}}>
-                    <Typography>{team.id}</Typography>
-                    <Typography>{team.name}</Typography>
-                    <Typography onClick={() => navigate("/club-management")}
-                                sx={{
-                                    "&:hover":
-                                        {color: "blue", cursor: "pointer"}
-                                }}>
-                        {team.club.name}
-                    </Typography>
-                </Box>
+            <Paper
+                sx={{
+                    m: 2,
+                    p: 2,
+                    width: "fit-content",
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 2,
+                    backgroundColor: "gray",
+                    color: "white"
+                }}
+            >
+                <Grid container>
+                    <Grid size={6}>
+                        <Typography sx={{fontWeight: "bold"}}>Vereins-ID:</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography>{team.id}</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography sx={{fontWeight: "bold"}}>Vereinsname:</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography>{team.name}</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography sx={{fontWeight: "bold"}}>Vereinsname:</Typography>
+                    </Grid>
+                    <Grid size={6} onClick={() => navigate("/club-management")}
+                          sx={{
+                              "&:hover":
+                                  {color: "blue", cursor: "pointer"}
+                          }}>
+                        <Typography>{team.club.name}</Typography>
+                    </Grid>
+                </Grid>
             </Paper>
             <Paper
                 sx={{

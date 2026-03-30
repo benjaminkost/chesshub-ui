@@ -117,7 +117,16 @@ export function Login() {
                             textAlign: "center"
                         }}
                     >
-                        Register dich
+                        Registrier dich
+                    </Link>
+                    <Link
+                        href={"/request-new-password"}
+                        sx={{
+                            color: "gray",
+                            textAlign: "center"
+                        }}
+                    >
+                        Passwort zurücksetzen
                     </Link>
                 </Paper>
             </Box>

@@ -1,4 +1,4 @@
-import {Box, Paper} from "@mui/material";
+import {Box, Grid, Paper, Typography} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
 import {ClubTeams} from "@/types/club";
@@ -39,33 +39,75 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                     {params.value}
                 </Box>)
             }},
-        {field: "admin", headerName: "Mannschaftsleiter", resizable: false, flex: 3, valueFormatter: (value:Member, row) => value.name}
+        {field: "admin", headerName: "Mannschaftsleiter", resizable: false, flex: 3, valueFormatter: (value:Member, _) => value.name}
     ],[rows]);
 
     return (
-        <Paper
+        <Box
             sx={{
-                m: 2
+                display: "flex",
+                flexDirection: "column"
             }}
         >
-            <DataGrid
+            <Paper
                 sx={{
-                    "& .MuiDataGrid-columnHeader": {
-                        backgroundColor: "gray",
-                        color: "white"
-                    }
+                    m: 2,
+                    p: 2,
+                    width: "fit-content",
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: 2,
+                    backgroundColor: "gray",
+                    color: "white"
                 }}
-                columns={columns}
-                rows={rows}
-                slots={{
-                    footer: () => < AddTeamPopupDialog
-                                                        allUsers={allUsers}
-                                                       addTeam={addTeam}
-                                                       currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
-                                                        club={club}
-                    />
-                }}
-            />
-        </Paper>
+            >
+                <Grid container>
+                    <Grid size={6}>
+                        <Typography sx={{fontWeight: "bold"}}>Vereins-ID:</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography>{club.id}</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography sx={{fontWeight: "bold"}}>Vereinsname:</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography>{club.name}</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography sx={{fontWeight: "bold"}}>Adresse:</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography>{club.address}</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography sx={{fontWeight: "bold"}}>Vereinsvorsitzender:</Typography>
+                    </Grid>
+                    <Grid size={6}>
+                        <Typography>{club.admin?.name}</Typography>
+                    </Grid>
+                </Grid>
+            </Paper>
+            <Paper sx={{m:2}}>
+                <DataGrid
+                    sx={{
+                        "& .MuiDataGrid-columnHeader": {
+                            backgroundColor: "gray",
+                            color: "white"
+                        }
+                    }}
+                    columns={columns}
+                    rows={rows}
+                    slots={{
+                        footer: () => < AddTeamPopupDialog
+                                                            allUsers={allUsers}
+                                                           addTeam={addTeam}
+                                                           currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
+                                                            club={club}
+                        />
+                    }}
+                />
+            </Paper>
+        </Box>
     )
 }
