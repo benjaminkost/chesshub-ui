@@ -1,4 +1,5 @@
 import {Team} from "@/types/team";
+import {User} from "@/types/user";
 
 export enum MemberStatus{
     APPLICANT,
@@ -11,7 +12,7 @@ export interface Club{
     id: number;
     name: string;
     address?: string;
-    admin?: string;
+    admin?: User;
 }
 
 export interface ClubAffiliation extends Club{
