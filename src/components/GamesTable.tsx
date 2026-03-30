@@ -1,6 +1,7 @@
 import { Paper } from "@mui/material";
 import React from "react";
 import {DataGrid, GridColDef, GridColumnVisibilityModel} from "@mui/x-data-grid";
+import {useNavigate} from "react-router-dom";
 
 export interface Row {
     id: number,
@@ -32,6 +33,7 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
     const userName = "Benjamin Kostka"; // TODO: muss später mit user daten ausgelesen werden
     const userTeam = "SV Empor"; // TODO: muss später mit user daten ausgelesen werden
     const [columnVisibilityModel, setColumnVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
+    const navigate = useNavigate();
 
     React.useEffect(() => {
         if (ownGamesOrTeamGames){
@@ -62,6 +64,10 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
         };
     },[ownGamesOrTeamGames, userTeam]);
 
+    const handleRowClick = () => {
+        navigate("/view-game");
+    }
+
     return(
         <Paper
             sx={{
@@ -77,12 +83,19 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
                     },
                     '& .MuiDataGrid-filler': {
                         backgroundColor: 'gray!important',
+                    },
+                    '& .MuiDataGrid-virtualScrollerContent': {
+                        '&:hover': {
+                            color: "blue",
+                            cursor: "pointer"
+                        }
                     }
                 }}
                 filterModel={filterModel}
                 columnVisibilityModel={columnVisibilityModel}
                 columns={columns}
                 rows={displayRows}
+                onRowClick={handleRowClick}
                 initialState={{
                     pagination: {
                         paginationModel: {
