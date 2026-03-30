@@ -3,20 +3,29 @@ import {Row} from "./components/GamesTable.js";
 import {Team} from "./types/team.js";
 import {Member, MemberRole, User} from "@/types/user";
 
+export const allUsers: User[] = [
+    {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
+    {id: 2, name: "Lukas Zander", userName: "b", email: "a"},
+    {id: 3, name: "Filip Topic", userName: "b", email: "a"},
+    {id: 4, name: "Sebastian Kostka", userName: "b", email: "a"},
+    {id: 5, name: "Kurt Zander", userName: "b", email: "a"},
+    {id: 6, name: "Ursula Topic", userName: "b", email: "a"}
+];
+
 export const dummyAllClubs: Club[] = [
-    {id: 1, name: "SV Empor", address: "Straße 1", admin: "Benjamin Kostka"},
-    {id: 2, name: "SV Brauereien", address: "Straße 2", admin: "Lukas Zander"},
-    {id: 3, name: "Bayern München", address: "Straße 3", admin: "Filip Topic"},
-    {id: 4, name: "Bayern München 2", address: "Straße 4", admin: "Filip Topic"},
-    {id: 5, name: "Bayern München 3", address: "Straße 5", admin: "Filip Topic"},
-    {id: 6, name: "Bayern München 4", address: "Straße 6", admin: "Filip Topic"},
-    {id: 7, name: "Bayern München 5", address: "Straße 7", admin: "Filip Topic"}
+    {id: 1, name: "SV Empor", address: "Straße 1", admin: allUsers[0]},
+    {id: 2, name: "SV Brauereien", address: "Straße 2", admin: allUsers[1]},
+    {id: 3, name: "Bayern München", address: "Straße 3", admin: allUsers[2]},
+    {id: 4, name: "Bayern München 2", address: "Straße 4", admin: allUsers[3]},
+    {id: 5, name: "Bayern München 3", address: "Straße 5", admin: allUsers[4]},
+    {id: 6, name: "Bayern München 4", address: "Straße 6", admin: allUsers[5]},
+    {id: 7, name: "Bayern München 5", address: "Straße 7", admin: allUsers[6]}
 ];
 
 export const dummyClubAffiliation: ClubAffiliation[] = [
-    {id: 1, name: "SV Empor", address: "Straße 1", admin: "Benjamin Kostka", status: MemberStatus.MEMBER},
-    {id: 2, name: "SV Brauereien", address: "Straße 2", admin: "Lukas Zander", status: MemberStatus.APPLICANT},
-    {id: 3, name: "Bayern München", address: "Straße 3", admin: "Filip Topic", status: MemberStatus.FORMER_MEMBER}
+    {id: 1, name: "SV Empor", address: "Straße 1", admin: allUsers[0], status: MemberStatus.MEMBER},
+    {id: 2, name: "SV Brauereien", address: "Straße 2", admin: allUsers[1], status: MemberStatus.APPLICANT},
+    {id: 3, name: "Bayern München", address: "Straße 3", admin: allUsers[2], status: MemberStatus.FORMER_MEMBER}
 ];
 
 export const dummyPgn = "[Event \"?\"]\n" +
@@ -107,7 +116,7 @@ export const teamMembersOfDummyTeam: Member[] = [
 
 export const dummyTeam: Team = {
     id: 1,
-    club: {id: 1, name: "Dummy Club", address: "Straße 1", admin: "Benjamin Kostka"},
+    club: {id: 1, name: "Dummy Club", address: "Straße 1", admin: allUsers[0]},
     name: "Mannschaft 1",
     members: teamMembersOfDummyTeam,
     admin: {id: 1, name: "Benjamin Kostka", userName: "bkostka", email: "mail@ben-kostka.de"}
@@ -116,15 +125,7 @@ export const dummyTeam: Team = {
 export const dummyClubTeams: ClubTeams = {
     id: 1,
     name: "1. Mannschaft",
-    admin: allMembers[0].name,
-    teams: [dummyTeam]
+    admin: allUsers[0],
+    teams: [dummyTeam],
+    address: "Choriner Straße 1"
 }
-
-export const allUsers: User[] = [
-    {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
-    {id: 2, name: "Lukas Zander", userName: "b", email: "a"},
-    {id: 3, name: "Filip Topic", userName: "b", email: "a"},
-    {id: 4, name: "Sebastian Kostka", userName: "b", email: "a"},
-    {id: 5, name: "Kurt Zander", userName: "b", email: "a"},
-    {id: 6, name: "Ursula Topic", userName: "b", email: "a"}
-];

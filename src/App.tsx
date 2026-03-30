@@ -14,6 +14,7 @@ import {ProfileSettingsPage} from "@/pages/ProfileSettingsPage";
 import {RequestNewPasswordPage} from "@/pages/RequestNewPasswordPage";
 import {Impressum} from "@/pages/Impressum";
 import {AboutChessHub} from "@/pages/AboutChessHub";
+import {BugReport} from "@/pages/BugReport";
 
 export function App() {
 
@@ -28,8 +29,8 @@ export function App() {
                       <Route path="/auth/login" element={< LoginPage />} />
                       <Route path="/auth/signin" element={< LoginPage />} />
                       <Route path="/uploadImage" element={< UploadImage />} />
-                      <Route path="/ownGamesHistory" element={< OwnGamesHistory />} />
-                      <Route path="/teamGamesHistory" element={< TeamGamesHistory />} />
+                      <Route path="/own-games-history" element={< OwnGamesHistory />} />
+                      <Route path="/team-games-history" element={< TeamGamesHistory />} />
                       <Route path="/view-game" element={< ViewSingleGame /> } />
                       <Route path="/club-affiliation" element={< ClubAffiliation />} />
                       <Route path={"/team-management"} element={< TeamManagement />} />
@@ -39,6 +40,7 @@ export function App() {
                       <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
                       <Route path={"/impressum"} element={< Impressum />} />
                       <Route path={"/about"} element={< AboutChessHub />} />
+                      <Route path={"/bug-report"} element={< BugReport />}/>
                   </Routes>
               </main>
           </BrowserRouter>

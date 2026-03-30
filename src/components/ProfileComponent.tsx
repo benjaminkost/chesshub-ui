@@ -9,7 +9,7 @@ interface MenuElement {
     action?: () => void;
 }
 
-interface ProfileProps {
+export interface ProfileProps {
     menuElements?: MenuElement[];
 }
 

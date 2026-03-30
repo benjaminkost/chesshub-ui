@@ -89,7 +89,7 @@ export function AddTeamPopupDialog({allUsers,addTeam,currentHighestID,club}:AddT
                                 getOptionLabel={(option:User | string) => typeof option === 'string' ? option : option.userName}
                                 renderInput={(params) => <TextField {...params} placeholder={"Mannschaftsleiter"}/>}
                                 options={allUsers}
-                                onChange={(event,selectedUser: User | string | null) => {
+                                onChange={(_,selectedUser: User | string | null) => {
                                     typeof selectedUser === 'string' ?
                                         console.log("No User was selected")
                                         :

@@ -3,16 +3,14 @@ import {
     Toolbar,
     Box,
     Button } from "@mui/material";
-import ProfileComponent, {defaultMenuElements} from "./ProfileComponent";
+import ProfileComponent, {defaultMenuElements, ProfileProps} from "./ProfileComponent";
 import SearchFieldComponent from "./SearchFieldComponent";
-import MenuButton, {defaultNavItems, NavItem} from "./MenuButton";
+import MenuButton, {defaultNavItems, MenuButtonProps} from "./MenuButton";
 import {useNavigate} from "react-router-dom";
 import {HomeIcon} from "@/components/HomeIcon";
 
-export interface HeaderProps{
+export interface HeaderProps extends ProfileProps, MenuButtonProps{
     loggedIn: boolean;
-    menuElements?: string[];
-    navItems?: NavItem[];
 }
 
 export function Header({loggedIn, menuElements = defaultMenuElements, navItems = defaultNavItems}: HeaderProps) {
