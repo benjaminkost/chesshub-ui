@@ -10,7 +10,14 @@ import {_post} from "../../bff/clients/apiChessHubCoreClient";
 import {useNavigate} from "react-router-dom";
 import {Team} from "@/types/team";
 
-interface InputGameByChessBoardProps {
+interface MoveNode {
+    notation: string;
+    fen: string;
+    comment?: string;
+    nextMoves: MoveNode[];
+}
+
+export interface InputGameByChessBoardProps {
     allTeams: Team[];
     user: User;
 }

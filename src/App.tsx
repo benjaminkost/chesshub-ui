@@ -1,5 +1,5 @@
 import {BrowserRouter, Route, Routes} from "react-router";
-import {UploadImage} from "./pages/UploadImage";
+import {UploadFileContent} from "./components/UploadFileContent";
 import {Home} from "./pages/Home";
 import OwnGamesHistory from "./pages/OwnGamesHistory";
 import TeamGamesHistory from "./pages/TeamGamesHistory";
@@ -9,7 +9,7 @@ import TeamManagement from "./pages/TeamManagement";
 import LoginPage from "./pages/LoginPage";
 import RegistrationPage from "@/pages/RegistrationPage";
 import ClubManagement from "@/pages/ClubManagement";
-import {InputGameByChessBoardPage} from "@/pages/InputGameByChessBoardPage";
+import {InputGame} from "@/pages/InputGame";
 import {ProfileSettingsPage} from "@/pages/ProfileSettingsPage";
 import {RequestNewPasswordPage} from "@/pages/RequestNewPasswordPage";
 import {Impressum} from "@/pages/Impressum";
@@ -28,14 +28,14 @@ export function App() {
                       <Route path="/auth/signup" element={< RegistrationPage />} />
                       <Route path="/auth/login" element={< LoginPage />} />
                       <Route path="/auth/signin" element={< LoginPage />} />
-                      <Route path="/uploadImage" element={< UploadImage />} />
+                      <Route path="/uploadImage" element={< UploadFileContent />} />
                       <Route path="/own-games-history" element={< OwnGamesHistory />} />
                       <Route path="/team-games-history" element={< TeamGamesHistory />} />
                       <Route path="/view-game" element={< ViewSingleGame /> } />
                       <Route path="/club-affiliation" element={< ClubAffiliation />} />
                       <Route path={"/team-management"} element={< TeamManagement />} />
                       <Route path={"/club-management"} element={< ClubManagement />} />
-                      <Route path={"/input-game-by-chessboard"} element={< InputGameByChessBoardPage />} />
+                      <Route path={"/input-game"} element={< InputGame />} />
                       <Route path={"/profile-settings"} element={<ProfileSettingsPage/>} />
                       <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
                       <Route path={"/impressum"} element={< Impressum />} />
