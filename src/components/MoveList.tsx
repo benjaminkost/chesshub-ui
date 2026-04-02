@@ -18,16 +18,18 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
 
         while(currentId !== null){
             const node:GameStateNode = gameState.allGameStates[currentId];
-            if(currentId !== "START"){
+            if(currentId !== "root"){
                 history.unshift(node);
             }
             currentId = node.parentId;
+            console.log("ID from history: %s",currentId);
         }
         return history;
     },[gameState.allGameStates, gameState.rootId]);
 
     const handleMoveBack = () => {
-        if (gameState.activeStateId === "START") return;
+        console.log("ID from Move Back: %s",gameState.activeStateId);
+        if (gameState.activeStateId === "root") return;
 
         const previousMoveId = gameState.allGameStates[gameState.activeStateId].parentId || "START";
 
@@ -43,7 +45,8 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
     }
 
     const handleBackToStart = () => {
-        onMoveSelect("START");
+        console.log("ID from move back to Start: %s",gameState.activeStateId);
+        onMoveSelect("root");
     };
 
     const handleForwardToEnd = () => {
@@ -53,7 +56,6 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
     };
 
     const handleSetMoveIndex = (moveId: string) => {
-        console.log("New activeState %s in MoveList", moveId);
         onMoveSelect(moveId);
     };
 

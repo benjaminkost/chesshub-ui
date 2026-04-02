@@ -47,6 +47,7 @@ export interface GameState {
     allGameStates: Record<string, GameStateNode>,
 }
 
+
 export interface InputGameByChessBoardProps {
     allTeams: Team[];
     user: User;
@@ -137,7 +138,6 @@ export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProp
 
     React.useEffect(() => {
         chessApi?.set({fen: gameState.allGameStates[gameState.activeStateId].fen});
-        console.log("New activeState %s in InputGameByChessBoard", gameState.activeStateId);
     },[gameState.activeStateId]);
 
     const handleSaveGame = async () => {
