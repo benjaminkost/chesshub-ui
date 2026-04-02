@@ -1,44 +1,64 @@
 import {Box} from "@mui/material";
 import GameNavBar from "./GameNavBar";
 import React from "react";
+import {GameState, GameStateNode} from "@/components/InputGameByChessBoard";
 
 interface MoveListProps {
+    gameState: GameState,
+    onMoveSelect: (activeStateId: string) => void,
     width?: number,
-    height?: number,
-    moveList: string[],
-    currentPositionIndex: number,
-    setCurrentPositionIndex: (positionIndex:number) => void
+    height?: number
 }
 
-export default function MoveList({width=200, height=600, moveList, setCurrentPositionIndex, currentPositionIndex}:MoveListProps) {
-    const currentColoredBox = React.useMemo(() => {
-        return currentPositionIndex;
-    },[currentPositionIndex]);
+export default function MoveList({width=200, height=600, gameState, onMoveSelect}:MoveListProps) {
+
+    const moveHistory = React.useMemo(() => {
+        const history: GameStateNode[] = [];
+        let currentId: string | null = gameState.activeStateId;
+
+        while(currentId !== null){
+            const node:GameStateNode = gameState.allGameStates[currentId];
+            if(currentId !== "START"){
+                history.unshift(node);
+            }
+            currentId = node.parentId;
+        }
+        return history;
+    },[gameState.allGameStates, gameState.rootId]);
 
     const handleMoveBack = () => {
-        if (currentPositionIndex == 0) return;
-        setCurrentPositionIndex(currentPositionIndex-1);
+        if (gameState.activeStateId === "START") return;
+
+        const previousMoveId = gameState.allGameStates[gameState.activeStateId].parentId || "START";
+
+        onMoveSelect(previousMoveId);
     };
 
     const handleMoveForward = () => {
-        if (currentPositionIndex == moveList.length) return;
-        setCurrentPositionIndex(currentPositionIndex+1);
+        if (gameState.activeStateId == moveHistory.at(-1)?.id) return;
+
+        const nextMoveId = gameState.allGameStates[gameState.activeStateId].nextMoves[0];
+
+        onMoveSelect(nextMoveId);
     }
 
     const handleBackToStart = () => {
-        setCurrentPositionIndex(0);
+        onMoveSelect("START");
     };
 
     const handleForwardToEnd = () => {
-        setCurrentPositionIndex(moveList.length);
+        const lastMoveId = moveHistory.at(-1)?.id || "";
+
+        onMoveSelect(lastMoveId);
     };
 
-    const handleSetMoveIndex = (index: number) => {
-        setCurrentPositionIndex(index);
+    const handleSetMoveIndex = (moveId: string) => {
+        console.log("New activeState %s in MoveList", moveId);
+        onMoveSelect(moveId);
     };
 
-    const handleCurrentColorOfCurrentMoveBox = (BoxIndex:number) => {
-        if (BoxIndex === currentColoredBox-1){
+    const handleCurrentColorOfCurrentMoveBox = (moveId:string) => {
+        if (moveId === gameState.activeStateId){
             return "black"
         } else {
             return "inherit";
@@ -62,43 +82,51 @@ export default function MoveList({width=200, height=600, moveList, setCurrentPos
             flexGrow: 1
         }}>
             {
-                moveList.map((whiteMove, index) => {
-                    if (index % 2 !== 0) return null;
+                moveHistory.map((gameStateNode, index) => {
+                    if (gameStateNode.color === "b" || gameStateNode.notation === "START") return null;
 
-                    const moveCount = Math.floor(index/2) + 1;
-                    const blackMove = moveList[index + 1];
+                    const whiteMoveNode = gameStateNode;
+                    const blackMoveNode: GameStateNode | null = moveHistory[index+1] || null;
 
                     return (
                         <Box
-                            key={moveCount}
+                            key={gameStateNode.id}
                             sx={{
                                 display: "flex",
                             }}
                         >
-                            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>{moveCount}</Box>
-                            <Box onClick={() => handleSetMoveIndex(index)}
+                            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>{gameStateNode.moveNumber}</Box>
+                            <Box onClick={() => handleSetMoveIndex(gameStateNode.id)}
                                  sx={{padding: 1,
                                      flex: 4,
-                                     backgroundColor: handleCurrentColorOfCurrentMoveBox(index),
+                                     backgroundColor: handleCurrentColorOfCurrentMoveBox(whiteMoveNode.id),
                                      "&:hover": {
                                      backgroundColor: "lightgray",
                                          cursor: "pointer"
                                  }}}>
-                                {whiteMove}
+                                {whiteMoveNode.notation}
                             </Box>
-                            <Box onClick={
-                                () => blackMove && handleSetMoveIndex(index+1)
-                            } sx={{
-                                padding: 1,
-                                flex: 4,
-                                backgroundColor: blackMove ? handleCurrentColorOfCurrentMoveBox(index+1) : "transparent",
-                                "&:hover": {
-                                    backgroundColor: blackMove ? "lightgray" : "transparent",
-                                    cursor: blackMove ? "pointer" : "default"
-                                }
-                            }}>
-                                {blackMove || ""}
-                            </Box>
+                            {
+                                blackMoveNode ?
+                                (<Box onClick={
+                                    () => blackMoveNode && handleSetMoveIndex(blackMoveNode.id)
+                                } sx={{
+                                    padding: 1,
+                                    flex: 4,
+                                    backgroundColor: handleCurrentColorOfCurrentMoveBox(blackMoveNode.id),
+                                    "&:hover": {
+                                        backgroundColor: "lightgray",
+                                        cursor: "pointer"
+                                    }
+                                }}>
+                                    {blackMoveNode.notation}
+                                </Box>)
+                                    :
+                                    (<Box sx={{
+                                        padding: 1,
+                                        flex: 4
+                                    }}/>)
+                            }
                         </Box>
                     )
                 })

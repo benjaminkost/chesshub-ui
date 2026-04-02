@@ -3,18 +3,48 @@ import {SmartChessBoard} from "@/components/ChessBoard";
 import MoveList from "@/components/MoveList";
 import React, {Key} from "react";
 import {Api} from "@lichess-org/chessground/api";
-import {Chess, DEFAULT_POSITION} from "chess.js";
+import {Chess, DEFAULT_POSITION, Move} from "chess.js";
 import {MetaDataForGameInput} from "@/components/MetaDataForGameInput";
 import {User} from "@/types/user";
 import {_post} from "../../bff/clients/apiChessHubCoreClient";
 import {useNavigate} from "react-router-dom";
 import {Team} from "@/types/team";
+import { v4 as uuidv4 } from "uuid";
 
-interface MoveNode {
+interface Evaluation {
+    centiPawn: number;
+    isMate: boolean;
+    mateIn?: number;
+}
+
+interface Recommendation {
+    notation: string;
+    eval: Evaluation;
+    engineDepth: number;
+}
+
+interface EngineAnalysis {
+    recommendedMoves: Recommendation[];
+    depth: number;
+    eval: Evaluation;
+}
+
+export interface GameStateNode {
+    id: string;
+    parentId: string | null;
+    moveNumber: number;
     notation: string;
     fen: string;
+    color: "w" | "b";
+    nextMoves: string[];
     comment?: string;
-    nextMoves: MoveNode[];
+    analysis?: EngineAnalysis;
+}
+
+export interface GameState {
+    activeStateId: string;
+    rootId: string;
+    allGameStates: Record<string, GameStateNode>,
 }
 
 export interface InputGameByChessBoardProps {
@@ -23,11 +53,29 @@ export interface InputGameByChessBoardProps {
 }
 
 export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProps){
+    const ROOT_ID = "root";
+    
+    const startingRecordGameState: Record<string,GameStateNode> = {
+        [ROOT_ID]: {
+            id: ROOT_ID,
+            parentId: null,
+            moveNumber: 0,
+            notation: "START",
+            fen: DEFAULT_POSITION,
+            color: "b",
+            nextMoves: []
+        }
+    };
+
+    const startingGameState:GameState = {
+        activeStateId: ROOT_ID,
+        rootId: ROOT_ID,
+        allGameStates: startingRecordGameState
+    };
+
     const [chessApi, setChessApi] = React.useState<Api | null>(null);
     const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
-    const [currentPositionIndex, setCurrentPositionIndex] = React.useState<number>(0);
-    const [moveList, setMoveList] = React.useState<string[]>([]);
-    const [positions, setPositions] = React.useState<string[]>([DEFAULT_POSITION]);
+    const [gameState, setGameState] = React.useState<GameState>(startingGameState);
     const [whitePlayer, setWhitePlayer] = React.useState<string>("");
     const [blackPlayer, setBlackPlayer] = React.useState<string>("");
     const [date, setDate] = React.useState<Date>();
@@ -36,44 +84,81 @@ export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProp
     const [team, setTeam] = React.useState<Team>();
     const navigate = useNavigate();
 
-    React.useEffect(() => {
-        if (moveList.length !== currentPositionIndex){
-            setMoveList(moveList.splice(currentPositionIndex-1));
-            setPositions(positions.splice(currentPositionIndex));
-        }
+    const convertTreeToPGNMoves = (): string => {
+        return "";
+    };
 
-        const chess = new Chess(positions.at(currentPositionIndex));
-        try{
-            const move = chess.move({from: lastMove[0], to: lastMove[1]});
-            setMoveList([... moveList, move.san]);
-            setCurrentPositionIndex(currentPositionIndex+1);
-            setPositions([...positions, chess.fen()]);
+    React.useEffect(() => {
+        const chess = new Chess(gameState.allGameStates[gameState.activeStateId].fen);
+        try {
+            const move:Move = chess.move({from: lastMove[0], to: lastMove[1]});
+            chessApi?.set({fen: chess.fen()});
+            const parentId = gameState.activeStateId;
+
+            setGameState(prev => {
+                const parentState = prev.allGameStates[parentId];
+
+                const existingMoveId = parentState.nextMoves.find(id => (
+                    prev.allGameStates[id].notation === move.san
+                ));
+
+                if (existingMoveId) {
+                    return {...prev, activeStateId: existingMoveId};
+                }
+
+                const newStateId = uuidv4();
+                const newState: GameStateNode = {
+                    id: newStateId,
+                    parentId: parentId,
+                    fen: chess.fen(),
+                    notation: move.san,
+                    color: parentState.color === "w" ? "b" : "w",
+                    moveNumber: parentState.color === "w" ? parentState.moveNumber : parentState.moveNumber + 1,
+                    nextMoves: []
+                };
+
+                return {
+                    ...prev,
+                    activeStateId: newStateId,
+                    allGameStates: {
+                        ...prev.allGameStates,
+                        [parentId]: {
+                            ...prev.allGameStates[parentId],
+                            nextMoves: [...prev.allGameStates[parentId].nextMoves, newStateId]
+                        },
+                        [newStateId]: newState
+                    }
+                }
+            });
         } catch(e){
             chessApi?.set({fen: chess.fen()});
         }
     },[lastMove]);
 
-/*    React.useEffect(() => {
-        if (positions.length-1 == currentPositionIndex){
-            chessApi?.set({movable: {free: true}});
-        } else {
-            chessApi?.set({movable: {free: false}})
-        }
-        debugger
-    },[currentPositionIndex]);*/
+    React.useEffect(() => {
+        chessApi?.set({fen: gameState.allGameStates[gameState.activeStateId].fen});
+        console.log("New activeState %s in InputGameByChessBoard", gameState.activeStateId);
+    },[gameState.activeStateId]);
 
     const handleSaveGame = async () => {
         const payload = {
             "white_player_name": whitePlayer,
             "black_player_name": blackPlayer,
-            "moves": moveList.toString(),
+            "moves": convertTreeToPGNMoves(),
             "event": event,
             "date": date,
             "team": team
         };
         await _post("", payload);
-        navigate("/ownGamesHistory");
+        navigate("/own-games-history");
     }
+
+    const handleMoveSelect = (id: string) => {
+        setGameState(prev => ({
+            ...prev,
+            activeStateId: id
+        }));
+    };
 
     return (
         <Box
@@ -93,8 +178,8 @@ export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProp
                             mb: 2
                         }}
                     >
-                        <SmartChessBoard setChessApi={setChessApi} setLastMove={setLastMove} config={{fen: positions[currentPositionIndex]}}/>
-                        <MoveList moveList={moveList} setCurrentPositionIndex={setCurrentPositionIndex} currentPositionIndex={currentPositionIndex} />
+                        <SmartChessBoard setChessApi={setChessApi} setLastMove={setLastMove} config={{fen: gameState.allGameStates[gameState.activeStateId].fen}}/>
+                        <MoveList gameState={gameState} onMoveSelect={handleMoveSelect}/>
                     </Box>
                 </Grid>
                 <Grid size={2}></Grid>
