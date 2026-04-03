@@ -1,7 +1,7 @@
 import {Box} from "@mui/material";
 import GameNavBar from "./GameNavBar";
 import React from "react";
-import {defaultStartValue, GameState, GameStateNode} from "@/components/ChessBoardEditor";
+import {defaultStartValue, GameState, GameStateNode} from "@/types/game";
 
 interface MoveListProps {
     gameState: GameState,

@@ -3,7 +3,7 @@ import {SmartChessBoard} from "@/components/ChessBoard";
 import MoveList from "@/components/MoveList";
 import React, {Key} from "react";
 import {Api} from "@lichess-org/chessground/api";
-import {Chess, DEFAULT_POSITION, Move} from "chess.js";
+import {Chess, Move} from "chess.js";
 import {MetaDataForGameInput} from "@/components/MetaDataForGameInput";
 import {User} from "@/types/user";
 import {_post} from "../../bff/clients/apiChessHubCoreClient";
@@ -11,43 +11,8 @@ import {useNavigate} from "react-router-dom";
 import {Team} from "@/types/team";
 import { v4 as uuidv4 } from "uuid";
 import {allUsers} from "@/dummyData";
-
-interface Evaluation {
-    centiPawn: number;
-    isMate: boolean;
-    mateIn?: number;
-}
-
-interface Recommendation {
-    notation: string;
-    eval: Evaluation;
-    engineDepth: number;
-}
-
-interface EngineAnalysis {
-    recommendedMoves: Recommendation[];
-    depth: number;
-    eval: Evaluation;
-}
-
-export interface GameStateNode {
-    id: string;
-    parentId: string | null;
-    moveNumber: number;
-    notation: string;
-    fen: string;
-    color: "w" | "b";
-    nextMoves: string[];
-    comment?: string;
-    analysis?: EngineAnalysis;
-}
-
-export interface GameState {
-    activeStateId: string;
-    rootId: string;
-    allGameStates: Record<string, GameStateNode>,
-}
-
+import {parsePgnToGameState} from"@/../bff/pgnParsing"
+import {GameState, GameStateNode} from "@/types/game";
 
 export interface ChessBoardEditorProps {
     allTeams: Team[];
@@ -69,90 +34,6 @@ const defaultValues = {
     initialRound: undefined,
     initialTeam: undefined,
     initialMoves: "",
-}
-
-export const defaultStartValue = "START";
-
-const parsePgnToGameState= (pgn: string):GameState =>  { // TODO: written bei Gemini -> needs review
-    const chess = new Chess();
-    const rootId = defaultStartValue;
-
-    // Initialer State mit Startaufstellung
-    const allGameStates: Record<string, GameStateNode> = {
-        [rootId]: {
-            id: rootId,
-            parentId: null,
-            moveNumber: 1,
-            notation: defaultStartValue,
-            fen: DEFAULT_POSITION,
-            color: "w",
-            nextMoves: []
-        }
-    };
-
-    let activeId = rootId;
-    // Der Stack speichert die ID, zu der wir nach einer geschlossenen Klammer zurückkehren
-    const parentStack: string[] = [];
-
-    // Wir extrahieren Züge, Kommentare und Klammern.
-    // RegEx: Züge (e4), Klammern (), oder Kommentare {}
-    const tokens = pgn.match(/\(|\)|\d+\.+|[a-zA-Z0-9+#=/-]+|\{[^}]*\}/g) || [];
-
-    tokens.forEach(token => {
-        if (token === "(") {
-            // Variante startet: Wir speichern den Vater des aktuellen Zuges auf dem Stack
-            const currentNode = allGameStates[activeId];
-            if (currentNode.parentId) {
-                parentStack.push(currentNode.parentId);
-            }
-        } else if (token === ")") {
-            // Variante endet: Wir springen zurück zum letzten gespeicherten Vater
-            const lastParent = parentStack.pop();
-            if (lastParent) activeId = lastParent;
-        } else if (token.startsWith("{") || /^\d+\.+$/.test(token)) {
-            // Kommentare oder Zugnummern (1., 1...) ignorieren wir für die Logik
-            return;
-        } else {
-            // Es ist ein echter Zug (z.B. "e4" oder "Nf3")
-            try {
-                const currentFen = allGameStates[activeId].fen;
-                chess.load(currentFen);
-
-                const move = chess.move(token);
-                if (move) {
-                    const newStateId = uuidv4();
-                    const parentNode = allGameStates[activeId];
-
-                    // Neuen Knoten erstellen
-                    const newNode: GameStateNode = {
-                        id: newStateId,
-                        parentId: activeId,
-                        notation: move.san,
-                        fen: chess.fen(),
-                        color: move.color === "w" ? "b" : "w",
-                        moveNumber: move.color === "w" ? parentNode.moveNumber : parentNode.moveNumber + 1,
-                        nextMoves: []
-                    };
-
-                    // In Map speichern
-                    allGameStates[newStateId] = newNode;
-                    // Verknüpfung beim Vater eintragen
-                    allGameStates[activeId].nextMoves.push(newStateId);
-
-                    // Der neue Zug ist nun der aktive Pointer
-                    activeId = newStateId;
-                }
-            } catch (e) {
-                console.error("Ungültiger Zug im PGN:", token);
-            }
-        }
-    });
-
-    return {
-        rootId,
-        activeStateId: activeId, // Pointer steht am Ende der Hauptlinie
-        allGameStates
-    };
 }
 
 export function ChessBoardEditor({allTeams,
