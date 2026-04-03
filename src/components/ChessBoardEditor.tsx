@@ -10,6 +10,7 @@ import {_post} from "../../bff/clients/apiChessHubCoreClient";
 import {useNavigate} from "react-router-dom";
 import {Team} from "@/types/team";
 import { v4 as uuidv4 } from "uuid";
+import {allUsers} from "@/dummyData";
 
 interface Evaluation {
     centiPawn: number;
@@ -48,45 +49,135 @@ export interface GameState {
 }
 
 
-export interface InputGameByChessBoardProps {
+export interface ChessBoardEditorProps {
     allTeams: Team[];
     user: User;
+    initialWhitePlayer?: User | string;
+    initialBlackPlayer?: User | string;
+    initialDate?: Date | undefined;
+    initialEvent?: string;
+    initialRound?: number;
+    initialTeam?: Team | undefined;
+    initialMoves?: string;
 }
 
-export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProps){
-    const ROOT_ID = "root";
-    
-    const startingRecordGameState: Record<string,GameStateNode> = {
-        [ROOT_ID]: {
-            id: ROOT_ID,
+const defaultValues = {
+    initialWhitePlayer: "",
+    initialBlackPlayer: "",
+    initialDate: undefined,
+    initialEvent: "",
+    initialRound: undefined,
+    initialTeam: undefined,
+    initialMoves: "",
+}
+
+export const defaultStartValue = "START";
+
+const parsePgnToGameState= (pgn: string):GameState =>  { // TODO: written bei Gemini -> needs review
+    const chess = new Chess();
+    const rootId = defaultStartValue;
+
+    // Initialer State mit Startaufstellung
+    const allGameStates: Record<string, GameStateNode> = {
+        [rootId]: {
+            id: rootId,
             parentId: null,
-            moveNumber: 0,
-            notation: "START",
+            moveNumber: 1,
+            notation: defaultStartValue,
             fen: DEFAULT_POSITION,
-            color: "b",
+            color: "w",
             nextMoves: []
         }
     };
 
-    const startingGameState:GameState = {
-        activeStateId: ROOT_ID,
-        rootId: ROOT_ID,
-        allGameStates: startingRecordGameState
-    };
+    let activeId = rootId;
+    // Der Stack speichert die ID, zu der wir nach einer geschlossenen Klammer zurückkehren
+    const parentStack: string[] = [];
 
+    // Wir extrahieren Züge, Kommentare und Klammern.
+    // RegEx: Züge (e4), Klammern (), oder Kommentare {}
+    const tokens = pgn.match(/\(|\)|\d+\.+|[a-zA-Z0-9+#=/-]+|\{[^}]*\}/g) || [];
+
+    tokens.forEach(token => {
+        if (token === "(") {
+            // Variante startet: Wir speichern den Vater des aktuellen Zuges auf dem Stack
+            const currentNode = allGameStates[activeId];
+            if (currentNode.parentId) {
+                parentStack.push(currentNode.parentId);
+            }
+        } else if (token === ")") {
+            // Variante endet: Wir springen zurück zum letzten gespeicherten Vater
+            const lastParent = parentStack.pop();
+            if (lastParent) activeId = lastParent;
+        } else if (token.startsWith("{") || /^\d+\.+$/.test(token)) {
+            // Kommentare oder Zugnummern (1., 1...) ignorieren wir für die Logik
+            return;
+        } else {
+            // Es ist ein echter Zug (z.B. "e4" oder "Nf3")
+            try {
+                const currentFen = allGameStates[activeId].fen;
+                chess.load(currentFen);
+
+                const move = chess.move(token);
+                if (move) {
+                    const newStateId = uuidv4();
+                    const parentNode = allGameStates[activeId];
+
+                    // Neuen Knoten erstellen
+                    const newNode: GameStateNode = {
+                        id: newStateId,
+                        parentId: activeId,
+                        notation: move.san,
+                        fen: chess.fen(),
+                        color: move.color === "w" ? "b" : "w",
+                        moveNumber: move.color === "w" ? parentNode.moveNumber : parentNode.moveNumber + 1,
+                        nextMoves: []
+                    };
+
+                    // In Map speichern
+                    allGameStates[newStateId] = newNode;
+                    // Verknüpfung beim Vater eintragen
+                    allGameStates[activeId].nextMoves.push(newStateId);
+
+                    // Der neue Zug ist nun der aktive Pointer
+                    activeId = newStateId;
+                }
+            } catch (e) {
+                console.error("Ungültiger Zug im PGN:", token);
+            }
+        }
+    });
+
+    return {
+        rootId,
+        activeStateId: activeId, // Pointer steht am Ende der Hauptlinie
+        allGameStates
+    };
+}
+
+export function ChessBoardEditor({allTeams,
+                                     user,
+                                     initialWhitePlayer=defaultValues.initialWhitePlayer,
+                                     initialBlackPlayer=defaultValues.initialBlackPlayer,
+                                     initialDate=defaultValues.initialDate,
+                                     initialEvent=defaultValues.initialEvent,
+                                     initialRound=defaultValues.initialRound,
+                                     initialTeam=defaultValues.initialTeam,
+                                     initialMoves=defaultValues.initialMoves
+                                 }:ChessBoardEditorProps){
     const [chessApi, setChessApi] = React.useState<Api | null>(null);
     const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
-    const [gameState, setGameState] = React.useState<GameState>(startingGameState);
-    const [whitePlayer, setWhitePlayer] = React.useState<string>("");
-    const [blackPlayer, setBlackPlayer] = React.useState<string>("");
-    const [date, setDate] = React.useState<Date>();
-    const [event, setEvent] = React.useState<string>("");
-    const [round, setRound] = React.useState<number>();
-    const [team, setTeam] = React.useState<Team>();
+    const [gameState, setGameState] = React.useState<GameState>(parsePgnToGameState(initialMoves));
+    const [whitePlayer, setWhitePlayer] = React.useState<User | string>(initialWhitePlayer);
+    const [blackPlayer, setBlackPlayer] = React.useState<User | string>(initialBlackPlayer);
+    const [date, setDate] = React.useState<Date | undefined>(initialDate);
+    const [event, setEvent] = React.useState<string>(initialEvent);
+    const [round, setRound] = React.useState<number | undefined>(initialRound);
+    const [team, setTeam] = React.useState<Team | undefined>(initialTeam);
     const navigate = useNavigate();
 
     const convertTreeToPGNMoves = (): string => {
-        return "";
+        return ""; // TODO: Define method
     };
 
     React.useEffect(() => {
@@ -186,6 +277,7 @@ export function InputGameByChessBoard({allTeams, user}:InputGameByChessBoardProp
                 <Grid size={2}></Grid>
                 <Grid size={8}>
                     <MetaDataForGameInput
+                        allUsers={allUsers}
                         whitePlayerData={whitePlayer}
                         setWhitePlayer={setWhitePlayer}
                         blackPlayerData={blackPlayer}

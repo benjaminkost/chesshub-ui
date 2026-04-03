@@ -160,3 +160,9 @@ export const allDummyTeams: Team[] = [
     {id: 23, name: "3. Mannschaft", club: dummyAllClubs[6], admin: allUsers[3], members: allMembers},
     {id: 24, name: "4. Mannschaft", club: dummyAllClubs[6], admin: allUsers[3], members: allMembers}
 ];
+
+export const dummyDate = new Date();
+
+export const dummyEvent = "FIDE Weltmeisterschaft";
+
+export const dummyRound = 10;

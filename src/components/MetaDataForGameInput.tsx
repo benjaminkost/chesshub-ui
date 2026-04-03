@@ -4,10 +4,11 @@ import {User} from "@/types/user";
 import {Team} from "@/types/team";
 
 interface MetaDataForGameInputProps {
-    whitePlayerData: string;
-    setWhitePlayer: (whitePlayer:string) => void;
-    blackPlayerData: string;
-    setBlackPlayer: (blackPlayer:string) => void;
+    allUsers: User[];
+    whitePlayerData: User | string;
+    setWhitePlayer: (whitePlayer: User | string) => void;
+    blackPlayerData: User | string;
+    setBlackPlayer: (blackPlayer: User | string) => void;
     dateData: Date | undefined;
     setDate: (date: Date) => void;
     eventData: string;
@@ -20,15 +21,21 @@ interface MetaDataForGameInputProps {
     user: User;
 }
 
-export function MetaDataForGameInput({whitePlayerData, setWhitePlayer,blackPlayerData,setBlackPlayer,dateData,setDate,eventData,setEvent,roundData,setRound,team,setTeam,allTeams,user}: MetaDataForGameInputProps) {
-    const handleWhitePlayer = (event: React.ChangeEvent<HTMLInputElement>)=> {
-        setWhitePlayer(event.target.value);
-    }
-
-    const handleBlackPlayer = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setBlackPlayer(event.target.value);
-    }
-
+export function MetaDataForGameInput({allUsers,
+                                         whitePlayerData,
+                                         setWhitePlayer,
+                                         blackPlayerData,
+                                         setBlackPlayer,
+                                         dateData,
+                                         setDate,
+                                         eventData,
+                                         setEvent,
+                                         roundData,
+                                         setRound,
+                                         team,
+                                         setTeam,
+                                         allTeams,
+                                         user}: MetaDataForGameInputProps) {
     const handleDate = (event: React.ChangeEvent<HTMLInputElement>) => {
         const dateFormatted = new Date(event.target.value);
         setDate(dateFormatted);
@@ -67,13 +74,59 @@ export function MetaDataForGameInput({whitePlayerData, setWhitePlayer,blackPlaye
                     <Typography>Weiß</Typography>
                 </Grid>
                 <Grid size={10}>
-                    <TextField fullWidth value={whitePlayerData} onChange={handleWhitePlayer}/>
+                    <Autocomplete freeSolo
+                                   value={whitePlayerData || null}
+                                  renderInput={(params) => {return <TextField {...params} />}}
+                                  options={allUsers}
+                                  getOptionLabel={(option)=> {
+                                      if (typeof option === "string") return option;
+                                      return `${option.name} (${option.userName})`;
+                                  }}
+                                  onChange={(_, newValue) => {
+                                      if (newValue === null) return;
+                                      if (typeof newValue === "string"){
+                                          const dummyUser: User = {
+                                              id: -1,
+                                              name: newValue,
+                                              userName: " ",
+                                              email: " "
+                                          }
+
+                                          setWhitePlayer(dummyUser);
+                                      } else {
+                                          setWhitePlayer(newValue);
+                                      }
+                                  }}
+                    />
                 </Grid>
                 <Grid size={2}>
                     <Typography>Schwarz</Typography>
                 </Grid>
                 <Grid size={10}>
-                    <TextField fullWidth value={blackPlayerData} onChange={handleBlackPlayer} />
+                    <Autocomplete freeSolo
+                                  value={blackPlayerData || null}
+                                  renderInput={(params) => {return <TextField {...params} />}}
+                                  options={allUsers}
+                                  getOptionLabel={(option)=> {
+                                      if (typeof option === "string") return option
+                                      return `${option.name} (${option.userName})`;
+                                  }}
+                                   onChange={(_, newValue) => {
+                                       if (newValue === null) return;
+                                       if (typeof newValue === "string"){
+                                           const dummyUser: User = {
+                                               id: -1,
+                                               name: newValue,
+                                               userName: " ",
+                                               email: " "
+                                           }
+
+                                           setBlackPlayer(dummyUser);
+                                       } else {
+                                           setBlackPlayer(newValue)
+                                       }
+                                   }}
+                    />
                 </Grid>
                 <Grid size={2}>
                     <Typography>Datum</Typography>
@@ -103,7 +156,7 @@ export function MetaDataForGameInput({whitePlayerData, setWhitePlayer,blackPlaye
                                   getOptionLabel={(option) => {
                                       return `${option.club?.name} - ${option.name}`;
                                   }}
-                                  onChange={(event, value) => {
+                                  onChange={(_, value) => {
                                       value ? setTeam(value) : console.warn("Input cound not be safed");
                                   }}
                     />

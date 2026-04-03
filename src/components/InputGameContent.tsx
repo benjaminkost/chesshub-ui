@@ -1,9 +1,9 @@
 import {Box, Tab, Tabs} from "@mui/material";
-import {InputGameByChessBoard, InputGameByChessBoardProps} from "@/components/InputGameByChessBoard";
+import {ChessBoardEditor, ChessBoardEditorProps} from "@/components/ChessBoardEditor";
 import {UploadFileContent} from "@/components/UploadFileContent";
 import React from "react";
 
-type InputGameContentProps = InputGameByChessBoardProps;
+type InputGameContentProps = ChessBoardEditorProps;
 
 export function InputGameContent(props: InputGameContentProps) {
     const [tabValue, setTabValue] = React.useState<number>(0);
@@ -25,7 +25,7 @@ export function InputGameContent(props: InputGameContentProps) {
                 </Tabs>
             </Box>
             {
-                tabValue === 0 && (<InputGameByChessBoard {...props}/>)
+                tabValue === 0 && (<ChessBoardEditor {...props}/>)
             }
             {
                 tabValue === 1 && (<UploadFileContent />)

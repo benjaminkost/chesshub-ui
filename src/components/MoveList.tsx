@@ -1,7 +1,7 @@
 import {Box} from "@mui/material";
 import GameNavBar from "./GameNavBar";
 import React from "react";
-import {GameState, GameStateNode} from "@/components/InputGameByChessBoard";
+import {defaultStartValue, GameState, GameStateNode} from "@/components/ChessBoardEditor";
 
 interface MoveListProps {
     gameState: GameState,
@@ -18,7 +18,7 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
 
         while(currentId !== null){
             const node:GameStateNode = gameState.allGameStates[currentId];
-            if(currentId !== "root"){
+            if(currentId !== defaultStartValue){
                 history.unshift(node);
             }
             currentId = node.parentId;
@@ -29,9 +29,9 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
 
     const handleMoveBack = () => {
         console.log("ID from Move Back: %s",gameState.activeStateId);
-        if (gameState.activeStateId === "root") return;
+        if (gameState.activeStateId === defaultStartValue) return;
 
-        const previousMoveId = gameState.allGameStates[gameState.activeStateId].parentId || "START";
+        const previousMoveId = gameState.allGameStates[gameState.activeStateId].parentId || defaultStartValue;
 
         onMoveSelect(previousMoveId);
     };
@@ -46,7 +46,7 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
 
     const handleBackToStart = () => {
         console.log("ID from move back to Start: %s",gameState.activeStateId);
-        onMoveSelect("root");
+        onMoveSelect(defaultStartValue);
     };
 
     const handleForwardToEnd = () => {
@@ -85,7 +85,7 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
         }}>
             {
                 moveHistory.map((gameStateNode, index) => {
-                    if (gameStateNode.color === "b" || gameStateNode.notation === "START") return null;
+                    if (gameStateNode.color === "w" || gameStateNode.notation === defaultStartValue) return null;
 
                     const whiteMoveNode = gameStateNode;
                     const blackMoveNode: GameStateNode | null = moveHistory[index+1] || null;
