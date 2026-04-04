@@ -12,23 +12,21 @@ interface MoveListProps {
 
 export default function MoveList({width=200, height=600, gameState, onMoveSelect}:MoveListProps) {
 
-    const moveHistory = React.useMemo(() => {
+    const mainLineStateHistory = React.useMemo(() => {
         const history: GameStateNode[] = [];
-        let currentId: string | null = gameState.activeStateId;
+        let currentId: string | null = gameState.rootId;
 
         while(currentId !== null){
             const node:GameStateNode = gameState.allGameStates[currentId];
-            if(currentId !== defaultStartValue){
-                history.unshift(node);
+            currentId = node.nextMoves[0] || null;
+            if (gameState.rootId !== node.id){
+                history.push(node);
             }
-            currentId = node.parentId;
-            console.log("ID from history: %s",currentId);
         }
         return history;
     },[gameState.allGameStates, gameState.rootId]);
 
     const handleMoveBack = () => {
-        console.log("ID from Move Back: %s",gameState.activeStateId);
         if (gameState.activeStateId === defaultStartValue) return;
 
         const previousMoveId = gameState.allGameStates[gameState.activeStateId].parentId || defaultStartValue;
@@ -37,7 +35,7 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
     };
 
     const handleMoveForward = () => {
-        if (gameState.activeStateId == moveHistory.at(-1)?.id) return;
+        if (gameState.activeStateId == mainLineStateHistory.at(-1)?.id) return;
 
         const nextMoveId = gameState.allGameStates[gameState.activeStateId].nextMoves[0];
 
@@ -50,7 +48,7 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
     };
 
     const handleForwardToEnd = () => {
-        const lastMoveId = moveHistory.at(-1)?.id || "";
+        const lastMoveId = mainLineStateHistory.at(-1)?.id || "";
 
         onMoveSelect(lastMoveId);
     };
@@ -84,11 +82,13 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
             flexGrow: 1
         }}>
             {
-                moveHistory.map((gameStateNode, index) => {
+                mainLineStateHistory.map((gameStateNode, index) => {
                     if (gameStateNode.color === "w" || gameStateNode.notation === defaultStartValue) return null;
 
                     const whiteMoveNode = gameStateNode;
-                    const blackMoveNode: GameStateNode | null = moveHistory[index+1] || null;
+                    const blackMoveNode: GameStateNode | null = mainLineStateHistory[index+1] || null;
+
+                    console.log("NextMoves: %s", gameState.allGameStates[gameStateNode.id].nextMoves);
 
                     return (
                         <Box
@@ -134,7 +134,7 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
                 })
             }
         </Box>
-        <Box sx={{flexShrink: 0}}>
+        <Box>
             <GameNavBar onMoveBack={handleMoveBack} onMoveForward={handleMoveForward} onBackToStart={handleBackToStart} onForwardToEnd={handleForwardToEnd} />
         </Box>
     </Box>
