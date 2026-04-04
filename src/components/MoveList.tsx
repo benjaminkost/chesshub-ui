@@ -10,21 +10,37 @@ interface MoveListProps {
     height?: number
 }
 
-export default function MoveList({width=200, height=600, gameState, onMoveSelect}:MoveListProps) {
+const createMainLine = (gameState:GameState, currentId:string | null):GameStateNode[] => {
+    const history: GameStateNode[] = [];
 
-    const mainLineStateHistory = React.useMemo(() => {
-        const history: GameStateNode[] = [];
-        let currentId: string | null = gameState.rootId;
-
-        while(currentId !== null){
-            const node:GameStateNode = gameState.allGameStates[currentId];
-            currentId = node.nextMoves[0] || null;
-            if (gameState.rootId !== node.id){
-                history.push(node);
-            }
+    while(currentId !== null){
+        const node:GameStateNode = gameState.allGameStates[currentId];
+        if (gameState.rootId !== node.id){
+            history.push(node);
         }
-        return history;
+        currentId = node.nextMoves[0] || null;
+    }
+
+   return history;
+}
+
+export default function MoveList({width=200, height=600, gameState, onMoveSelect}:MoveListProps) {
+    const mainLineStateHistory = React.useMemo(() => {
+        let currentId: string | null = gameState.rootId;
+        return createMainLine(gameState, currentId);
     },[gameState.allGameStates, gameState.rootId]);
+
+    const currentSideLines:GameStateNode[][] | null = React.useMemo(() => {
+        const parentId:string = gameState.allGameStates[gameState.activeStateId].parentId || defaultStartValue;
+        const parentNode = gameState.allGameStates[parentId];
+
+        if (parentNode.nextMoves.length <= 1) return null;
+
+        const siblingsIds:string[] = parentNode.nextMoves.filter(id => id !== gameState.activeStateId);
+
+        return siblingsIds.map(id => createMainLine(gameState, id));
+
+    }, [gameState.activeStateId]);
 
     const handleMoveBack = () => {
         if (gameState.activeStateId === defaultStartValue) return;
@@ -88,47 +104,79 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
                     const whiteMoveNode = gameStateNode;
                     const blackMoveNode: GameStateNode | null = mainLineStateHistory[index+1] || null;
 
-                    console.log("NextMoves: %s", gameState.allGameStates[gameStateNode.id].nextMoves);
-
                     return (
                         <Box
-                            key={gameStateNode.id}
                             sx={{
                                 display: "flex",
+                                flexDirection: "column"
                             }}
                         >
-                            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>{gameStateNode.moveNumber}</Box>
-                            <Box onClick={() => handleSetMoveIndex(gameStateNode.id)}
-                                 sx={{padding: 1,
-                                     flex: 4,
-                                     backgroundColor: handleCurrentColorOfCurrentMoveBox(whiteMoveNode.id),
-                                     "&:hover": {
-                                     backgroundColor: "lightgray",
-                                         cursor: "pointer"
-                                 }}}>
-                                {whiteMoveNode.notation}
-                            </Box>
-                            {
-                                blackMoveNode ?
-                                (<Box onClick={
-                                    () => blackMoveNode && handleSetMoveIndex(blackMoveNode.id)
-                                } sx={{
-                                    padding: 1,
-                                    flex: 4,
-                                    backgroundColor: handleCurrentColorOfCurrentMoveBox(blackMoveNode.id),
-                                    "&:hover": {
-                                        backgroundColor: "lightgray",
-                                        cursor: "pointer"
-                                    }
-                                }}>
-                                    {blackMoveNode.notation}
-                                </Box>)
-                                    :
-                                    (<Box sx={{
+                            <Box
+                                key={gameStateNode.id}
+                                sx={{
+                                    display: "flex",
+                                    flexDirection: "row"
+                                }}
+                            >
+                                <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>{gameStateNode.moveNumber}</Box>
+                                <Box onClick={() => handleSetMoveIndex(gameStateNode.id)}
+                                     sx={{padding: 1,
+                                         flex: 4,
+                                         backgroundColor: handleCurrentColorOfCurrentMoveBox(whiteMoveNode.id),
+                                         "&:hover": {
+                                         backgroundColor: "lightgray",
+                                             cursor: "pointer"
+                                     }}}>
+                                    {whiteMoveNode.notation}
+                                </Box>
+                                {
+                                    blackMoveNode ?
+                                    (<Box onClick={
+                                        () => blackMoveNode && handleSetMoveIndex(blackMoveNode.id)
+                                    } sx={{
                                         padding: 1,
-                                        flex: 4
-                                    }}/>)
-                            }
+                                        flex: 4,
+                                        backgroundColor: handleCurrentColorOfCurrentMoveBox(blackMoveNode.id),
+                                        "&:hover": {
+                                            backgroundColor: "lightgray",
+                                            cursor: "pointer"
+                                        }
+                                    }}>
+                                        {blackMoveNode.notation}
+                                    </Box>)
+                                        :
+                                        (<Box sx={{
+                                            padding: 1,
+                                            flex: 4
+                                        }}/>)
+                                }
+                            </Box>
+                            <Box>
+                                {
+                                    currentSideLines &&
+                                    currentSideLines.map((sideLines) => {
+                                        return (<Box sx={{
+                                                display: "flex",
+                                                flexDirection: "column",
+                                            }}>
+                                                {sideLines.map((moveNode)=>{
+                                                    return (
+                                                        <Box
+                                                            sx={{
+                                                                display: "flex",
+                                                                flexDirection: "row",
+                                                                backgroundColor: "darkgray"
+                                                        }}
+                                                        >
+                                                            {moveNode.notation}
+                                                        </Box>
+                                                    )
+                                                })}
+                                            </Box>
+                                        )
+                                    })
+                                }
+                            </Box>
                         </Box>
                     )
                 })
