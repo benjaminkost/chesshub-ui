@@ -50,7 +50,7 @@ export const dummyGamesTableData: Row[] = [
         id: 1,
         whitePGN: "Filip Topov",
         blackPGN: "Lukas Zander",
-        datePGN: dayjs("13.11.2002"),
+        datePGN: dayjs(),
         opening: "Scotch Opening",
         team: "SV Empor",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
@@ -76,7 +76,7 @@ export const dummyGamesTableData: Row[] = [
         id: 2,
         whitePGN: "Benjamin Kostka",
         blackPGN: "Lukas Zander",
-        datePGN: dayjs("13.10.2002"),
+        datePGN: dayjs(),
         opening: "Scotch Opening",
         team: "SV Kreuzberg",
         movePGN: "1. e4 c6 2. d4 d5 3. " +

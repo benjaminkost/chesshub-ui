@@ -24,7 +24,9 @@ const columns: GridColDef[] = [
     { field: "whitePGN", headerName: "Weiß", resizable: false, flex: 2 },
     { field: "blackPGN", headerName: "Schwarz", resizable: false, flex: 2 },
     { field: "team", headerName: "Mannschaft", resizable: false, flex: 2 },
-    { field: "datePGN", headerName: "Datum", type: "date", resizable: false, flex: 1.5 },
+    { field: "datePGN", headerName: "Datum", type: "date", resizable: false, flex: 1.5,
+        valueFormatter: (value:Dayjs) => value?.format("DD.MM.YYYY")
+    },
     { field: "opening", headerName: "Eröffnung", resizable: false, flex: 2 },
     { field: "movePGN", headerName: "Züge", resizable: false, flex: 5 }
 ];
