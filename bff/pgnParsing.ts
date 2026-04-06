@@ -2,7 +2,7 @@ import {Chess, DEFAULT_POSITION} from "chess.js";
 import {v4 as uuidv4} from "uuid";
 import {defaultStartValue, GameState, GameStateNode} from "@/types/game";
 
-export const parsePgnToGameState= (pgn: string):GameState =>  { // TODO: written bei Gemini -> needs review
+export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>  { // TODO: written bei Gemini -> needs review
     const chess = new Chess();
     const rootId = defaultStartValue;
 
@@ -79,7 +79,7 @@ export const parsePgnToGameState= (pgn: string):GameState =>  { // TODO: written
 
     return {
         rootId,
-        activeStateId: activeId, // Pointer steht am Ende der Hauptlinie
+        activeStateId: lastPosition ? activeId : defaultStartValue,
         allGameStates
     };
 }
