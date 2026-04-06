@@ -15,7 +15,6 @@ const createMainLine = (gameState:GameState, currentId:string | null):GameStateN
 
     while(currentId !== null){
         const node:GameStateNode = gameState.allGameStates[currentId];
-        debugger;
         if (gameState.rootId !== node.id){
             history.push(node);
         }
@@ -90,6 +89,7 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
 
                     return (
                         <Box
+                            key={gameStateNode.id}
                             sx={{
                                 display: "flex",
                                 flexDirection: "column"
@@ -99,11 +99,16 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
                                   whiteMoveNode={whiteMoveNode}
                                   blackMoveNode={blackMoveNode}
                                   handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}/>
+
+                            {
+                                (whiteMoveNode.nextMoves.length > 1 || blackMoveNode.nextMoves.length > 1) &&
+                                <Box sx={{border: "1px solid gray", pt: 0.75, pb: 0.75, backgroundColor: "dimgray"}}>
                             {
                                 whiteMoveNode.nextMoves.length > 1 &&
                                 whiteMoveNode.nextMoves.slice(1).map((id)=> {
                                     const node = gameState.allGameStates[id];
-                                    return (<SideLine
+                                    return (
+                                        <SideLine
                                                 currentNode={node}
                                                 onMoveSelect={onMoveSelect}
                                                 handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
@@ -125,6 +130,8 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
                                     />)
                                 })
                             }
+                                </Box>
+                                }
                         </Box>
                     )
                 })
@@ -204,23 +211,24 @@ function SideLine({currentNode, onMoveSelect, handleCurrentColorOfCurrentMoveBox
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                backgroundColor: "darkgray",
-                gap: 1,
-                pl: variantDepth
+                gap:  0.5,
+                pl: variantDepth,
+                alignItems: "baseline",
+                fontSize: 13
             }}
         >
-            <Box sx={{display:"flex", flexDirection: "row", flexWrap: "wrap", gap: 1}}>
+            <Box sx={{display:"flex", flexDirection: "row", flexWrap: "wrap", gap: 0.75}}>
                     {createMainLine(gameState, currentNode.id).map((sideLine) => {
-                        debugger;
                         return (
-                            <>
+                            <React.Fragment key={sideLine.id}>
                                 {
-                                    (sideLine.color === "b") && (gameState.allGameStates[sideLine.parentId]?.nextMoves[0] !== sideLine.id)
+                                    (sideLine.color === "b") && (gameState.allGameStates[sideLine.parentId || defaultStartValue].nextMoves[0] !== sideLine.id)
                                     ?
                                         <Box>{sideLine.moveNumber}... </Box>
                                     : (sideLine.color === "w") && <Box>{sideLine.moveNumber}. </Box>
                                 }
-                                <Box onClick={() => onMoveSelect(sideLine.id)}
+                                <Box
+                                    onClick={() => onMoveSelect(sideLine.id)}
                                      sx={{
                                          backgroundColor: handleCurrentColorOfCurrentMoveBox(sideLine.id),
                                          "&:hover": {
@@ -231,7 +239,7 @@ function SideLine({currentNode, onMoveSelect, handleCurrentColorOfCurrentMoveBox
                                 >
                                     {sideLine.notation}
                                 </Box>
-                            </>)
+                            </React.Fragment>)
                     })}
             </Box>
             <Box sx={{display:"flex", flexDirection: "row"}}>
@@ -243,6 +251,7 @@ function SideLine({currentNode, onMoveSelect, handleCurrentColorOfCurrentMoveBox
                                 sideLine.nextMoves.slice(1).map((id)=> {
                                     const node = gameState.allGameStates[id];
                                     return (<SideLine
+                                        key={id}
                                         currentNode={node}
                                         onMoveSelect={onMoveSelect}
                                         handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
