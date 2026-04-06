@@ -2,6 +2,7 @@ import {Club, ClubAffiliation, ClubTeams, MemberStatus} from "./types/club.js";
 import {Row} from "./components/GamesTable.js";
 import {Team} from "./types/team.js";
 import {Member, MemberRole, User} from "@/types/user";
+import dayjs from "dayjs";
 
 export const allUsers: User[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -49,7 +50,7 @@ export const dummyGamesTableData: Row[] = [
         id: 1,
         whitePGN: "Filip Topov",
         blackPGN: "Lukas Zander",
-        datePGN: new Date(13,11,2002),
+        datePGN: dayjs("13.11.2002"),
         opening: "Scotch Opening",
         team: "SV Empor",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
@@ -75,7 +76,7 @@ export const dummyGamesTableData: Row[] = [
         id: 2,
         whitePGN: "Benjamin Kostka",
         blackPGN: "Lukas Zander",
-        datePGN: new Date(2002,10,13),
+        datePGN: dayjs("13.10.2002"),
         opening: "Scotch Opening",
         team: "SV Kreuzberg",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
@@ -161,7 +162,7 @@ export const allDummyTeams: Team[] = [
     {id: 24, name: "4. Mannschaft", club: dummyAllClubs[6], admin: allUsers[3], members: allMembers}
 ];
 
-export const dummyDate = new Date();
+export const dummyDate = dayjs("10.12.2022");
 
 export const dummyEvent = "FIDE Weltmeisterschaft";
 

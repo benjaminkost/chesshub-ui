@@ -1,10 +1,11 @@
 import {Team} from "@/types/team";
+import {Dayjs} from "dayjs";
 
 export interface Game {
     id: number,
     whites: string,
     blacks: string,
-    dates: Date,
+    dates: Dayjs,
     opening?: string,
     event?: string,
     board?: string,

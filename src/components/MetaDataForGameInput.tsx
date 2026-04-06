@@ -1,7 +1,12 @@
 import {Autocomplete, Box, Button, Grid, TextField, Typography} from "@mui/material";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from "react";
 import {User} from "@/types/user";
 import {Team} from "@/types/team";
+import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
+import {DatePicker, DateValidationError, PickerChangeHandlerContext} from "@mui/x-date-pickers";
+import {Dayjs} from "dayjs";
+import {PickerValue} from "@mui/x-date-pickers/internals";
 
 interface MetaDataForGameInputProps {
     allUsers: User[];
@@ -9,8 +14,8 @@ interface MetaDataForGameInputProps {
     setWhitePlayer: (whitePlayer: User | string) => void;
     blackPlayerData: User | string;
     setBlackPlayer: (blackPlayer: User | string) => void;
-    dateData: Date | undefined;
-    setDate: (date: Date) => void;
+    dateData: Dayjs | null;
+    setDate: (date: Dayjs | null) => void;
     eventData: string;
     setEvent: (event: string) => void;
     roundData: number | undefined;
@@ -36,9 +41,8 @@ export function MetaDataForGameInput({allUsers,
                                          setTeam,
                                          allTeams,
                                          user}: MetaDataForGameInputProps) {
-    const handleDate = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const dateFormatted = new Date(event.target.value);
-        setDate(dateFormatted);
+    const handleDate = (value: PickerValue, _: PickerChangeHandlerContext<DateValidationError>) => {
+        setDate(value);
     }
 
     const handleEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -132,7 +136,17 @@ export function MetaDataForGameInput({allUsers,
                     <Typography>Datum</Typography>
                 </Grid>
                 <Grid size={10}>
-                    <TextField fullWidth value={dateData} onChange={handleDate} />
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            value={dateData}
+                            format={"DD.MM.YYYY"}
+                            onChange={handleDate}
+                            slotProps={{
+                                textField: {
+                                    fullWidth: true
+                            }}}
+                        />
+                    </LocalizationProvider>
                 </Grid>
                 <Grid size={2}>
                     <Typography>Event</Typography>

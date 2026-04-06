@@ -13,13 +13,14 @@ import { v4 as uuidv4 } from "uuid";
 import {allUsers} from "@/dummyData";
 import {parsePgnToGameState} from"@/../bff/pgnParsing"
 import {GameState, GameStateNode} from "@/types/game";
+import {Dayjs} from "dayjs";
 
 export interface ChessBoardEditorProps {
     allTeams: Team[];
     user: User;
     initialWhitePlayer?: User | string;
     initialBlackPlayer?: User | string;
-    initialDate?: Date | undefined;
+    initialDate?: Dayjs | null;
     initialEvent?: string;
     initialRound?: number;
     initialTeam?: Team | undefined;
@@ -29,7 +30,7 @@ export interface ChessBoardEditorProps {
 const defaultValues = {
     initialWhitePlayer: "",
     initialBlackPlayer: "",
-    initialDate: undefined,
+    initialDate: null,
     initialEvent: "",
     initialRound: undefined,
     initialTeam: undefined,
@@ -51,7 +52,7 @@ export function ChessBoardEditor({allTeams,
     const [gameState, setGameState] = React.useState<GameState>(parsePgnToGameState(initialMoves));
     const [whitePlayer, setWhitePlayer] = React.useState<User | string>(initialWhitePlayer);
     const [blackPlayer, setBlackPlayer] = React.useState<User | string>(initialBlackPlayer);
-    const [date, setDate] = React.useState<Date | undefined>(initialDate);
+    const [date, setDate] = React.useState<Dayjs | null>(initialDate);
     const [event, setEvent] = React.useState<string>(initialEvent);
     const [round, setRound] = React.useState<number | undefined>(initialRound);
     const [team, setTeam] = React.useState<Team | undefined>(initialTeam);
@@ -118,7 +119,7 @@ export function ChessBoardEditor({allTeams,
             "black_player_name": blackPlayer,
             "moves": convertTreeToPGNMoves(),
             "event": event,
-            "date": date,
+            "date": date?.toISOString(),
             "team": team
         };
         await _post("", payload);

@@ -2,12 +2,13 @@ import { Paper } from "@mui/material";
 import React from "react";
 import {DataGrid, GridColDef, GridColumnVisibilityModel} from "@mui/x-data-grid";
 import {useNavigate} from "react-router-dom";
+import {Dayjs} from "dayjs";
 
 export interface Row {
     id: number,
     whitePGN: string,
     blackPGN: string,
-    datePGN: Date,
+    datePGN: Dayjs,
     opening: string,
     team: string,
     movePGN: string
