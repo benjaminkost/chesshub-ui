@@ -24,7 +24,7 @@ export function Header({loggedIn, menuElements = defaultMenuElements, navItems =
     return (
         <AppBar position={"sticky"}
                 sx={{
-                    "background-color": "#bdbdbd",
+                    backgroundColor: "#bdbdbd",
                     color: "#424242",
                     height: 80
                 }}

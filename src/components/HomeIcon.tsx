@@ -15,7 +15,7 @@ export function HomeIcon(){
                         "&:hover": {color: "primary.main"}
                     }}
                 >
-                    <a href="/">ChessHub</a>
+                    ChessHub
                 </Typography>
             </Box>
         </>
