@@ -11,10 +11,10 @@ export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>
         [rootId]: {
             id: rootId,
             parentId: null,
-            moveNumber: 1,
+            moveNumber: 0,
             notation: defaultStartValue,
             fen: DEFAULT_POSITION,
-            color: "w",
+            color: "b",
             nextMoves: []
         }
     };
@@ -58,8 +58,8 @@ export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>
                         parentId: activeId,
                         notation: move.san,
                         fen: chess.fen(),
-                        color: move.color === "w" ? "b" : "w",
-                        moveNumber: move.color === "w" ? parentNode.moveNumber : parentNode.moveNumber + 1,
+                        color: move.color,
+                        moveNumber: move.color === "b" ? parentNode.moveNumber : parentNode.moveNumber + 1,
                         nextMoves: []
                     };
 

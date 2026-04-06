@@ -15,6 +15,7 @@ const createMainLine = (gameState:GameState, currentId:string | null):GameStateN
 
     while(currentId !== null){
         const node:GameStateNode = gameState.allGameStates[currentId];
+        debugger;
         if (gameState.rootId !== node.id){
             history.push(node);
         }
@@ -22,20 +23,6 @@ const createMainLine = (gameState:GameState, currentId:string | null):GameStateN
     }
 
    return history;
-}
-
-const createSideLine = (gameState:GameState, currentId:string | null):GameStateNode[] => {
-    const history: GameStateNode[] = [];
-
-    while(currentId !== null){
-        const node:GameStateNode = gameState.allGameStates[currentId];
-        if (gameState.rootId !== node.id){
-            history.push(node);
-        }
-        currentId = node.nextMoves[0] || null;
-    }
-
-    return history;
 }
 
 export default function MoveList({width=200, height=600, gameState, onMoveSelect}:MoveListProps) {
@@ -96,7 +83,7 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
         }}>
             {
                 mainLineStateHistory.map((gameStateNode, index) => {
-                    if (gameStateNode.color === "w" || gameStateNode.notation === defaultStartValue) return null;
+                    if (gameStateNode.color === "b" || gameStateNode.notation === defaultStartValue) return null;
 
                     const whiteMoveNode = mainLineStateHistory[index];
                     const blackMoveNode: GameStateNode | null = mainLineStateHistory[index+1] || null;
@@ -112,13 +99,32 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
                                   whiteMoveNode={whiteMoveNode}
                                   blackMoveNode={blackMoveNode}
                                   handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}/>
-                            <SideLine
-                                onMoveSelect={onMoveSelect}
-                                whiteMoveNode={whiteMoveNode}
-                                blackMoveNode={blackMoveNode}
-                                handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
-                                gameState={gameState}
-                            />
+                            {
+                                whiteMoveNode.nextMoves.length > 1 &&
+                                whiteMoveNode.nextMoves.slice(1).map((id)=> {
+                                    const node = gameState.allGameStates[id];
+                                    return (<SideLine
+                                                currentNode={node}
+                                                onMoveSelect={onMoveSelect}
+                                                handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
+                                                gameState={gameState}
+                                                variantDepth={1}
+                                    />)
+                                })
+                            }
+                            {
+                                blackMoveNode?.nextMoves.length > 1 &&
+                                blackMoveNode.nextMoves.slice(1).map((id)=> {
+                                    const node = gameState.allGameStates[id];
+                                    return (<SideLine
+                                        currentNode={node}
+                                        onMoveSelect={onMoveSelect}
+                                        handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
+                                        gameState={gameState}
+                                        variantDepth={1}
+                                    />)
+                                })
+                            }
                         </Box>
                     )
                 })
@@ -161,7 +167,7 @@ function Move({onMoveSelect, whiteMoveNode, blackMoveNode, handleCurrentColorOfC
             </Box>
             {
                 blackMoveNode ?
-                    (<Box onClick={
+                    <Box onClick={
                         () => blackMoveNode && onMoveSelect(blackMoveNode.id)
                     } sx={{
                         padding: 1,
@@ -173,7 +179,7 @@ function Move({onMoveSelect, whiteMoveNode, blackMoveNode, handleCurrentColorOfC
                         }
                     }}>
                         {blackMoveNode.notation}
-                    </Box>)
+                    </Box>
                     :
                     (<Box sx={{
                         padding: 1,
@@ -184,55 +190,39 @@ function Move({onMoveSelect, whiteMoveNode, blackMoveNode, handleCurrentColorOfC
     )
 }
 
-interface SideLineProps extends MoveProps {
-    gameState: GameState
+interface SideLineProps {
+    currentNode: GameStateNode;
+    onMoveSelect: (id: string) => void;
+    handleCurrentColorOfCurrentMoveBox: (id: string) => string;
+    gameState: GameState;
+    variantDepth: number;
 }
 
-function SideLine({gameState, ...props}:SideLineProps) {
+function SideLine({currentNode, onMoveSelect, handleCurrentColorOfCurrentMoveBox, gameState, variantDepth}:SideLineProps) {
     return (
         <Box
             sx={{
                 display: "flex",
                 flexDirection: "column",
                 backgroundColor: "darkgray",
-                gap: 1
+                gap: 1,
+                pl: variantDepth
             }}
         >
-            {
-                (props.whiteMoveNode.nextMoves.length > 1) &&
-                (<Box sx={{display:"flex", flexDirection: "row", gap: 1}}>
-                    {createSideLine(gameState, props.whiteMoveNode.nextMoves[1]).map((sideLine) => {
+            <Box sx={{display:"flex", flexDirection: "row", flexWrap: "wrap", gap: 1}}>
+                    {createMainLine(gameState, currentNode.id).map((sideLine) => {
+                        debugger;
                         return (
-                            <Box onClick={() => props.onMoveSelect(sideLine.id)}
-                                 sx={{
-                                     backgroundColor: props.handleCurrentColorOfCurrentMoveBox(sideLine.id),
-                                     "&:hover": {
-                                         backgroundColor: "lightgray",
-                                         cursor: "pointer"
-                                     }
-                                 }}
-                            >
-                                {sideLine.notation}
-                            </Box>
-                        )
-                    })}
-                </Box>)}
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    backgroundColor: "darkgray",
-                    gap: 1
-                }}
-            >
-                {
-                    (props.blackMoveNode?.nextMoves.length > 1) &&
-                    (<Box sx={{display:"flex", flexDirection: "row", gap: 1}}>
-                        {createSideLine(gameState, props.blackMoveNode.nextMoves[1]).map((sideLine) => {
-                            return (
-                                <Box onClick={() => props.onMoveSelect(sideLine.id)}
+                            <>
+                                {
+                                    (sideLine.color === "b") && (gameState.allGameStates[sideLine.parentId]?.nextMoves[0] !== sideLine.id)
+                                    ?
+                                        <Box>{sideLine.moveNumber}... </Box>
+                                    : (sideLine.color === "w") && <Box>{sideLine.moveNumber}. </Box>
+                                }
+                                <Box onClick={() => onMoveSelect(sideLine.id)}
                                      sx={{
-                                         backgroundColor: props.handleCurrentColorOfCurrentMoveBox(sideLine.id),
+                                         backgroundColor: handleCurrentColorOfCurrentMoveBox(sideLine.id),
                                          "&:hover": {
                                              backgroundColor: "lightgray",
                                              cursor: "pointer"
@@ -241,10 +231,28 @@ function SideLine({gameState, ...props}:SideLineProps) {
                                 >
                                     {sideLine.notation}
                                 </Box>
-                            )
-                        })}
-                    </Box>)
-                }
+                            </>)
+                    })}
+            </Box>
+            <Box sx={{display:"flex", flexDirection: "row"}}>
+                {createMainLine(gameState, currentNode.id).map((sideLine) => {
+                    return (
+                        <>
+                            {
+                            sideLine.nextMoves.length > 1 &&
+                                sideLine.nextMoves.slice(1).map((id)=> {
+                                    const node = gameState.allGameStates[id];
+                                    return (<SideLine
+                                        currentNode={node}
+                                        onMoveSelect={onMoveSelect}
+                                        handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
+                                        gameState={gameState}
+                                        variantDepth={variantDepth+1}
+                                    />)
+                                })
+                            }
+                        </>)
+                })}
             </Box>
         </Box>
     )
