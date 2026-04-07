@@ -12,6 +12,8 @@ export function StockfishTurnOnBar({fen, id, setEvaluation, evaluation=null}: St
     const [checked, setChecked] = React.useState<boolean>(false);
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
+    React.useEffect(() => {setChecked(false); setIsLoading(false);}, [id]);
+
     const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     const handleLichessRequest = async () => {
