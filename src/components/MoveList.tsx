@@ -66,7 +66,7 @@ export default function MoveList({width=200, height=600, gameState, setEvaluatio
         <StockfishTurnOnBar fen={gameState.allGameStates[gameState.activeStateId || defaultStartValue]?.fen}
                             id={gameState.activeStateId}
                             setEvaluation={setEvaluation}
-                            evaluation={gameState.allGameStates[gameState.activeStateId || defaultStartValue].analysis?.eval.centiPawn}/>
+                            evaluation={gameState.allGameStates[gameState.activeStateId || defaultStartValue].analysis?.eval?.centiPawn}/>
         <Box sx={{
             backgroundColor: "gray",
             color: "white",
@@ -94,7 +94,7 @@ export default function MoveList({width=200, height=600, gameState, setEvaluatio
                                   handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}/>
 
                             {
-                                (whiteMoveNode.nextMoves.length > 1 || blackMoveNode.nextMoves.length > 1) &&
+                                (whiteMoveNode.nextMoves.length > 1 || blackMoveNode?.nextMoves.length > 1) &&
                                 <Box sx={{border: "1px solid gray", pt: 0.75, pb: 0.75, backgroundColor: "dimgray"}}>
                             {
                                 whiteMoveNode.nextMoves.length > 1 &&
