@@ -30,8 +30,8 @@ export interface Recommendation {
 }
 
 export interface EngineAnalysis {
-    recommendedMoves: Recommendation[];
-    depth: number;
+    recommendedMoves?: Recommendation[];
+    depth?: number;
     eval: Evaluation;
 }
 

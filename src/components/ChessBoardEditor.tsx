@@ -14,6 +14,7 @@ import {allUsers} from "@/dummyData";
 import {parsePgnToGameState} from"@/../bff/pgnParsing"
 import {GameState, GameStateNode} from "@/types/game";
 import {Dayjs} from "dayjs";
+import {produce} from "immer";
 
 export interface ChessBoardEditorProps {
     allTeams: Team[];
@@ -65,7 +66,7 @@ export function ChessBoardEditor({allTeams,
     React.useEffect(() => {
         const chess = new Chess(gameState.allGameStates[gameState.activeStateId].fen);
         try {
-            const move:Move = chess.move({from: lastMove[0], to: lastMove[1]});
+            const move:Move = chess.move({from: lastMove[0].toString(), to: lastMove[1].toString()});
             chessApi?.set({fen: chess.fen()});
             const parentId = gameState.activeStateId;
 
@@ -134,27 +135,20 @@ export function ChessBoardEditor({allTeams,
     };
 
     const handleEvaluationChange = (id:string, evaluation: number | null) => {
-        setGameState((prev):GameState => {
-            const currentNode = prev.allGameStates[id];
-            if (!currentNode) return prev;
+        setGameState(produce((prev:GameState) => {
+            const node = prev.allGameStates[id];
+            if (!node) return prev;
 
-            const updatedNode = {
-                ...currentNode,
-                analysis: {
-                ...(currentNode.analysis || {}),
-                eval: {
-                    ...(currentNode.analysis?.eval || { centiPawn: null}),
-                    centiPawn: evaluation
+            if (!node.analysis) {
+                node.analysis = {
+                    recommendedMoves: [],
+                    depth: 0,
+                    eval: { centiPawn: 0, isMate: false, mateIn: 0}
                 }
-            }};
+            }
 
-                return {
-                    ...prev,
-                    allGameStates: {
-                        ...prev.allGameStates,
-                        [id]: updatedNode
-                    }};
-        })
+            node.analysis.eval.centiPawn = evaluation ?? 0;
+        }))
     }
 
     return (

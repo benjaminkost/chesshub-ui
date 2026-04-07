@@ -20,7 +20,7 @@ export function StockfishTurnOnBar({fen, id, setEvaluation, evaluation=null}: St
             // TODO: API call to backend that calls the lichess api
             console.log("Here should be the api call with parameters: position %s", fen);
             await sleep(4000);
-            const lichessEval = 0.1;
+            const lichessEval = -0.1;
             setEvaluation(id, lichessEval);
         } finally {
             setIsLoading(false);
@@ -41,15 +41,15 @@ export function StockfishTurnOnBar({fen, id, setEvaluation, evaluation=null}: St
 
     return (
         <Box>
-            {isLoading && <LinearProgress />}
+            {isLoading && <LinearProgress color={"success"}/>}
             <Box sx={{display: "flex", backgroundColor: "darkgray", flexDirection: "row", alignItems: "center", p: 1, gap: 1}}>
                 <IOSSwitch sx={{m:1}}
                            checked={checked}
                            onChange={handleSwitchCheck}
                            defaultChecked />
                 {evaluation && evaluation > 0
-                    ? (<Typography variant={"h5"} sx={{color: "blue", fontWeight: "bold"}}>+{evaluation}</Typography>)
-                    : (<Typography variant={"h5"} sx={{color: "blue", fontWeight: "bold"}}>{evaluation}</Typography>)}
+                    ? (<Typography variant={"h5"} sx={{color: "white", fontWeight: "bold"}}>+{evaluation}</Typography>)
+                    : (<Typography variant={"h5"} sx={{color: "white", fontWeight: "bold"}}>{evaluation}</Typography>)}
             </Box>
         </Box>
     )
