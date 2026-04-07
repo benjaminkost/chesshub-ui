@@ -16,9 +16,12 @@ export default function GameNavBar({onForwardToEnd, onMoveForward, onMoveBack, o
 
     React.useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
-            const isInput = ["INPUT", "TEXTAREA"].includes((event.target as HTMLElement).tagName);
+            const target = event.target as HTMLElement;
+            const isEditable = ["INPUT", "TEXTAREA"].includes(target.tagName)
+                || target.isContentEditable
+                || target.getAttribute("role") === "spinbutton";
 
-            if(isInput) return;
+            if(isEditable) return;
 
             switch(event.key) {
                 case "ArrowRight":
