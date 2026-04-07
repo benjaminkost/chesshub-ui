@@ -3,6 +3,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPage from '@mui/icons-material/LastPage';
+import React from "react";
 
 interface GameNavBar {
     onMoveBack: () => void,
@@ -12,6 +13,28 @@ interface GameNavBar {
 }
 
 export default function GameNavBar({onForwardToEnd, onMoveForward, onMoveBack, onBackToStart}: GameNavBar) {
+
+    React.useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            const isInput = ["INPUT", "TEXTAREA"].includes((event.target as HTMLElement).tagName);
+
+            if(isInput) return;
+
+            switch(event.key) {
+                case "ArrowRight":
+                    onMoveForward();
+                    break;
+                case "ArrowLeft":
+                    onMoveBack();
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        }
+    });
 
     return (
         <Box
