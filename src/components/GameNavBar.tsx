@@ -3,6 +3,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPage from '@mui/icons-material/LastPage';
+import React from "react";
 
 interface GameNavBar {
     onMoveBack: () => void,
@@ -12,6 +13,31 @@ interface GameNavBar {
 }
 
 export default function GameNavBar({onForwardToEnd, onMoveForward, onMoveBack, onBackToStart}: GameNavBar) {
+
+    React.useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            const target = event.target as HTMLElement;
+            const isEditable = ["INPUT", "TEXTAREA"].includes(target.tagName)
+                || target.isContentEditable
+                || target.getAttribute("role") === "spinbutton";
+
+            if(isEditable) return;
+
+            switch(event.key) {
+                case "ArrowRight":
+                    onMoveForward();
+                    break;
+                case "ArrowLeft":
+                    onMoveBack();
+            }
+        }
+
+        window.addEventListener("keydown", handleKeyDown);
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        }
+    });
 
     return (
         <Box

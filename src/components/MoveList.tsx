@@ -1,38 +1,57 @@
 import {Box} from "@mui/material";
 import GameNavBar from "./GameNavBar";
 import React from "react";
+import {defaultStartValue, GameState, GameStateNode} from "@/types/game";
+import {StockfishTurnOnBar} from "@/components/StockfishTurnOnBar";
+import {createMainLine} from "../../bff/interactWithGameState";
 
 interface MoveListProps {
+    gameState: GameState,
+    onMoveSelect: (activeStateId: string) => void,
+    setEvaluation: (id: string, evaluation: number | null) => void,
     width?: number,
-    height?: number,
-    pgnMoves: string[],
-    setMoveIndex: (moveIndex:number) => void,
-    moveIndex: number
+    height?: number
 }
 
-export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex, moveIndex}:MoveListProps) {
+export default function MoveList({width=200, height=600, gameState, setEvaluation, onMoveSelect}:MoveListProps) {
+    const mainLineStateHistory = React.useMemo(() => {
+        let currentId: string | null = gameState.rootId;
+        return createMainLine(gameState, currentId);
+    },[gameState.allGameStates, gameState.rootId]);
 
     const handleMoveBack = () => {
-        if (moveIndex == 0) return;
-        setMoveIndex(moveIndex-1);
+        if (gameState.activeStateId === defaultStartValue) return;
+
+        const previousMoveId = gameState.allGameStates[gameState.activeStateId].parentId || defaultStartValue;
+
+        onMoveSelect(previousMoveId);
     };
 
     const handleMoveForward = () => {
-        if (moveIndex == pgnMoves.length-1) return;
-        setMoveIndex(moveIndex+1);
+        if (gameState.activeStateId == mainLineStateHistory.at(-1)?.id) return;
+
+        const nextMoveId = gameState.allGameStates[gameState.activeStateId].nextMoves[0];
+
+        onMoveSelect(nextMoveId);
     }
 
     const handleBackToStart = () => {
-        setMoveIndex(0);
+        onMoveSelect(defaultStartValue);
     };
 
     const handleForwardToEnd = () => {
-        setMoveIndex(pgnMoves.length-1);
+        const lastMoveId = mainLineStateHistory.at(-1)?.id || "";
+
+        onMoveSelect(lastMoveId);
     };
 
-    const handleSetMoveIndex = (index: number) => {
-        setMoveIndex(index);
-    };
+    const handleCurrentColorOfCurrentMoveBox = (moveId:string) => {
+        if (moveId === gameState.activeStateId){
+            return "black"
+        } else {
+            return "inherit";
+        }
+    }
 
     return (
     <Box
@@ -44,6 +63,10 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
             ml: 5
         }}
     >
+        <StockfishTurnOnBar fen={gameState.allGameStates[gameState.activeStateId || defaultStartValue]?.fen}
+                            id={gameState.activeStateId}
+                            setEvaluation={setEvaluation}
+                            evaluation={gameState.allGameStates[gameState.activeStateId || defaultStartValue].analysis?.eval?.centiPawn}/>
         <Box sx={{
             backgroundColor: "gray",
             color: "white",
@@ -51,49 +74,188 @@ export default function MoveList({width=200, height=600, pgnMoves, setMoveIndex,
             flexGrow: 1
         }}>
             {
-                pgnMoves.map((whiteMove, index) => {
-                    if (index % 2 !== 0) return null;
+                mainLineStateHistory.map((gameStateNode, index) => {
+                    if (gameStateNode.color === "b" || gameStateNode.notation === defaultStartValue) return null;
 
-                    const moveCount = Math.floor(index/2) + 1;
-                    const blackMove = pgnMoves[index + 1];
+                    const whiteMoveNode = mainLineStateHistory[index];
+                    const blackMoveNode: GameStateNode | null = mainLineStateHistory[index+1] || null;
 
                     return (
                         <Box
-                            key={moveCount}
+                            key={gameStateNode.id}
                             sx={{
                                 display: "flex",
+                                flexDirection: "column"
                             }}
                         >
-                            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>{moveCount}</Box>
-                            <Box onClick={() => handleSetMoveIndex(index)}
-                                 sx={{padding: 1,
-                                     flex: 4,
-                                     "&:hover": {
-                                     backgroundColor: "lightgray",
-                                         cursor: "pointer"
-                                 }}}>
-                                {whiteMove}
-                            </Box>
-                            <Box onClick={
-                                () => blackMove && handleSetMoveIndex(index+1)
-                            } sx={{
-                                padding: 1,
-                                flex: 4,
-                                "&:hover": {
-                                    backgroundColor: blackMove ? "lightgray" : "transparent",
-                                    cursor: blackMove ? "pointer" : "default"
+                            <Move onMoveSelect={onMoveSelect}
+                                  whiteMoveNode={whiteMoveNode}
+                                  blackMoveNode={blackMoveNode}
+                                  handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}/>
+
+                            {
+                                (whiteMoveNode.nextMoves.length > 1 || blackMoveNode?.nextMoves.length > 1) &&
+                                <Box sx={{border: "1px solid gray", pt: 0.75, pb: 0.75, backgroundColor: "dimgray"}}>
+                            {
+                                whiteMoveNode.nextMoves.length > 1 &&
+                                whiteMoveNode.nextMoves.slice(1).map((id)=> {
+                                    const node = gameState.allGameStates[id];
+                                    return (
+                                        <SideLine
+                                                currentNode={node}
+                                                onMoveSelect={onMoveSelect}
+                                                handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
+                                                gameState={gameState}
+                                                variantDepth={1}
+                                    />)
+                                })
+                            }
+                            {
+                                blackMoveNode?.nextMoves.length > 1 &&
+                                blackMoveNode.nextMoves.slice(1).map((id)=> {
+                                    const node = gameState.allGameStates[id];
+                                    return (<SideLine
+                                        currentNode={node}
+                                        onMoveSelect={onMoveSelect}
+                                        handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
+                                        gameState={gameState}
+                                        variantDepth={1}
+                                    />)
+                                })
+                            }
+                                </Box>
                                 }
-                            }}>
-                                {blackMove || ""}
-                            </Box>
                         </Box>
                     )
                 })
             }
         </Box>
-        <Box sx={{flexShrink: 0}}>
+        <Box>
             <GameNavBar onMoveBack={handleMoveBack} onMoveForward={handleMoveForward} onBackToStart={handleBackToStart} onForwardToEnd={handleForwardToEnd} />
         </Box>
     </Box>
 );
+}
+
+interface MoveProps {
+    onMoveSelect: (id: string) => void;
+    whiteMoveNode: GameStateNode;
+    blackMoveNode: GameStateNode;
+    handleCurrentColorOfCurrentMoveBox: (id: string) => string;
+}
+
+function Move({onMoveSelect, whiteMoveNode, blackMoveNode, handleCurrentColorOfCurrentMoveBox}:MoveProps) {
+    return (
+        <Box
+            key={whiteMoveNode.id}
+            sx={{
+                display: "flex",
+                flexDirection: "row"
+            }}
+        >
+            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>
+                {whiteMoveNode.moveNumber}</Box>
+            <Box onClick={() => onMoveSelect(whiteMoveNode.id)}
+                 sx={{padding: 1,
+                     flex: 4,
+                     backgroundColor: handleCurrentColorOfCurrentMoveBox(whiteMoveNode.id),
+                     "&:hover": {
+                         backgroundColor: "lightgray",
+                         cursor: "pointer"
+                     }}}>
+                {whiteMoveNode.notation}
+            </Box>
+            {
+                blackMoveNode ?
+                    <Box onClick={
+                        () => blackMoveNode && onMoveSelect(blackMoveNode.id)
+                    } sx={{
+                        padding: 1,
+                        flex: 4,
+                        backgroundColor: handleCurrentColorOfCurrentMoveBox(blackMoveNode.id),
+                        "&:hover": {
+                            backgroundColor: "lightgray",
+                            cursor: "pointer"
+                        }
+                    }}>
+                        {blackMoveNode.notation}
+                    </Box>
+                    :
+                    (<Box sx={{
+                        padding: 1,
+                        flex: 4
+                    }}/>)
+            }
+        </Box>
+    )
+}
+
+interface SideLineProps {
+    currentNode: GameStateNode;
+    onMoveSelect: (id: string) => void;
+    handleCurrentColorOfCurrentMoveBox: (id: string) => string;
+    gameState: GameState;
+    variantDepth: number;
+}
+
+function SideLine({currentNode, onMoveSelect, handleCurrentColorOfCurrentMoveBox, gameState, variantDepth}:SideLineProps) {
+    return (
+        <Box
+            sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap:  0.5,
+                pl: variantDepth,
+                alignItems: "baseline",
+                fontSize: 13
+            }}
+        >
+            <Box sx={{display:"flex", flexDirection: "row", flexWrap: "wrap", gap: 0.75}}>
+                    {createMainLine(gameState, currentNode.id).map((sideLine) => {
+                        return (
+                            <React.Fragment key={sideLine.id}>
+                                {
+                                    (sideLine.color === "b") && (gameState.allGameStates[sideLine.parentId || defaultStartValue].nextMoves[0] !== sideLine.id)
+                                    ?
+                                        <Box>{sideLine.moveNumber}... </Box>
+                                    : (sideLine.color === "w") && <Box>{sideLine.moveNumber}. </Box>
+                                }
+                                <Box
+                                    onClick={() => onMoveSelect(sideLine.id)}
+                                     sx={{
+                                         backgroundColor: handleCurrentColorOfCurrentMoveBox(sideLine.id),
+                                         "&:hover": {
+                                             backgroundColor: "lightgray",
+                                             cursor: "pointer"
+                                         }
+                                     }}
+                                >
+                                    {sideLine.notation}
+                                </Box>
+                            </React.Fragment>)
+                    })}
+            </Box>
+            <Box sx={{display:"flex", flexDirection: "row"}}>
+                {createMainLine(gameState, currentNode.id).map((sideLine) => {
+                    return (
+                        <>
+                            {
+                            sideLine.nextMoves.length > 1 &&
+                                sideLine.nextMoves.slice(1).map((id)=> {
+                                    const node = gameState.allGameStates[id];
+                                    return (<SideLine
+                                        key={id}
+                                        currentNode={node}
+                                        onMoveSelect={onMoveSelect}
+                                        handleCurrentColorOfCurrentMoveBox={handleCurrentColorOfCurrentMoveBox}
+                                        gameState={gameState}
+                                        variantDepth={variantDepth+1}
+                                    />)
+                                })
+                            }
+                        </>)
+                })}
+            </Box>
+        </Box>
+    )
 }

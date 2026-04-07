@@ -86,14 +86,11 @@ export function Registration() {
                 password: password,
                 phone: phone
             }
-            console.log("Here 1");
-
             const value= await _post('/auth/register', payload);
 
             setUserRegistered(value);
 
             if (value){
-                console.log("Here 3");
                 navigate("/");
             }
         }

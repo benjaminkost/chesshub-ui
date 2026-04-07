@@ -2,6 +2,7 @@ import {Club, ClubAffiliation, ClubTeams, MemberStatus} from "./types/club.js";
 import {Row} from "./components/GamesTable.js";
 import {Team} from "./types/team.js";
 import {Member, MemberRole, User} from "@/types/user";
+import dayjs from "dayjs";
 
 export const allUsers: User[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -49,7 +50,7 @@ export const dummyGamesTableData: Row[] = [
         id: 1,
         whitePGN: "Filip Topov",
         blackPGN: "Lukas Zander",
-        datePGN: new Date(13,11,2002),
+        datePGN: dayjs(),
         opening: "Scotch Opening",
         team: "SV Empor",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
@@ -75,7 +76,7 @@ export const dummyGamesTableData: Row[] = [
         id: 2,
         whitePGN: "Benjamin Kostka",
         blackPGN: "Lukas Zander",
-        datePGN: new Date(2002,10,13),
+        datePGN: dayjs(),
         opening: "Scotch Opening",
         team: "SV Kreuzberg",
         movePGN: "1. e4 c6 2. d4 d5 3. " +
@@ -129,3 +130,40 @@ export const dummyClubTeams: ClubTeams = {
     teams: [dummyTeam],
     address: "Choriner Straße 1"
 }
+
+export const allDummyTeams: Team[] = [
+    {id: 1, name: "1. Mannschaft", club: dummyAllClubs[0], admin: allUsers[0], members: allMembers},
+    {id: 2, name: "2. Mannschaft", club: dummyAllClubs[0], admin: allUsers[0], members: allMembers},
+    {id: 3, name: "3. Mannschaft", club: dummyAllClubs[0], admin: allUsers[0], members: allMembers},
+    {id: 4, name: "4. Mannschaft", club: dummyAllClubs[0], admin: allUsers[0], members: allMembers},
+    {id: 5, name: "1. Mannschaft", club: dummyAllClubs[1], admin: allUsers[1], members: allMembers},
+    {id: 6, name: "2. Mannschaft", club: dummyAllClubs[1], admin: allUsers[1], members: allMembers},
+    {id: 7, name: "3. Mannschaft", club: dummyAllClubs[1], admin: allUsers[1], members: allMembers},
+    {id: 8, name: "4. Mannschaft", club: dummyAllClubs[1], admin: allUsers[1], members: allMembers},
+    {id: 9, name: "1. Mannschaft", club: dummyAllClubs[2], admin: allUsers[2], members: allMembers},
+    {id: 10, name: "2. Mannschaft", club: dummyAllClubs[2], admin: allUsers[2], members: allMembers},
+    {id: 11, name: "3. Mannschaft", club: dummyAllClubs[2], admin: allUsers[2], members: allMembers},
+    {id: 12, name: "4. Mannschaft", club: dummyAllClubs[2], admin: allUsers[2], members: allMembers},
+    {id: 13, name: "1. Mannschaft", club: dummyAllClubs[3], admin: allUsers[3], members: allMembers},
+    {id: 14, name: "2. Mannschaft", club: dummyAllClubs[3], admin: allUsers[3], members: allMembers},
+    {id: 15, name: "3. Mannschaft", club: dummyAllClubs[3], admin: allUsers[3], members: allMembers},
+    {id: 16, name: "4. Mannschaft", club: dummyAllClubs[3], admin: allUsers[3], members: allMembers},
+    {id: 13, name: "1. Mannschaft", club: dummyAllClubs[4], admin: allUsers[3], members: allMembers},
+    {id: 14, name: "2. Mannschaft", club: dummyAllClubs[4], admin: allUsers[3], members: allMembers},
+    {id: 15, name: "3. Mannschaft", club: dummyAllClubs[4], admin: allUsers[3], members: allMembers},
+    {id: 16, name: "4. Mannschaft", club: dummyAllClubs[4], admin: allUsers[3], members: allMembers},
+    {id: 17, name: "1. Mannschaft", club: dummyAllClubs[5], admin: allUsers[3], members: allMembers},
+    {id: 18, name: "2. Mannschaft", club: dummyAllClubs[5], admin: allUsers[3], members: allMembers},
+    {id: 19, name: "3. Mannschaft", club: dummyAllClubs[5], admin: allUsers[3], members: allMembers},
+    {id: 20, name: "4. Mannschaft", club: dummyAllClubs[5], admin: allUsers[3], members: allMembers},
+    {id: 21, name: "1. Mannschaft", club: dummyAllClubs[6], admin: allUsers[3], members: allMembers},
+    {id: 22, name: "2. Mannschaft", club: dummyAllClubs[6], admin: allUsers[3], members: allMembers},
+    {id: 23, name: "3. Mannschaft", club: dummyAllClubs[6], admin: allUsers[3], members: allMembers},
+    {id: 24, name: "4. Mannschaft", club: dummyAllClubs[6], admin: allUsers[3], members: allMembers}
+];
+
+export const dummyDate = dayjs("10.12.2022");
+
+export const dummyEvent = "FIDE Weltmeisterschaft";
+
+export const dummyRound = 10;

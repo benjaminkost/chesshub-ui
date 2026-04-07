@@ -1,3 +1,6 @@
+import {Team} from "@/types/team";
+import {Club} from "@/types/club";
+
 export enum MemberRole{
     ADMIN="Admin",
     CAPTAIN="Kapitän",
@@ -20,4 +23,6 @@ export interface User{
     fideID?: string;
     lichessUsername?: string;
     chesscomUsername?: string;
+    club?: Club;
+    team?: Team;
 }
