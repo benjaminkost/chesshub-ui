@@ -2,29 +2,18 @@ import {Box} from "@mui/material";
 import GameNavBar from "./GameNavBar";
 import React from "react";
 import {defaultStartValue, GameState, GameStateNode} from "@/types/game";
+import {StockfishTurnOnBar} from "@/components/StockfishTurnOnBar";
+import {createMainLine} from "../../bff/interactWithGameState";
 
 interface MoveListProps {
     gameState: GameState,
     onMoveSelect: (activeStateId: string) => void,
+    setEvaluation: (id: string, evaluation: number | null) => void,
     width?: number,
     height?: number
 }
 
-const createMainLine = (gameState:GameState, currentId:string | null):GameStateNode[] => {
-    const history: GameStateNode[] = [];
-
-    while(currentId !== null){
-        const node:GameStateNode = gameState.allGameStates[currentId];
-        if (gameState.rootId !== node.id){
-            history.push(node);
-        }
-        currentId = node.nextMoves[0] || null;
-    }
-
-   return history;
-}
-
-export default function MoveList({width=200, height=600, gameState, onMoveSelect}:MoveListProps) {
+export default function MoveList({width=200, height=600, gameState, setEvaluation, onMoveSelect}:MoveListProps) {
     const mainLineStateHistory = React.useMemo(() => {
         let currentId: string | null = gameState.rootId;
         return createMainLine(gameState, currentId);
@@ -74,6 +63,10 @@ export default function MoveList({width=200, height=600, gameState, onMoveSelect
             ml: 5
         }}
     >
+        <StockfishTurnOnBar fen={gameState.allGameStates[gameState.activeStateId || defaultStartValue]?.fen}
+                            id={gameState.activeStateId}
+                            setEvaluation={setEvaluation}
+                            evaluation={gameState.allGameStates[gameState.activeStateId || defaultStartValue].analysis?.eval.centiPawn}/>
         <Box sx={{
             backgroundColor: "gray",
             color: "white",

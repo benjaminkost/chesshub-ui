@@ -133,6 +133,30 @@ export function ChessBoardEditor({allTeams,
         }));
     };
 
+    const handleEvaluationChange = (id:string, evaluation: number | null) => {
+        setGameState((prev):GameState => {
+            const currentNode = prev.allGameStates[id];
+            if (!currentNode) return prev;
+
+            const updatedNode = {
+                ...currentNode,
+                analysis: {
+                ...(currentNode.analysis || {}),
+                eval: {
+                    ...(currentNode.analysis?.eval || { centiPawn: null}),
+                    centiPawn: evaluation
+                }
+            }};
+
+                return {
+                    ...prev,
+                    allGameStates: {
+                        ...prev.allGameStates,
+                        [id]: updatedNode
+                    }};
+        })
+    }
+
     return (
         <Box
             sx={{
@@ -152,7 +176,11 @@ export function ChessBoardEditor({allTeams,
                         }}
                     >
                         <SmartChessBoard setChessApi={setChessApi} setLastMove={setLastMove} config={{fen: gameState.allGameStates[gameState.activeStateId].fen}}/>
-                        <MoveList gameState={gameState} onMoveSelect={handleMoveSelect}/>
+                        <MoveList
+                            gameState={gameState}
+                            onMoveSelect={handleMoveSelect}
+                            setEvaluation={handleEvaluationChange}
+                        />
                     </Box>
                 </Grid>
                 <Grid size={2}></Grid>
