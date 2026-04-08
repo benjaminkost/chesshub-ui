@@ -1,6 +1,6 @@
 import {Chess, DEFAULT_POSITION} from "chess.js";
 import {v4 as uuidv4} from "uuid";
-import {defaultStartValue, GameState, GameStateNode} from "@/types/game";
+import {defaultStartValue, GameState, GameStateNode} from "@/types/models/game.model";
 
 export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>  { // TODO: written bei Gemini -> needs review
     const chess = new Chess();

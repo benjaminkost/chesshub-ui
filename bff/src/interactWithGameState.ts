@@ -1,4 +1,4 @@
-import {GameState, GameStateNode} from "@/types/game";
+import {GameState, GameStateNode} from "@/types/models/game.model";
 
 export const createMainLine = (gameState:GameState, currentId:string | null):GameStateNode[] => {
     const history: GameStateNode[] = [];
