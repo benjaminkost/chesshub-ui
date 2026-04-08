@@ -1,8 +1,8 @@
-export enum MemberStatus {
-    APPLICANT,
-    MEMBER,
-    FORMER_MEMBER,
-    BANNED
+export enum ClubMemberStatus {
+    APPLICANT="Bewerber",
+    MEMBER="Mitglied",
+    FORMER_MEMBER="Ehemaliges Mitglied",
+    BANNED="Gesperrt"
 }
 
 export enum TeamRole {
