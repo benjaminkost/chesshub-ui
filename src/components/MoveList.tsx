@@ -1,9 +1,9 @@
 import {Box} from "@mui/material";
 import GameNavBar from "./GameNavBar";
 import React from "react";
-import {defaultStartValue, GameState, GameStateNode} from "@/types/game";
+import {defaultStartValue, GameState, GameStateNode} from "@/types/models/game.model";
 import {StockfishTurnOnBar} from "@/components/StockfishTurnOnBar";
-import {createMainLine} from "../../bff/interactWithGameState";
+import {createMainLine} from "../../bff/src/interactWithGameState";
 
 interface MoveListProps {
     gameState: GameState,
