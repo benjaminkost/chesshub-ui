@@ -3,38 +3,26 @@ import React from "react";
 import {DataGrid, GridColDef, GridColumnVisibilityModel} from "@mui/x-data-grid";
 import {useNavigate} from "react-router-dom";
 import {Dayjs} from "dayjs";
-
-export interface Row {
-    id: number,
-    whitePGN: string,
-    blackPGN: string,
-    datePGN: Dayjs,
-    opening: string,
-    team: string,
-    movePGN: string
-}
+import {GameVm} from "@/types/viewmodels/game.vm";
 
 interface GameTableProps {
-    rows: Row[],
-    ownGamesOrTeamGames: boolean
+    games: GameVm[],
+    ownGamesOrTeamGames?: boolean
 }
 
 const columns: GridColDef[] = [
     { field: "id", headerName: "ID", resizable: false, flex: 0.75 },
-    { field: "whitePGN", headerName: "Weiß", resizable: false, flex: 2 },
-    { field: "blackPGN", headerName: "Schwarz", resizable: false, flex: 2 },
-    { field: "team", headerName: "Mannschaft", resizable: false, flex: 2 },
-    { field: "datePGN", headerName: "Datum", type: "date", resizable: false, flex: 1.5,
+    { field: "whitePlayerName", headerName: "Weiß", resizable: false, flex: 2 },
+    { field: "blackPlayerName", headerName: "Schwarz", resizable: false, flex: 2 },
+    { field: "teamName", headerName: "Mannschaft", resizable: false, flex: 2 },
+    { field: "date", headerName: "Datum", type: "date", resizable: false, flex: 1.5,
         valueFormatter: (value:Dayjs) => value?.format("DD.MM.YYYY")
     },
     { field: "opening", headerName: "Eröffnung", resizable: false, flex: 2 },
-    { field: "movePGN", headerName: "Züge", resizable: false, flex: 5 }
+    { field: "move", headerName: "Züge", resizable: false, flex: 5 }
 ];
 
-export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
-
-    const userName = "Benjamin Kostka"; // TODO: muss später mit user daten ausgelesen werden
-    const userTeam = "SV Empor"; // TODO: muss später mit user daten ausgelesen werden
+export function GamesTable({games, ownGamesOrTeamGames=true}: GameTableProps){
     const [columnVisibilityModel, setColumnVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
     const navigate = useNavigate();
 
@@ -45,27 +33,6 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
             setColumnVisibilityModel({team: false});
         }
     },[ownGamesOrTeamGames]);
-
-    const displayRows = React.useMemo(()=> {
-        if (ownGamesOrTeamGames) return rows.filter((elem) =>
-            elem.whitePGN == userName || elem.blackPGN == userName);
-
-        return rows;
-    }, [rows, ownGamesOrTeamGames, userName]);
-
-    const filterModel = React.useMemo(() => {
-        if (ownGamesOrTeamGames) return { items: []};
-
-        return {
-            items: [
-                {
-                    field: 'team',
-                    operator: 'equals',
-                    value: userTeam
-                }
-            ]
-        };
-    },[ownGamesOrTeamGames, userTeam]);
 
     const handleRowClick = () => {
         navigate("/view-game");
@@ -86,18 +53,11 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
                     },
                     '& .MuiDataGrid-filler': {
                         backgroundColor: 'gray!important',
-                    },
-                    '& .MuiDataGrid-virtualScrollerContent': {
-                        '&:hover': {
-                            color: "blue",
-                            cursor: "pointer"
-                        }
                     }
                 }}
-                filterModel={filterModel}
                 columnVisibilityModel={columnVisibilityModel}
                 columns={columns}
-                rows={displayRows}
+                rows={games}
                 onRowClick={handleRowClick}
                 initialState={{
                     pagination: {

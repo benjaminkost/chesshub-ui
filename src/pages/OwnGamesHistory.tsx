@@ -3,10 +3,12 @@ import {dummyGamesTableData} from "@/dummyData";
 import PageLayout from "@/components/PageLayout";
 
 export default function OwnGamesHistory() {
+    const userName = "Benjamin Kostka";
+    const userGames = dummyGamesTableData.filter(games => games.whitePlayerName === userName || games.blackPlayerName === userName);
 
     return (
         <PageLayout loggedIn={true} children={<GamesTable
-            rows={dummyGamesTableData} // TODO: muss später aus der datenbank ausgelesen werden
+            games={userGames} // TODO: muss später aus der datenbank ausgelesen werden
             ownGamesOrTeamGames={true}
         />}
         />

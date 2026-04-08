@@ -1,24 +1,29 @@
-import {Team} from "@/types/team";
+import {TeamModel} from "@/types/models/team.model";
 import {Dayjs} from "dayjs";
 
-export interface Game {
+export interface GameModel {
     id: number,
-    whites: string,
-    blacks: string,
-    dates: Dayjs,
+    whiteId: number,
+    whitePlayerName?: string,
+    blackId: number,
+    blackPlayerName?: string,
+    date: Dayjs,
     opening?: string,
     event?: string,
+    site?: string
     board?: string,
+    result?: string
     moves: string
 }
 
-export interface GameSetting extends Game{
-    team: Team;
+export interface GameSetting extends GameModel{
+    team: TeamModel;
 }
+
 export const defaultStartValue = "START";
 
 export interface Evaluation {
-    centiPawn: number;
+    centiPawn: number | null;
     isMate: boolean;
     mateIn?: number;
 }

@@ -1,5 +1,4 @@
 import {ClubModel} from "./types/models/club.model";
-import {Row} from "./components/GamesTable.js";
 import {TeamModel} from "./types/models/team.model";
 import {UserModel} from "@/types/models/user.model";
 import dayjs from "dayjs";
@@ -7,6 +6,7 @@ import {AppRole, ClubMemberStatus, TeamRole} from "@/types/common/roles";
 import {ClubAffiliationVm, ClubWithTeamsVm} from "@/types/viewmodels/club.vm";
 import {TeamMemberVm} from "@/types/viewmodels/user.vm";
 import {TeamVm} from "@/types/viewmodels/team.vm";
+import {GameVm} from "@/types/viewmodels/game.vm";
 
 export const allUsers: UserModel[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", appRole: AppRole.USER, lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -49,15 +49,15 @@ export const dummyPgn = "[Event \"?\"]\n" +
     "55. Ke5 Kg5 56. Ke4 f6 57. Kf3 Kf5 58. Kg3 Ke4 59. Kf2 f5 60. Kg3 Ke3 61. Kh4 f4 62. Kg5 Nf7+ 63. Kf6 Nd6 " +
     "64. Ke5 Ne4 65. Kf5 f3 66. Kg4 f2 67. Kf5 f1=Q+ *";
 
-export const dummyGamesTableData: Row[] = [
+export const dummyGamesTableData: GameVm[] = [
     {
         id: 1,
-        whitePGN: "Filip Topov",
-        blackPGN: "Lukas Zander",
-        datePGN: dayjs(),
+        whitePlayerName: "Filip Topov",
+        blackPlayerName: "Lukas Zander",
+        date: dayjs(),
         opening: "Scotch Opening",
-        team: "SV Empor",
-        movePGN: "1. e4 c6 2. d4 d5 3. " +
+        teamName: "SV Empor",
+        move: "1. e4 c6 2. d4 d5 3. " +
             "exd5 cxd5 4. Nc3 Nc6 5. Bb5 Nf6 6. Nge2 " +
             "Bg4 7. O-O e6 8. f3 Bf5 9. a3 a6 10. Ba4 b5 11. " +
             "Bb3 Be7 12. Ng3 Bg6 13. f4 Qb6 14. Nce2 Nh5 15. c3 " +
@@ -78,12 +78,12 @@ export const dummyGamesTableData: Row[] = [
             "81. d8=Q Kb7 82. Qd3 Ka8 83. Qa6# 1-0"},
     {
         id: 2,
-        whitePGN: "Benjamin Kostka",
-        blackPGN: "Lukas Zander",
-        datePGN: dayjs(),
+        whitePlayerName: "Benjamin Kostka",
+        blackPlayerName: "Lukas Zander",
+        date: dayjs(),
         opening: "Scotch Opening",
-        team: "SV Kreuzberg",
-        movePGN: "1. e4 c6 2. d4 d5 3. " +
+        teamName: "SV Kreuzberg",
+        move: "1. e4 c6 2. d4 d5 3. " +
             "exd5 cxd5 4. Nc3 Nc6 5. Bb5 Nf6 6. Nge2 " +
             "Bg4 7. O-O e6 8. f3 Bf5 9. a3 a6 10. Ba4 b5 11. " +
             "Bb3 Be7 12. Ng3 Bg6 13. f4 Qb6 14. Nce2 Nh5 15. c3 " +
