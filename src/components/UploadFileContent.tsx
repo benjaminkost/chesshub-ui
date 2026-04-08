@@ -4,7 +4,7 @@ import {Alert, Box, Button, Grid, Paper, Snackbar, SnackbarCloseReason} from "@m
 import {UploadFile} from "@mui/icons-material";
 import {useDropzone} from "react-dropzone";
 import {useNavigate} from "react-router-dom";
-import {_post} from "../../bff/clients/apiChessHubCoreClient";
+import {_post} from "../../bff/src/clients/apiChessHubCoreClient";
 
 export function UploadFileContent() {
     const [pgnContent, setPgnContent] = React.useState<string>("");
