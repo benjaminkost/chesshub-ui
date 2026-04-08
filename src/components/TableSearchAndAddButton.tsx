@@ -1,21 +1,21 @@
-import {Club, ClubAffiliation} from "@/types/club";
 import React from "react";
 import {GridFooterContainer} from "@mui/x-data-grid";
 import {Autocomplete, Box, Button, ClickAwayListener, TextField} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import {Member} from "@/types/user";
+import {Member} from "@/types/models/user.model";
+import {ClubAffiliation, ClubSimpleViewModel} from "@/types/viewmodels/club.vm";
 
 export interface AddClubToAffiliation {
-    allClubs: Club[],
+    allClubs: ClubSimpleViewModel[],
     clubsOfUser: ClubAffiliation[],
-    addClubToUser: (club: Club | null | undefined) => void
+    addClubToUser: (clubId: number) => void
 }
 
 export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: AddClubToAffiliation){
     const [clicked, setClicked] = React.useState(false);
     const clubsOfUserIds = new Set(clubsOfUser.map((c) => c.id))
     const clubsUserIsNotApart = allClubs.filter((club) => !clubsOfUserIds.has(club.id));
-    const [selectedClub, setSelectedClub] = React.useState<Club | null>();
+    const [selectedClub, setSelectedClub] = React.useState<ClubSimpleViewModel | null>();
 
     return (
         <GridFooterContainer>
@@ -34,13 +34,13 @@ export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: Add
                                 fullWidth
                                 freeSolo
                                 options={clubsUserIsNotApart}
-                                getOptionLabel={(option:Club | string) => {
+                                getOptionLabel={(option:ClubSimpleViewModel | string) => {
                                     return typeof option === 'string' ? option : `${option.name} (${option.id})`
                                 }}
                                 renderInput={(params) => <TextField{...params}/>}
-                                onChange={(event, selectedClub:Club | string | null) => {
+                                onChange={(_, selectedClub:ClubSimpleViewModel | string | null) => {
                                     typeof selectedClub === 'string' ?
-                                        console.log("String was tipped in no Club selected")
+                                        console.log("String was tipped in no ClubModel selected")
                                         :
                                         setSelectedClub(selectedClub)
                                 }}
@@ -52,7 +52,7 @@ export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: Add
                                     mr: 1,
                                     ml: 1
                                 }}
-                                onClick={() => addClubToUser(selectedClub)}
+                                onClick={() => selectedClub && addClubToUser(selectedClub.id)}
                             >
                                 Anfragen
                             </Button>
@@ -118,9 +118,9 @@ export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}:
                                             return typeof option === 'string' ? option : `${option.name} (${option.id})`
                                         }}
                                         renderInput={(params) => <TextField{...params} placeholder={"Neueres Mannschaftsmitglied"}/>}
-                                        onChange={(event, selectedUser:Member | string | null) => {
+                                        onChange={(_, selectedUser:Member | string | null) => {
                                             typeof selectedUser === 'string' ?
-                                                console.log("String was tipped in no User selected")
+                                                console.log("String was tipped in no UserModel selected")
                                                 :
                                                 setSelectedUser(selectedUser)
                                         }}

@@ -1,10 +1,12 @@
-import {Club, ClubAffiliation, ClubTeams, MemberStatus} from "./types/club.js";
+import {ClubModel} from "./types/models/club.model";
 import {Row} from "./components/GamesTable.js";
-import {Team} from "./types/team.js";
-import {Member, MemberRole, User} from "@/types/user";
+import {TeamModel} from "./types/models/team.model";
+import {Member, MemberRole, UserModel} from "@/types/models/user.model";
 import dayjs from "dayjs";
+import {MemberStatus} from "@/types/common/enum";
+import {ClubAffiliation, ClubTeams} from "@/types/viewmodels/club.vm";
 
-export const allUsers: User[] = [
+export const allUsers: UserModel[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
     {id: 2, name: "Lukas Zander", userName: "b", email: "a"},
     {id: 3, name: "Filip Topic", userName: "b", email: "a"},
@@ -13,7 +15,7 @@ export const allUsers: User[] = [
     {id: 6, name: "Ursula Topic", userName: "b", email: "a"}
 ];
 
-export const dummyAllClubs: Club[] = [
+export const dummyAllClubs: ClubModel[] = [
     {id: 1, name: "SV Empor", address: "Straße 1", admin: allUsers[0]},
     {id: 2, name: "SV Brauereien", address: "Straße 2", admin: allUsers[1]},
     {id: 3, name: "Bayern München", address: "Straße 3", admin: allUsers[2]},
@@ -24,9 +26,9 @@ export const dummyAllClubs: Club[] = [
 ];
 
 export const dummyClubAffiliation: ClubAffiliation[] = [
-    {id: 1, name: "SV Empor", address: "Straße 1", admin: allUsers[0], status: MemberStatus.MEMBER},
-    {id: 2, name: "SV Brauereien", address: "Straße 2", admin: allUsers[1], status: MemberStatus.APPLICANT},
-    {id: 3, name: "Bayern München", address: "Straße 3", admin: allUsers[2], status: MemberStatus.FORMER_MEMBER}
+    {id: 1, name: "SV Empor", address: "Straße 1", adminId: allUsers[0].id, adminName: allUsers[0].name, status: MemberStatus.MEMBER},
+    {id: 2, name: "SV Brauereien", address: "Straße 2", adminId: allUsers[1].id, adminName: allUsers[1].name, status: MemberStatus.APPLICANT},
+    {id: 3, name: "Bayern München", address: "Straße 3", adminId: allUsers[2].id, adminName: allUsers[2].name , status: MemberStatus.FORMER_MEMBER}
 ];
 
 export const dummyPgn = "[Event \"?\"]\n" +
@@ -115,9 +117,9 @@ export const teamMembersOfDummyTeam: Member[] = [
     {id: 3, name: "Filip Topic", roles: [MemberRole.PLAYER, MemberRole.CAPTAIN]},
 ];
 
-export const dummyTeam: Team = {
+export const dummyTeam: TeamModel = {
     id: 1,
-    club: {id: 1, name: "Dummy Club", address: "Straße 1", admin: allUsers[0]},
+    club: {id: 1, name: "Dummy ClubModel", address: "Straße 1", admin: allUsers[0]},
     name: "Mannschaft 1",
     members: teamMembersOfDummyTeam,
     admin: {id: 1, name: "Benjamin Kostka", userName: "bkostka", email: "mail@ben-kostka.de"}
@@ -131,7 +133,7 @@ export const dummyClubTeams: ClubTeams = {
     address: "Choriner Straße 1"
 }
 
-export const allDummyTeams: Team[] = [
+export const allDummyTeams: TeamModel[] = [
     {id: 1, name: "1. Mannschaft", club: dummyAllClubs[0], admin: allUsers[0], members: allMembers},
     {id: 2, name: "2. Mannschaft", club: dummyAllClubs[0], admin: allUsers[0], members: allMembers},
     {id: 3, name: "3. Mannschaft", club: dummyAllClubs[0], admin: allUsers[0], members: allMembers},

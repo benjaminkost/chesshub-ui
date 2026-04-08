@@ -1,11 +1,14 @@
 import {Box, Paper} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
-import {Club, ClubAffiliation, MemberStatus} from "@/types/club";
+import {ClubModel} from "@/types/models/club.model";
 import {AddClubToAffiliation} from "@/components/TableSearchAndAddButton";
+import {MemberStatus} from "@/types/common/enum";
+import {ClubAffiliation} from "@/types/viewmodels/club.vm";
+import {mapClubModelToClubAffiliation, mapClubToSimpleVM} from "../../bff/src/mapper/club.mapper";
 
 interface ClubsTableProps {
-    allClubs: Club[];
+    allClubs: ClubModel[];
     clubsOfUser: ClubAffiliation[];
 }
 
@@ -28,7 +31,7 @@ const clubsTableColumns: GridColDef[] = [
     {field: "id", headerName: "ID", resizable: false, flex: 1},
     {field: "name", headerName: "Vereinsname", resizable: false, flex: 2},
     {field: "address", headerName: "Adresse", resizable: false, flex: 3},
-    {field: "president", headerName: "Vorsitzender", resizable: false, flex: 2},
+    {field: "adminName", headerName: "Vorsitzender", resizable: false, flex: 2},
     {field: "status", headerName: "Mitgliedsstatus", resizable: false, flex: 1,
         valueFormatter: (value: MemberStatus) => parseMemberStatus(value),
         renderCell: (params) => {
@@ -64,9 +67,11 @@ const clubsTableColumns: GridColDef[] = [
 export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
     const [currentClubs, setCurrentClubs] = React.useState<ClubAffiliation[]>(clubsOfUser);
 
-    const addClubToUser = (newClub: Club | null | undefined) => {
+    const addClubToUser = (newClubId: number) => {
+        const newClub = allClubs.find(club => club.id === newClubId);
+
         if (newClub){
-            const newClubAffiliation:ClubAffiliation = {...newClub, status: MemberStatus.APPLICANT}
+            const newClubAffiliation = mapClubModelToClubAffiliation(newClub, MemberStatus.APPLICANT);
             setCurrentClubs([...currentClubs, newClubAffiliation]);
         } else {
             console.warn("Selected club was null or undefined");
@@ -91,7 +96,7 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
                 rows={currentClubs}
                 slots={{
                     footer: () => <AddClubToAffiliation
-                        allClubs={allClubs}
+                        allClubs={allClubs.map(club => mapClubToSimpleVM(club))}
                         clubsOfUser={currentClubs}
                         addClubToUser={addClubToUser}/>
                 }}
