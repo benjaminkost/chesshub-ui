@@ -1,7 +1,7 @@
 import PageLayout from "../components/PageLayout";
 import {allDummyTeams, allUsers, dummyGamesTableData} from "@/dummyData";
 import {InputGameContent} from "@/components/InputGameContent";
-import { mapUserModelToUserSimpleVm } from "bff/src/mapper/user.mapper";
+import {mapUserModelToUserSimpleVm} from "../../bff/src/mapper/user.mapper";
 
 export function InputGame(){
     return (

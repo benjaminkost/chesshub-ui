@@ -19,7 +19,7 @@ const columns: GridColDef[] = [
         valueFormatter: (value:Dayjs) => value?.format("DD.MM.YYYY")
     },
     { field: "opening", headerName: "Eröffnung", resizable: false, flex: 2 },
-    { field: "move", headerName: "Züge", resizable: false, flex: 5 }
+    { field: "moves", headerName: "Züge", resizable: false, flex: 5 }
 ];
 
 export function GamesTable({games, ownGamesOrTeamGames=true}: GameTableProps){
