@@ -1,8 +1,8 @@
 import {ClubModel} from "@/types/models/club.model";
-import {ClubAffiliation, ClubSimpleViewModel} from "@/types/viewmodels/club.vm";
-import {MemberStatus} from "@/types/common/enum";
+import {ClubAffiliationVm, ClubSimpleVm} from "@/types/viewmodels/club.vm";
+import {ClubMemberStatus} from "@/types/common/roles";
 
-export const mapClubModelToClubAffiliation = (club: ClubModel, status: MemberStatus):ClubAffiliation => {
+export const mapClubModelToClubAffiliation = (club: ClubModel, status: ClubMemberStatus):ClubAffiliationVm => {
     const { admin, ...attributes} = club;
 
     return {
@@ -13,7 +13,7 @@ export const mapClubModelToClubAffiliation = (club: ClubModel, status: MemberSta
     }
 }
 
-export const mapClubToSimpleVM = (club: ClubModel):ClubSimpleViewModel => {
+export const mapClubToSimpleVM = (club: ClubModel):ClubSimpleVm => {
 
     return {
         id: club.id,

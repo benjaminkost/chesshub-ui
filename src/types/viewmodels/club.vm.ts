@@ -1,4 +1,4 @@
-import {MemberStatus} from "@/types/common/roles";
+import {ClubMemberStatus} from "@/types/common/roles";
 import {TeamVm} from "@/types/viewmodels/team.vm";
 
 export interface ClubVm {
@@ -9,13 +9,13 @@ export interface ClubVm {
     adminName?: string;
 }
 
-export interface ClubSimpleViewModel {
+export interface ClubSimpleVm {
     id: number;
     name: string;
 }
 
-export interface ClubAffiliation extends ClubVm {
-    status: MemberStatus
+export interface ClubAffiliationVm extends ClubVm {
+    status: ClubMemberStatus
 }
 
 export interface ClubWithTeamsVm extends ClubVm {

@@ -1,31 +1,15 @@
 import {Box, Paper} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
-import {ClubModel} from "@/types/models/club.model";
 import {AddClubToAffiliation} from "@/components/TableSearchAndAddButton";
-import {MemberStatus} from "@/types/common/enum";
-import {ClubAffiliation} from "@/types/viewmodels/club.vm";
+import {ClubMemberStatus} from "@/types/common/roles";
+import {ClubAffiliationVm, ClubSimpleVm} from "@/types/viewmodels/club.vm";
 import {mapClubModelToClubAffiliation, mapClubToSimpleVM} from "../../bff/src/mapper/club.mapper";
 
 interface ClubsTableProps {
-    allClubs: ClubModel[];
-    clubsOfUser: ClubAffiliation[];
+    allClubs: ClubSimpleVm[];
+    clubsOfUser: ClubAffiliationVm[];
 }
-
-const parseMemberStatus = (memberStatus: MemberStatus): string => {
-    switch (memberStatus) {
-        case MemberStatus.APPLICANT:
-            return "Bewerber";
-        case MemberStatus.MEMBER:
-            return "Mitglied";
-        case MemberStatus.FORMER_MEMBER:
-            return "Ehemaliges Mitglied";
-        case MemberStatus.BANNED:
-            return "Gesperrt";
-        default:
-            return "Unbekannt";
-    }
-};
 
 const clubsTableColumns: GridColDef[] = [
     {field: "id", headerName: "ID", resizable: false, flex: 1},
@@ -33,22 +17,21 @@ const clubsTableColumns: GridColDef[] = [
     {field: "address", headerName: "Adresse", resizable: false, flex: 3},
     {field: "adminName", headerName: "Vorsitzender", resizable: false, flex: 2},
     {field: "status", headerName: "Mitgliedsstatus", resizable: false, flex: 1,
-        valueFormatter: (value: MemberStatus) => parseMemberStatus(value),
         renderCell: (params) => {
-        const status = params.value as MemberStatus;
+        const status = params.value as ClubMemberStatus;
         let textColor = "black";
 
         switch (status) {
-            case MemberStatus.APPLICANT:
+            case ClubMemberStatus.APPLICANT:
                 textColor = "orange";
                 break;
-            case MemberStatus.MEMBER:
+            case ClubMemberStatus.MEMBER:
                 textColor = "green";
                 break;
-            case MemberStatus.FORMER_MEMBER:
+            case ClubMemberStatus.FORMER_MEMBER:
                 textColor = "purple";
                 break;
-            case MemberStatus.BANNED:
+            case ClubMemberStatus.BANNED:
                 textColor = "red";
                 break;
             default:
@@ -57,7 +40,7 @@ const clubsTableColumns: GridColDef[] = [
 
         return (
             <Box sx={{color: textColor}}>
-                {parseMemberStatus(status)}
+                {status}
             </Box>
         );
         }
@@ -65,13 +48,13 @@ const clubsTableColumns: GridColDef[] = [
 ];
 
 export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
-    const [currentClubs, setCurrentClubs] = React.useState<ClubAffiliation[]>(clubsOfUser);
+    const [currentClubs, setCurrentClubs] = React.useState<ClubAffiliationVm[]>(clubsOfUser);
 
     const addClubToUser = (newClubId: number) => {
         const newClub = allClubs.find(club => club.id === newClubId);
 
         if (newClub){
-            const newClubAffiliation = mapClubModelToClubAffiliation(newClub, MemberStatus.APPLICANT);
+            const newClubAffiliation = mapClubModelToClubAffiliation(newClub, ClubMemberStatus.APPLICANT);
             setCurrentClubs([...currentClubs, newClubAffiliation]);
         } else {
             console.warn("Selected club was null or undefined");
