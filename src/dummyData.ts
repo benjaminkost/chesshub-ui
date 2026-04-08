@@ -1,10 +1,12 @@
 import {ClubModel} from "./types/models/club.model";
 import {Row} from "./components/GamesTable.js";
 import {TeamModel} from "./types/models/team.model";
-import {Member, MemberRole, UserModel} from "@/types/models/user.model";
+import {UserModel} from "@/types/models/user.model";
 import dayjs from "dayjs";
-import {MemberStatus} from "@/types/common/enum";
+import {MemberRole, MemberStatus} from "@/types/common/enum";
 import {ClubAffiliation, ClubTeams} from "@/types/viewmodels/club.vm";
+import {Member} from "@/types/viewmodels/user.vm";
+import {TeamVm} from "@/types/viewmodels/team.vm";
 
 export const allUsers: UserModel[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -125,11 +127,22 @@ export const dummyTeam: TeamModel = {
     admin: {id: 1, name: "Benjamin Kostka", userName: "bkostka", email: "mail@ben-kostka.de"}
 }
 
+export const dummyTeamVm: TeamVm = {
+    id: 1,
+    clubId: 1,
+    clubName: "Dummy ClubModel",
+    name: "Mannschaft 1",
+    members: teamMembersOfDummyTeam,
+    adminId: 1,
+    adminName: "Benjamin Kostka"
+}
+
 export const dummyClubTeams: ClubTeams = {
     id: 1,
     name: "1. Mannschaft",
-    admin: allUsers[0],
-    teams: [dummyTeam],
+    adminId: allUsers[0].id,
+    adminName: allUsers[0].name,
+    teams: [dummyTeamVm],
     address: "Choriner Straße 1"
 }
 

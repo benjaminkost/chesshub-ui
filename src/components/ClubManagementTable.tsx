@@ -1,23 +1,27 @@
 import {Box, Grid, Paper, Typography} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
-import {ClubTeams} from "@/types/club";
-import {Team} from "@/types/team";
-import {Member, User} from "@/types/user";
+import {UserModel} from "@/types/models/user.model";
 import {useNavigate} from "react-router-dom";
 import {AddTeamPopupDialog} from "@/components/AddTeamPopupDialog";
+import {ClubTeams} from "@/types/viewmodels/club.vm";
+import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
+import {mapUserModelToUserSimpleVm} from "../../bff/src/mapper/user.mapper";
+import {mapTeamSimpleVmToTeamVm} from "../../bff/src/mapper/team.mapper";
 
 interface ClubManagementTable{
     club: ClubTeams;
-    allUsers: User[];
+    allUsers: UserModel[];
 }
 
 export default function ClubManagementTable({club, allUsers}: ClubManagementTable){
-    const [rows, setRows] = React.useState<Team[]>(club.teams);
+    const [rows, setRows] = React.useState<TeamVm[]>(club?.teams || []);
     const navigate = useNavigate();
 
-    const addTeam = (newTeam:Team) => {
-        setRows((prevState) => [...prevState, newTeam]);
+    const addTeam = (newTeam:TeamSimpleVm) => {
+        const admin = allUsers.find(user => user.id === newTeam.adminId);
+        const newTeamVm = mapTeamSimpleVmToTeamVm(newTeam, club.id, {adminName: admin?.name});
+        setRows((prevState) => [...prevState, newTeamVm]);
     }
 
     const navigateToTeam = () => {
@@ -39,7 +43,7 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                     {params.value}
                 </Box>)
             }},
-        {field: "admin", headerName: "Mannschaftsleiter", resizable: false, flex: 3, valueFormatter: (value:Member, _) => value.name}
+        {field: "adminName", headerName: "Mannschaftsleiter", resizable: false, flex: 3, valueFormatter: (value:string, _) => value}
     ],[rows]);
 
     return (
@@ -84,7 +88,7 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                         <Typography sx={{fontWeight: "bold"}}>Vereinsvorsitzender:</Typography>
                     </Grid>
                     <Grid size={6}>
-                        <Typography>{club.admin?.name}</Typography>
+                        <Typography>{club?.adminName}</Typography>
                     </Grid>
                 </Grid>
             </Paper>
@@ -99,11 +103,10 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                     columns={columns}
                     rows={rows}
                     slots={{
-                        footer: () => < AddTeamPopupDialog
-                                                            allUsers={allUsers}
-                                                           addTeam={addTeam}
-                                                           currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
-                                                            club={club}
+                        footer: () => <AddTeamPopupDialog
+                                                allUsers={allUsers.map(user => mapUserModelToUserSimpleVm(user))}
+                                                addTeam={addTeam}
+                                                currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
                         />
                     }}
                 />

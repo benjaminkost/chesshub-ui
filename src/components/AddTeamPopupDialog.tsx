@@ -10,22 +10,20 @@ import {
 } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import {GridFooterContainer} from "@mui/x-data-grid";
-import {User} from "@/types/user";
-import {Team} from "@/types/team";
 import CloseIcon from '@mui/icons-material/Close';
-import {Club} from "@/types/club";
+import {TeamSimpleVm} from "@/types/viewmodels/team.vm";
+import {UserSimpleVm} from "@/types/viewmodels/user.vm";
 
 interface AddTeamPopupDialogProps {
-    allUsers: User[];
-    addTeam: (team: Team) => void;
+    allUsers: UserSimpleVm[];
+    addTeam: (team: TeamSimpleVm) => void;
     currentHighestID: number;
-    club: Club;
 }
 
-export function AddTeamPopupDialog({allUsers,addTeam,currentHighestID,club}:AddTeamPopupDialogProps) {
+export function AddTeamPopupDialog({allUsers,addTeam,currentHighestID}:AddTeamPopupDialogProps) {
     const [open, setOpen] = React.useState<boolean>(false);
     const [name, setName] = React.useState<string>();
-    const [admin, setAdmin] = React.useState<User | null>();
+    const [admin, setAdmin] = React.useState<UserSimpleVm | null>();
     const isFormIncomplete = !name?.trim() || !admin;
 
     const nameInput = (event: React.ChangeEvent<HTMLInputElement>)=> {
@@ -43,8 +41,7 @@ export function AddTeamPopupDialog({allUsers,addTeam,currentHighestID,club}:AddT
             addTeam({
                 id: (currentHighestID+1),
                 name: name,
-                admin: admin,
-                club: club
+                adminId: admin.id,
             });
             handleClose();
         }
@@ -86,12 +83,12 @@ export function AddTeamPopupDialog({allUsers,addTeam,currentHighestID,club}:AddT
                         >
                             <TextField placeholder={"Mannschaftsname"} onInput={nameInput} required/>
                             <Autocomplete
-                                getOptionLabel={(option:User | string) => typeof option === 'string' ? option : option.userName}
+                                getOptionLabel={(option:UserSimpleVm | string) => typeof option === 'string' ? option : `${option.name} (${option.userName})`}
                                 renderInput={(params) => <TextField {...params} placeholder={"Mannschaftsleiter"}/>}
                                 options={allUsers}
-                                onChange={(_,selectedUser: User | string | null) => {
+                                onChange={(_,selectedUser: UserSimpleVm | string | null) => {
                                     typeof selectedUser === 'string' ?
-                                        console.log("No User was selected")
+                                        console.log("No UserModel was selected")
                                         :
                                         setAdmin(selectedUser)
                                 }}
