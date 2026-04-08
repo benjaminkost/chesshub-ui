@@ -1,4 +1,3 @@
-import {TeamModel} from "@/types/models/team.model";
 import {Dayjs} from "dayjs";
 
 export interface GameModel {
@@ -14,10 +13,6 @@ export interface GameModel {
     board?: string,
     result?: string
     moves: string
-}
-
-export interface GameSetting extends GameModel{
-    team: TeamModel;
 }
 
 export const defaultStartValue = "START";

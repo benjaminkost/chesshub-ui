@@ -5,58 +5,37 @@ import React, {Key} from "react";
 import {Api} from "@lichess-org/chessground/api";
 import {Chess, Move} from "chess.js";
 import {MetaDataForGameInput} from "@/components/MetaDataForGameInput";
-import {User} from "@/types/user";
-import {_post} from "../../bff/clients/apiChessHubCoreClient";
+import {UserModel} from "@/types/models/user.model";
+import {_post} from "../../bff/src/clients/apiChessHubCoreClient";
 import {useNavigate} from "react-router-dom";
-import {Team} from "@/types/team";
+import {TeamModel} from "@/types/models/team.model";
 import { v4 as uuidv4 } from "uuid";
 import {allUsers} from "@/dummyData";
-import {parsePgnToGameState} from"@/../bff/pgnParsing"
-import {GameState, GameStateNode} from "@/types/game";
+import {parsePgnToGameState} from "../../bff/src/pgnParsing"
+import {GameState, GameStateNode} from "@/types/models/game.model";
 import {Dayjs} from "dayjs";
 import {produce} from "immer";
+import {GameWithTeamVm} from "@/types/viewmodels/game.vm";
 
 export interface ChessBoardEditorProps {
-    allTeams: Team[];
-    user: User;
-    initialWhitePlayer?: User | string;
-    initialBlackPlayer?: User | string;
-    initialDate?: Dayjs | null;
-    initialEvent?: string;
-    initialRound?: number;
-    initialTeam?: Team | undefined;
-    initialMoves?: string;
-}
-
-const defaultValues = {
-    initialWhitePlayer: "",
-    initialBlackPlayer: "",
-    initialDate: null,
-    initialEvent: "",
-    initialRound: undefined,
-    initialTeam: undefined,
-    initialMoves: "",
+    allTeams: TeamModel[];
+    user: UserModel;
+    game: GameWithTeamVm;
 }
 
 export function ChessBoardEditor({allTeams,
                                      user,
-                                     initialWhitePlayer=defaultValues.initialWhitePlayer,
-                                     initialBlackPlayer=defaultValues.initialBlackPlayer,
-                                     initialDate=defaultValues.initialDate,
-                                     initialEvent=defaultValues.initialEvent,
-                                     initialRound=defaultValues.initialRound,
-                                     initialTeam=defaultValues.initialTeam,
-                                     initialMoves=defaultValues.initialMoves
+                                     game
                                  }:ChessBoardEditorProps){
     const [chessApi, setChessApi] = React.useState<Api | null>(null);
     const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
-    const [gameState, setGameState] = React.useState<GameState>(parsePgnToGameState(initialMoves));
-    const [whitePlayer, setWhitePlayer] = React.useState<User | string>(initialWhitePlayer);
-    const [blackPlayer, setBlackPlayer] = React.useState<User | string>(initialBlackPlayer);
-    const [date, setDate] = React.useState<Dayjs | null>(initialDate);
-    const [event, setEvent] = React.useState<string>(initialEvent);
-    const [round, setRound] = React.useState<number | undefined>(initialRound);
-    const [team, setTeam] = React.useState<Team | undefined>(initialTeam);
+    const [gameState, setGameState] = React.useState<GameState>(parsePgnToGameState(game.moves));
+    const [whitePlayer, setWhitePlayer] = React.useState<UserModel | string | undefined>(game?.whitePlayerName);
+    const [blackPlayer, setBlackPlayer] = React.useState<UserModel | string | undefined>(game?.blackPlayerName);
+    const [date, setDate] = React.useState<Dayjs | null | undefined>(game?.date);
+    const [event, setEvent] = React.useState<string | undefined>(game?.event);
+    const [round, setRound] = React.useState<number | undefined>(game?.round);
+    const [team, setTeam] = React.useState<TeamModel | undefined>(allTeams.find( team => team.id === game?.teamId));
     const navigate = useNavigate();
 
     const convertTreeToPGNMoves = (): string => {
@@ -66,6 +45,7 @@ export function ChessBoardEditor({allTeams,
     React.useEffect(() => {
         const chess = new Chess(gameState.allGameStates[gameState.activeStateId].fen);
         try {
+            if (lastMove?.length !== 2) throw Error("Move given from chessboard is no completet move");
             const move:Move = chess.move({from: lastMove[0].toString(), to: lastMove[1].toString()});
             chessApi?.set({fen: chess.fen()});
             const parentId = gameState.activeStateId;

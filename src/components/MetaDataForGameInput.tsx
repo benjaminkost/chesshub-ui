@@ -1,29 +1,29 @@
 import {Autocomplete, Box, Button, Grid, TextField, Typography} from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from "react";
-import {User} from "@/types/user";
-import {Team} from "@/types/team";
+import {UserModel} from "@/types/models/user.model";
+import {TeamModel} from "@/types/models/team.model";
 import {AdapterDayjs} from "@mui/x-date-pickers/AdapterDayjs";
 import {DatePicker, DateValidationError, PickerChangeHandlerContext} from "@mui/x-date-pickers";
 import {Dayjs} from "dayjs";
 import {PickerValue} from "@mui/x-date-pickers/internals";
 
 interface MetaDataForGameInputProps {
-    allUsers: User[];
-    whitePlayerData: User | string;
-    setWhitePlayer: (whitePlayer: User | string) => void;
-    blackPlayerData: User | string;
-    setBlackPlayer: (blackPlayer: User | string) => void;
-    dateData: Dayjs | null;
+    allUsers: UserModel[];
+    whitePlayerData: UserModel | string | undefined;
+    setWhitePlayer: (whitePlayer: UserModel | string | undefined) => void;
+    blackPlayerData: UserModel | string | undefined;
+    setBlackPlayer: (blackPlayer: UserModel | string | undefined) => void;
+    dateData: Dayjs | null | undefined;
     setDate: (date: Dayjs | null) => void;
-    eventData: string;
+    eventData: string | undefined;
     setEvent: (event: string) => void;
     roundData: number | undefined;
     setRound: (round:number) => void;
-    team: Team | undefined;
-    setTeam: (team:Team | undefined) => void;
-    allTeams: Team[];
-    user: User;
+    team: TeamModel | undefined;
+    setTeam: (team:TeamModel | undefined) => void;
+    allTeams: TeamModel[];
+    user: UserModel;
 }
 
 export function MetaDataForGameInput({allUsers,
@@ -88,20 +88,8 @@ export function MetaDataForGameInput({allUsers,
                                   }}
                                   onChange={(_, newValue) => {
                                       if (newValue === null) return;
-                                      if (typeof newValue === "string"){
-                                          const dummyUser: User = {
-                                              id: -1,
-                                              name: newValue,
-                                              userName: " ",
-                                              email: " "
-                                          }
-
-                                          setWhitePlayer(dummyUser);
-                                      } else {
-                                          setWhitePlayer(newValue);
-                                      }
-                                  }}
-                    />
+                                      setWhitePlayer(newValue);
+                                  }} />
                 </Grid>
                 <Grid size={2}>
                     <Typography>Schwarz</Typography>
@@ -117,18 +105,7 @@ export function MetaDataForGameInput({allUsers,
                                   }}
                                    onChange={(_, newValue) => {
                                        if (newValue === null) return;
-                                       if (typeof newValue === "string"){
-                                           const dummyUser: User = {
-                                               id: -1,
-                                               name: newValue,
-                                               userName: " ",
-                                               email: " "
-                                           }
-
-                                           setBlackPlayer(dummyUser);
-                                       } else {
-                                           setBlackPlayer(newValue)
-                                       }
+                                       setBlackPlayer(newValue)
                                    }}
                     />
                 </Grid>

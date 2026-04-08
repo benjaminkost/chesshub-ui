@@ -6,7 +6,7 @@ import {AppRole, ClubMemberStatus, TeamRole} from "@/types/common/roles";
 import {ClubAffiliationVm, ClubWithTeamsVm} from "@/types/viewmodels/club.vm";
 import {TeamMemberVm} from "@/types/viewmodels/user.vm";
 import {TeamVm} from "@/types/viewmodels/team.vm";
-import {GameVm} from "@/types/viewmodels/game.vm";
+import {GameWithTeamVm} from "@/types/viewmodels/game.vm";
 
 export const allUsers: UserModel[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideID: "123456789", appRole: AppRole.USER, lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -49,7 +49,7 @@ export const dummyPgn = "[Event \"?\"]\n" +
     "55. Ke5 Kg5 56. Ke4 f6 57. Kf3 Kf5 58. Kg3 Ke4 59. Kf2 f5 60. Kg3 Ke3 61. Kh4 f4 62. Kg5 Nf7+ 63. Kf6 Nd6 " +
     "64. Ke5 Ne4 65. Kf5 f3 66. Kg4 f2 67. Kf5 f1=Q+ *";
 
-export const dummyGamesTableData: GameVm[] = [
+export const dummyGamesTableData: GameWithTeamVm[] = [
     {
         id: 1,
         whitePlayerName: "Filip Topov",
@@ -57,7 +57,7 @@ export const dummyGamesTableData: GameVm[] = [
         date: dayjs(),
         opening: "Scotch Opening",
         teamName: "SV Empor",
-        move: "1. e4 c6 2. d4 d5 3. " +
+        moves: "1. e4 c6 2. d4 d5 3. " +
             "exd5 cxd5 4. Nc3 Nc6 5. Bb5 Nf6 6. Nge2 " +
             "Bg4 7. O-O e6 8. f3 Bf5 9. a3 a6 10. Ba4 b5 11. " +
             "Bb3 Be7 12. Ng3 Bg6 13. f4 Qb6 14. Nce2 Nh5 15. c3 " +
@@ -83,7 +83,7 @@ export const dummyGamesTableData: GameVm[] = [
         date: dayjs(),
         opening: "Scotch Opening",
         teamName: "SV Kreuzberg",
-        move: "1. e4 c6 2. d4 d5 3. " +
+        moves: "1. e4 c6 2. d4 d5 3. " +
             "exd5 cxd5 4. Nc3 Nc6 5. Bb5 Nf6 6. Nge2 " +
             "Bg4 7. O-O e6 8. f3 Bf5 9. a3 a6 10. Ba4 b5 11. " +
             "Bb3 Be7 12. Ng3 Bg6 13. f4 Qb6 14. Nce2 Nh5 15. c3 " +

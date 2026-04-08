@@ -3,10 +3,10 @@ import React from "react";
 import {DataGrid, GridColDef, GridColumnVisibilityModel} from "@mui/x-data-grid";
 import {useNavigate} from "react-router-dom";
 import {Dayjs} from "dayjs";
-import {GameVm} from "@/types/viewmodels/game.vm";
+import {GameWithTeamVm} from "@/types/viewmodels/game.vm";
 
 interface GameTableProps {
-    games: GameVm[],
+    games: GameWithTeamVm[],
     ownGamesOrTeamGames?: boolean
 }
 
