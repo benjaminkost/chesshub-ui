@@ -7,7 +7,7 @@ export interface UserModel {
     name: string;
     userName: string;
     email: string;
-    phoneNumber: string;
+    phoneNumber?: string;
     appRole: AppRole;
     fideID?: string;
     lichessUsername?: string;
