@@ -1,6 +1,6 @@
 import {TeamModel} from "@/types/models/team.model";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
-import {Member} from "@/types/viewmodels/user.vm";
+import {TeamMemberVm} from "@/types/viewmodels/user.vm";
 
 export const mapTeamModelToTeamVm = (team: TeamModel) => {
     return {
@@ -18,7 +18,7 @@ interface MappingContext {
     clubName?: string;
     adminId?: number;
     adminName?: string;
-    memberIds?: Member[];
+    memberIds?: TeamMemberVm[];
 }
 
 export const mapTeamSimpleVmToTeamVm = (team: TeamSimpleVm, clubId: number, context:MappingContext):TeamVm => {

@@ -2,12 +2,12 @@ import React from "react";
 import {GridFooterContainer} from "@mui/x-data-grid";
 import {Autocomplete, Box, Button, ClickAwayListener, TextField} from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import {Member} from "@/types/models/user.model";
-import {ClubAffiliation, ClubSimpleViewModel} from "@/types/viewmodels/club.vm";
+import {ClubAffiliationVm, ClubSimpleVm} from "@/types/viewmodels/club.vm";
+import {TeamMemberVm, UserSimpleVm} from "@/types/viewmodels/user.vm";
 
 export interface AddClubToAffiliation {
-    allClubs: ClubSimpleViewModel[],
-    clubsOfUser: ClubAffiliation[],
+    allClubs: ClubSimpleVm[],
+    clubsOfUser: ClubAffiliationVm[],
     addClubToUser: (clubId: number) => void
 }
 
@@ -15,7 +15,7 @@ export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: Add
     const [clicked, setClicked] = React.useState(false);
     const clubsOfUserIds = new Set(clubsOfUser.map((c) => c.id))
     const clubsUserIsNotApart = allClubs.filter((club) => !clubsOfUserIds.has(club.id));
-    const [selectedClub, setSelectedClub] = React.useState<ClubSimpleViewModel | null>();
+    const [selectedClub, setSelectedClub] = React.useState<ClubSimpleVm | null>();
 
     return (
         <GridFooterContainer>
@@ -34,11 +34,11 @@ export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: Add
                                 fullWidth
                                 freeSolo
                                 options={clubsUserIsNotApart}
-                                getOptionLabel={(option:ClubSimpleViewModel | string) => {
+                                getOptionLabel={(option:ClubSimpleVm | string) => {
                                     return typeof option === 'string' ? option : `${option.name} (${option.id})`
                                 }}
                                 renderInput={(params) => <TextField{...params}/>}
-                                onChange={(_, selectedClub:ClubSimpleViewModel | string | null) => {
+                                onChange={(_, selectedClub:ClubSimpleVm | string | null) => {
                                     typeof selectedClub === 'string' ?
                                         console.log("String was tipped in no ClubModel selected")
                                         :
@@ -71,16 +71,16 @@ export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: Add
 }
 
 export interface AddUserToTeamSearchBarProps {
-    allUsers: Member[],
-    membersInTeam: Member[],
-    addUserToTeam: (newMember: Member) => void
+    allUsers: UserSimpleVm[],
+    membersInTeam: TeamMemberVm[],
+    addUserToTeam: (newMember: UserSimpleVm) => void
 }
 
 export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUserToTeamSearchBarProps){
     const [open, setOpen] = React.useState(false);
     const membersInTeamIds = new Set(membersInTeam.map((m) => m.id))
     const usersNotApartOfTeam = allUsers.filter((member) => !membersInTeamIds.has(member.id));
-    const [selectedUser, setSelectedUser] = React.useState<Member | null>(null);
+    const [selectedUser, setSelectedUser] = React.useState<UserSimpleVm | null>(null);
 
     const handleOnClick = () => {
         if (selectedUser){
@@ -114,11 +114,11 @@ export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}:
                                         fullWidth
                                         freeSolo
                                         options={usersNotApartOfTeam}
-                                        getOptionLabel={(option:Member | string) => {
+                                        getOptionLabel={(option:UserSimpleVm | string) => {
                                             return typeof option === 'string' ? option : `${option.name} (${option.id})`
                                         }}
                                         renderInput={(params) => <TextField{...params} placeholder={"Neueres Mannschaftsmitglied"}/>}
-                                        onChange={(_, selectedUser:Member | string | null) => {
+                                        onChange={(_, selectedUser:UserSimpleVm | string | null) => {
                                             typeof selectedUser === 'string' ?
                                                 console.log("String was tipped in no UserModel selected")
                                                 :
