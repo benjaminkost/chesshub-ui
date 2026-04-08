@@ -8,40 +8,42 @@ import {
 } from "@mui/material";
 import {DataGrid, GridColDef, GridRowId} from "@mui/x-data-grid";
 import React from "react";
-import MemberRoleManager from "./MemberRoleManager.js";
-import {Team} from "@/types/team";
-import {Member, MemberRole} from "@/types/user.js";
+import TeamMemberRoleManager from "./TeamMemberRoleManager";
 import {AddUserToTeamSearchBar} from "@/components/TableSearchAndAddButton";
 import {useNavigate} from "react-router-dom";
+import {TeamRole} from "@/types/common/roles";
+import {TeamMemberVm, UserSimpleVm} from "@/types/viewmodels/user.vm";
+import {TeamVm} from "@/types/viewmodels/team.vm";
+import {mapUserSimpleVmToMemberVm} from "../../bff/src/mapper/user.mapper";
 
 interface TeamManagementTableProps {
-    team: Team;
-    allUsers: Member[];
+    team: TeamVm;
+    allUsers: UserSimpleVm[];
 }
 
-const cssForMemberRole = (role: MemberRole) => {
+const cssForMemberRole = (role: TeamRole) => {
     switch (role) {
-        case MemberRole.ADMIN:
+        case TeamRole.ADMIN:
             return {
                 backgroundColor: "red",
                 color: "white"
             };
-        case MemberRole.HEAD_COACH:
+        case TeamRole.HEAD_COACH:
             return {
                 backgroundColor: "orange",
                 color: "white"
             };
-        case MemberRole.CAPTAIN:
+        case TeamRole.CAPTAIN:
             return {
                 backgroundColor: "purple",
                 color: "white"
             };
-        case MemberRole.PLAYER:
+        case TeamRole.PLAYER:
             return {
                 backgroundColor: "blue",
                 color: "white"
             };
-        case MemberRole.RESERVE:
+        case TeamRole.RESERVE:
             return {
                 backgroundColor: "lightblue",
                 color: "white"
@@ -55,28 +57,25 @@ const cssForMemberRole = (role: MemberRole) => {
 }
 
 export default function TeamManagementTable({team, allUsers}: TeamManagementTableProps) {
-    const [currentMembers, setCurrentMembers] = React.useState<Member[]>(team.members ?? []);
+    const [currentMembers, setCurrentMembers] = React.useState<TeamMemberVm[]>(team.members ?? []);
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>();
     const navigate = useNavigate();
 
-    const addUserToTeam = (selectedUser: Member | null) => {
+    const addUserToTeam = (selectedUser: UserSimpleVm | null) => {
         if (!selectedUser) return;
 
-        const memberToAdd: Member = {
-            ...selectedUser,
-            roles: [...selectedUser.roles, MemberRole.PLAYER]
-        }
+        const memberToAdd: TeamMemberVm = mapUserSimpleVmToMemberVm(selectedUser, [TeamRole.PLAYER]);
 
         setCurrentMembers([...currentMembers, memberToAdd]);
     };
 
-    const addRole = (rowId: GridRowId, role: MemberRole) => {
+    const addRole = (rowId: GridRowId, role: TeamRole) => {
         setCurrentMembers(prev => prev.map(m => m.id === rowId ? {...m, roles: [...m.roles, role]} : m));
     };
 
-    const deleteRole = (rowId: GridRowId, role: MemberRole) => {
-        if (role === MemberRole.ADMIN) {
-            const adminCount = currentMembers.filter((m) => m.roles.includes(MemberRole.ADMIN)).length;
+    const deleteRole = (rowId: GridRowId, role: TeamRole) => {
+        if (role === TeamRole.ADMIN) {
+            const adminCount = currentMembers.filter((m) => m.roles.includes(TeamRole.ADMIN)).length;
 
             if (adminCount == 1){
                 setOpenSnackbar(true);
@@ -94,7 +93,7 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
         );
     };
 
-    const handleClose =  (event: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
+    const handleClose =  (_: React.SyntheticEvent<any> | Event, reason: SnackbarCloseReason) => {
         if (reason === "clickaway") return;
         setOpenSnackbar(false);
     }
@@ -106,8 +105,8 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
             field: "roles", headerName: "Rollen", resizable: false, flex: 6,
             renderCell: (params) => {
 
-                return <MemberRoleManager
-                    rolesOfUser={params.value as MemberRole[]}
+                return <TeamMemberRoleManager
+                    rolesOfUser={params.value as TeamRole[]}
                     onAddRole={(role) => addRole(params.id, role)}
                     onDeleteRole={(role) => deleteRole(params.id, role)}
                     cssForMemberRole={cssForMemberRole}
@@ -150,13 +149,13 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
             >
                 <Grid container>
                     <Grid size={6}>
-                        <Typography sx={{fontWeight: "bold"}}>Vereins-ID:</Typography>
+                        <Typography sx={{fontWeight: "bold"}}>Mannschafts-ID:</Typography>
                     </Grid>
                     <Grid size={6}>
                         <Typography>{team.id}</Typography>
                     </Grid>
                     <Grid size={6}>
-                        <Typography sx={{fontWeight: "bold"}}>Vereinsname:</Typography>
+                        <Typography sx={{fontWeight: "bold"}}>Mannschaftsname:</Typography>
                     </Grid>
                     <Grid size={6}>
                         <Typography>{team.name}</Typography>
@@ -169,7 +168,7 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
                               "&:hover":
                                   {color: "blue", cursor: "pointer"}
                           }}>
-                        <Typography>{team.club.name}</Typography>
+                        <Typography>{team.clubName}</Typography>
                     </Grid>
                 </Grid>
             </Paper>
