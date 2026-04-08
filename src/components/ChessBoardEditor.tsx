@@ -22,7 +22,7 @@ export interface ChessBoardEditorProps {
     game: GameWithTeamVm;
 }
 
-export function ChessBoardEditor({ allTeams, game }: ChessBoardEditorProps) {
+export function ChessBoardEditor({ allTeams, allUsers, game }: ChessBoardEditorProps) {
     const [chessApi, setChessApi] = React.useState<Api | null>(null);
     const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
     const [gameState, setGameState] = React.useState<GameState>(parsePgnToGameState(game.moves));
