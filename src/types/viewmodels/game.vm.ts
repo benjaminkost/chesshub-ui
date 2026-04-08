@@ -1,7 +1,10 @@
 import {Dayjs} from "dayjs";
+import { TeamVm } from "./team.vm";
 
 export interface GameVm {
     id: number;
+    whitePlayerId?: number;
+    blackPlayerId?: number;
     whitePlayerName?: string;
     blackPlayerName?: string;
     date?: Dayjs,
@@ -14,9 +17,22 @@ export interface GameVm {
     moves: string
 }
 
-export interface GameWithTeamVm {
+export interface GameSimpleVm {
     id: number;
     whitePlayerName?: string;
+    blackPlayerName?: string;
+    date?: Dayjs,
+    opening?: string,
+    event?: string,
+    result?: string,
+    moves: string
+}
+
+export interface GameWithTeamVm {
+    id: number;
+    whitePlayerId?: number;
+    whitePlayerName?: string;
+    blackPlayerId?: number;
     blackPlayerName?: string;
     date?: Dayjs,
     opening?: string,
@@ -28,4 +44,16 @@ export interface GameWithTeamVm {
     teamId?: number,
     teamName?: string,
     moves: string
+}
+
+export interface GameMetaData {
+    whitePlayerId?: number;
+    whitePlayerName?: string | undefined;
+    blackPlayerId?: number;
+    blackPlayerName?: string | undefined;
+    date?: Dayjs | null | undefined;
+    event?: string | undefined;
+    round?: number | undefined;
+    teamId?: number;
+    teamName?: string;
 }
