@@ -5,7 +5,7 @@ import {expect, describe, it, vi, beforeEach } from "vitest";
 import "@testing-library/jest-dom/vitest";
 import {MemoryRouter} from "react-router-dom";
 import { userEvent } from '@testing-library/user-event';
-import {_post} from "../../bff/clients/apiChessHubCoreClient.js";
+import {_post} from "../../bff/src/clients/apiChessHubCoreClient.js";
 
 describe("Registration", () => {
     vi.mock('../../bff/clients/apiChessHubCoreClient.ts', () => ({

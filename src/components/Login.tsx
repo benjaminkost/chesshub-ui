@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Box, Paper, TextField, Typography, Button, Link } from "@mui/material";
-import {_post} from "@/../bff/clients/apiChessHubCoreClient";
+import {_post} from "../../bff/src/clients/apiChessHubCoreClient";
 import {useNavigate} from "react-router-dom";
 
 

@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {_post} from "../../bff/clients/apiChessHubCoreClient";
+import {_post} from "../../bff/src/clients/apiChessHubCoreClient";
 import {Box, Button, Link, Paper, TextField, Typography } from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
