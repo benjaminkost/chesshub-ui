@@ -1,4 +1,4 @@
-import {MemberStatus} from "@/types/common/enum";
+import {MemberStatus} from "@/types/common/roles";
 import {TeamVm} from "@/types/viewmodels/team.vm";
 
 export interface ClubVm {
@@ -18,6 +18,6 @@ export interface ClubAffiliation extends ClubVm {
     status: MemberStatus
 }
 
-export interface ClubTeams extends ClubVm {
+export interface ClubWithTeamsVm extends ClubVm {
     teams: TeamVm[];
 }

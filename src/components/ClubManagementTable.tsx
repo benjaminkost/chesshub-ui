@@ -4,13 +4,13 @@ import React from "react";
 import {UserModel} from "@/types/models/user.model";
 import {useNavigate} from "react-router-dom";
 import {AddTeamPopupDialog} from "@/components/AddTeamPopupDialog";
-import {ClubTeams} from "@/types/viewmodels/club.vm";
+import {ClubWithTeamsVm} from "@/types/viewmodels/club.vm";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
 import {mapUserModelToUserSimpleVm} from "../../bff/src/mapper/user.mapper";
 import {mapTeamSimpleVmToTeamVm} from "../../bff/src/mapper/team.mapper";
 
 interface ClubManagementTable{
-    club: ClubTeams;
+    club: ClubWithTeamsVm;
     allUsers: UserModel[];
 }
 
