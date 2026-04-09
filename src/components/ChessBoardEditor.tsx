@@ -14,15 +14,13 @@ import { produce } from "immer";
 import { GameMetaData, GameWithTeamVm } from "@/types/viewmodels/game.vm";
 import { mapGameWithTeamVmToGameMetaData } from "../../bff/src/mapper/game.mapper";
 import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
-import { UserSimpleVm } from "@/types/viewmodels/user.vm";
 
 export interface ChessBoardEditorProps {
     allTeams: TeamSimpleVm[];
-    allUsers: UserSimpleVm[];
     game: GameWithTeamVm;
 }
 
-export function ChessBoardEditor({ allTeams, allUsers, game }: ChessBoardEditorProps) {
+export function ChessBoardEditor({ allTeams, game }: ChessBoardEditorProps) {
     const [chessApi, setChessApi] = React.useState<Api | null>(null);
     const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
     const [gameState, setGameState] = React.useState<GameState>(parsePgnToGameState(game.moves));
@@ -156,7 +154,6 @@ export function ChessBoardEditor({ allTeams, allUsers, game }: ChessBoardEditorP
                 <Grid size={2}></Grid>
                 <Grid size={8}>
                     <MetaDataForGameInput
-                        allUsers={allUsers}
                         allTeams={allTeams}
                         gameMetaData={gameMetaData}
                         onChangeGameMetaData={onChangeGameMetaData}

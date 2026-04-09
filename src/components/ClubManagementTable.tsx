@@ -1,21 +1,20 @@
 import {Box, Grid, Paper, Typography} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
-import {UserModel} from "@/types/models/user.model";
 import {useNavigate} from "react-router-dom";
 import {AddTeamPopupDialog} from "@/components/AddTeamPopupDialog";
 import {ClubWithTeamsVm} from "@/types/viewmodels/club.vm";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
-import {mapUserModelToUserSimpleVm} from "../../bff/src/mapper/user.mapper";
 import {mapTeamSimpleVmToTeamVm} from "../../bff/src/mapper/team.mapper";
+import {useLookup} from "@/context/LookupContext";
 
 interface ClubManagementTable{
     club: ClubWithTeamsVm;
-    allUsers: UserModel[];
 }
 
-export default function ClubManagementTable({club, allUsers}: ClubManagementTable){
+export default function ClubManagementTable({club}: ClubManagementTable){
     const [rows, setRows] = React.useState<TeamVm[]>(club?.teams || []);
+    const allUsers = Object.values(useLookup().usersSimple);
     const navigate = useNavigate();
 
     const addTeam = (newTeam:TeamSimpleVm) => {
@@ -104,7 +103,7 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                     rows={rows}
                     slots={{
                         footer: () => <AddTeamPopupDialog
-                                                allUsers={allUsers.map(user => mapUserModelToUserSimpleVm(user))}
+                                                allUsers={allUsers}
                                                 addTeam={addTeam}
                                                 currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
                         />

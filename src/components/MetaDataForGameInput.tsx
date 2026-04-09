@@ -5,20 +5,21 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker, DateValidationError, PickerChangeHandlerContext } from "@mui/x-date-pickers";
 import { PickerValue } from "@mui/x-date-pickers/internals";
 import { GameMetaData } from "@/types/viewmodels/game.vm";
-import { UserSimpleVm } from "@/types/viewmodels/user.vm";
 import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
+import {useLookup} from "@/context/LookupContext";
 
 interface MetaDataForGameInputProps {
-    allUsers: UserSimpleVm[];
     allTeams: TeamSimpleVm[];
     gameMetaData: GameMetaData;
     onChangeGameMetaData: (update: Partial<GameMetaData>) => void;
 }
 
-export function MetaDataForGameInput({ allUsers,
+export function MetaDataForGameInput({
     allTeams,
     gameMetaData,
     onChangeGameMetaData }: MetaDataForGameInputProps) {
+    const allUsers = Object.values(useLookup().usersSimple);
+
     const handleDate = (value: PickerValue, _: PickerChangeHandlerContext<DateValidationError>) => {
         onChangeGameMetaData({ date: value });
     }
@@ -69,6 +70,7 @@ export function MetaDataForGameInput({ allUsers,
                 <Grid size={10}>
                     <Autocomplete freeSolo
                         renderInput={(params) => { return <TextField {...params} /> }}
+                        value={gameMetaData.blackPlayerName || null}
                         options={allUsers}
                         getOptionLabel={(option) => {
                             if (typeof option === "string") return option
@@ -121,7 +123,7 @@ export function MetaDataForGameInput({ allUsers,
                         renderInput={(params) => { return <TextField {...params} /> }}
                         options={allTeams}
                         getOptionLabel={(option) => {
-                            return `${option.name} - ${option.name}`;
+                            return `${option.clubName} - ${option.name}`;
                         }}
                         onChange={(_, value) => {
                             value ? onChangeGameMetaData({ teamName: value.name, teamId: value.id }) : console.warn("Input cound not be safed");

@@ -15,7 +15,7 @@ export interface ClubSimpleVm {
 }
 
 export interface ClubAffiliationVm extends ClubVm {
-    status: ClubMemberStatus
+    status: ClubMemberStatus;
 }
 
 export interface ClubWithTeamsVm extends ClubVm {

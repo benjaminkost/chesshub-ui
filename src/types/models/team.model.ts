@@ -1,10 +1,8 @@
-import {ClubModel} from "./club.model";
-import {UserModel} from "@/types/models/user.model";
 
 export interface TeamModel {
     id: number;
-    club: ClubModel;
+    clubId: number;
     name: string;
-    members?: UserModel[];
-    admin?: UserModel;
+    memberIds?: number[];
+    adminId?: number;
 }

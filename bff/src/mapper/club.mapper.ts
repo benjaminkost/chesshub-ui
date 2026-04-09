@@ -1,14 +1,17 @@
 import {ClubModel} from "@/types/models/club.model";
 import {ClubAffiliationVm, ClubSimpleVm} from "@/types/viewmodels/club.vm";
 import {ClubMemberStatus} from "@/types/common/roles";
+import {UserSimpleVm} from "@/types/viewmodels/user.vm";
 
-export const mapClubModelToClubAffiliation = (club: ClubModel, status: ClubMemberStatus):ClubAffiliationVm => {
-    const { admin, ...attributes} = club;
+export const mapClubModelToClubAffiliation = (club: ClubModel,
+                                              status: ClubMemberStatus, users: Record<number, UserSimpleVm>):ClubAffiliationVm => {
+    const { adminId, ...attributes} = club;
+
+    const adminName = adminId ? users[adminId]?.name : undefined;
 
     return {
         ...attributes,
-        adminId: admin?.id,
-        adminName: admin?.name,
+        adminName: adminName,
         status
     }
 }

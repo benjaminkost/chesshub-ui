@@ -2,14 +2,14 @@ import {ClubSimpleVm} from "@/types/viewmodels/club.vm";
 import {UserSimpleVm} from "@/types/viewmodels/user.vm";
 import React from "react";
 
-export interface LockupData {
-    clubs: Record<number, ClubSimpleVm>,
-    users: Record<number, UserSimpleVm>
+export interface LookupData {
+    clubsSimple: Record<number, ClubSimpleVm>,
+    usersSimple: Record<number, UserSimpleVm>
 }
 
-export const LockupContext = React.createContext<LockupData>( {
-    clubs: {},
-    users: {}
+export const LookupContext = React.createContext<LookupData>( {
+    clubsSimple: {},
+    usersSimple: {}
 });
 
-export const useLockup = () => React.useContext(LockupContext);
+export const useLookup = () => React.useContext(LookupContext);

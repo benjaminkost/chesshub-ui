@@ -13,5 +13,6 @@ export interface TeamVm {
 export interface TeamSimpleVm {
     id: number;
     name: string;
+    clubName: string;
     adminId?: number;
 }

@@ -15,23 +15,27 @@ import {RequestNewPasswordPage} from "@/pages/RequestNewPasswordPage";
 import {Impressum} from "@/pages/Impressum";
 import {AboutChessHub} from "@/pages/AboutChessHub";
 import {BugReport} from "@/pages/BugReport";
-import {LockupContext, LockupData} from "@/context/LookupContext";
+import {LookupContext, LookupData} from "@/context/LookupContext";
 import React from "react";
 import {allUsers, dummyAllClubs} from "@/dummyData";
 
 export function App() {
 
-    const [lockup, setLockup] = React.useState<LockupData>({ users: {}, clubs: {} });
+    const [lookup, setLookup] = React.useState<LookupData>({ usersSimple: {}, clubsSimple: {} });
 
     React.useEffect(() => {
-        setLockup({
-            clubs: dummyAllClubs,
-            users: allUsers
+        setLookup({
+            clubsSimple: Object.fromEntries(
+                dummyAllClubs.map(c => [c.id, { ...c }])
+            ),
+            usersSimple: Object.fromEntries(
+                allUsers.map(u => [u.id, {...u}])
+            )
         });
     }, []);
 
     return (
-          <LockupContext.Provider value={lockup}>
+          <LookupContext.Provider value={lookup}>
               <BrowserRouter>
                   <main>
                       <Routes>
@@ -56,6 +60,6 @@ export function App() {
                       </Routes>
                   </main>
               </BrowserRouter>
-          </LockupContext.Provider>
+          </LookupContext.Provider>
       )
 }

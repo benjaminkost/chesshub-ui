@@ -1,4 +1,4 @@
-import { GameWithTeamVm, GameMetaData } from "../../../src/types/viewmodels/game.vm";
+import { GameWithTeamVm, GameMetaData } from "@/types/viewmodels/game.vm";
 
 export const mapGameWithTeamVmToGameMetaData = (game: GameWithTeamVm): GameMetaData => {
     return {

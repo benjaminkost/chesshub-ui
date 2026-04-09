@@ -1,16 +1,25 @@
 import {TeamModel} from "@/types/models/team.model";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
-import {TeamMemberVm} from "@/types/viewmodels/user.vm";
+import {TeamMemberVm, UserSimpleVm} from "@/types/viewmodels/user.vm";
+import {ClubSimpleVm} from "@/types/viewmodels/club.vm";
+import {teamMembersOfDummyTeam} from "@/dummyData";
 
-export const mapTeamModelToTeamVm = (team: TeamModel) => {
+export const mapTeamModelToTeamVm = (team: TeamModel,
+                                     clubs: Record<number,ClubSimpleVm>,
+                                     users: Record<number, UserSimpleVm>):TeamVm => {
+    const {clubId, adminId} = team;
+
+    const adminName = adminId && users[adminId].name || undefined;
+    const clubName = clubId && clubs[clubId].name || undefined;
+
     return {
         id: team.id,
-        clubId: team.club.id,
-        clubName: team.club.name,
+        clubId: team.clubId,
+        clubName: clubName,
         name: team.name,
-        adminId: team?.admin?.id,
-        adminName: team?.admin?.name,
-        memberIds: team.members
+        adminId: team?.adminId,
+        adminName: adminName,
+        members: teamMembersOfDummyTeam // TODO: Abfrage über backend
     }
 }
 

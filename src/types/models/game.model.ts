@@ -1,18 +1,16 @@
 import {Dayjs} from "dayjs";
 
 export interface GameModel {
-    id: number,
-    whiteId: number,
-    whitePlayerName?: string,
-    blackId: number,
-    blackPlayerName?: string,
-    date: Dayjs,
-    opening?: string,
-    event?: string,
-    site?: string
-    board?: string,
-    result?: string
-    moves: string
+    id: number;
+    whiteId: number;
+    blackId: number;
+    date: Dayjs;
+    opening?: string;
+    event?: string;
+    site?: string;
+    board?: string;
+    result?: string;
+    moves: string;
 }
 
 export const defaultStartValue = "START";
@@ -50,5 +48,5 @@ export interface GameStateNode {
 export interface GameState {
     activeStateId: string;
     rootId: string;
-    allGameStates: Record<string, GameStateNode>,
+    allGameStates: Record<string, GameStateNode>;
 }

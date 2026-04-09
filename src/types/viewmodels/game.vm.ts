@@ -1,5 +1,5 @@
 import {Dayjs} from "dayjs";
-import { TeamVm } from "./team.vm";
+import {StrictOmit} from "@/types/common/utils";
 
 export interface GameVm {
     id: number;
@@ -7,53 +7,21 @@ export interface GameVm {
     blackPlayerId?: number;
     whitePlayerName?: string;
     blackPlayerName?: string;
-    date?: Dayjs,
-    opening?: string,
-    event?: string,
-    site?: string
-    board?: string,
-    result?: string,
-    round?: number,
-    moves: string
+    date?: Dayjs | null;
+    opening?: string;
+    event?: string;
+    site?: string;
+    board?: string;
+    result?: string;
+    round?: number;
+    moves: string;
 }
 
-export interface GameSimpleVm {
-    id: number;
-    whitePlayerName?: string;
-    blackPlayerName?: string;
-    date?: Dayjs,
-    opening?: string,
-    event?: string,
-    result?: string,
-    moves: string
-}
+export type GameSimpleVm  = Pick<GameVm, "id" | "whitePlayerName" | "blackPlayerName" | "date" | "opening" | "event" | "result" | "moves">;
 
-export interface GameWithTeamVm {
-    id: number;
-    whitePlayerId?: number;
-    whitePlayerName?: string;
-    blackPlayerId?: number;
-    blackPlayerName?: string;
-    date?: Dayjs,
-    opening?: string,
-    event?: string,
-    site?: string
-    board?: string,
-    result?: string
-    round?: number,
-    teamId?: number,
-    teamName?: string,
-    moves: string
-}
-
-export interface GameMetaData {
-    whitePlayerId?: number;
-    whitePlayerName?: string | undefined;
-    blackPlayerId?: number;
-    blackPlayerName?: string | undefined;
-    date?: Dayjs | null | undefined;
-    event?: string | undefined;
-    round?: number | undefined;
+export interface GameWithTeamVm extends GameVm{
     teamId?: number;
     teamName?: string;
 }
+
+export type GameMetaData = StrictOmit<GameWithTeamVm, "id" | "moves">;

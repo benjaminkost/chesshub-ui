@@ -10,7 +10,7 @@ export function ProfileSettings({user}:ProfileSettingsProps) {
     const [username, setUsername] = React.useState<string>(user.userName);
     const [name, setName] = React.useState<string>(user.name);
     const [email, setEmail] = React.useState<string>(user.email);
-    const [fideID, setFideID] = React.useState<string>(user.fideID ?? "");
+    const [fideID, setFideID] = React.useState<string>(user.fideId ?? "");
     const [lichessUsername, setLichessUserName] = React.useState<string>(user.lichessUsername ?? "");
     const [chesscomUsername, setChesscomUserName] = React.useState<string>(user.chesscomUsername ?? "");
     const [open, setOpen] =  React.useState<boolean>(false);
