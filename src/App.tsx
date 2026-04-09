@@ -15,35 +15,47 @@ import {RequestNewPasswordPage} from "@/pages/RequestNewPasswordPage";
 import {Impressum} from "@/pages/Impressum";
 import {AboutChessHub} from "@/pages/AboutChessHub";
 import {BugReport} from "@/pages/BugReport";
+import {LockupContext, LockupData} from "@/context/LookupContext";
+import React from "react";
+import {allUsers, dummyAllClubs} from "@/dummyData";
 
 export function App() {
 
-  return (
-      <>
-          <BrowserRouter>
-              <main>
-                  <Routes>
-                      <Route path="/" element={< Home />} />
-                      <Route path="/auth/register" element={< RegistrationPage />} />
-                      <Route path="/auth/signup" element={< RegistrationPage />} />
-                      <Route path="/auth/login" element={< LoginPage />} />
-                      <Route path="/auth/signin" element={< LoginPage />} />
-                      <Route path="/uploadImage" element={< UploadFileContent />} />
-                      <Route path="/own-games-history" element={< OwnGamesHistory />} />
-                      <Route path="/team-games-history" element={< TeamGamesHistory />} />
-                      <Route path="/view-game" element={< ViewSingleGame /> } />
-                      <Route path="/club-affiliation" element={< ClubAffiliation />} />
-                      <Route path={"/team-management"} element={< TeamManagement />} />
-                      <Route path={"/club-management"} element={< ClubManagement />} />
-                      <Route path={"/input-game"} element={< InputGame />} />
-                      <Route path={"/profile-settings"} element={<ProfileSettingsPage/>} />
-                      <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
-                      <Route path={"/impressum"} element={< Impressum />} />
-                      <Route path={"/about"} element={< AboutChessHub />} />
-                      <Route path={"/bug-report"} element={< BugReport />}/>
-                  </Routes>
-              </main>
-          </BrowserRouter>
-      </>
-  )
+    const [lockup, setLockup] = React.useState<LockupData>({ users: {}, clubs: {} });
+
+    React.useEffect(() => {
+        setLockup({
+            clubs: dummyAllClubs,
+            users: allUsers
+        });
+    }, []);
+
+    return (
+          <LockupContext.Provider value={lockup}>
+              <BrowserRouter>
+                  <main>
+                      <Routes>
+                          <Route path="/" element={< Home />} />
+                          <Route path="/auth/register" element={< RegistrationPage />} />
+                          <Route path="/auth/signup" element={< RegistrationPage />} />
+                          <Route path="/auth/login" element={< LoginPage />} />
+                          <Route path="/auth/signin" element={< LoginPage />} />
+                          <Route path="/uploadImage" element={< UploadFileContent />} />
+                          <Route path="/own-games-history" element={< OwnGamesHistory />} />
+                          <Route path="/team-games-history" element={< TeamGamesHistory />} />
+                          <Route path="/view-game" element={< ViewSingleGame /> } />
+                          <Route path="/club-affiliation" element={< ClubAffiliation />} />
+                          <Route path={"/team-management"} element={< TeamManagement />} />
+                          <Route path={"/club-management"} element={< ClubManagement />} />
+                          <Route path={"/input-game"} element={< InputGame />} />
+                          <Route path={"/profile-settings"} element={<ProfileSettingsPage/>} />
+                          <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
+                          <Route path={"/impressum"} element={< Impressum />} />
+                          <Route path={"/about"} element={< AboutChessHub />} />
+                          <Route path={"/bug-report"} element={< BugReport />}/>
+                      </Routes>
+                  </main>
+              </BrowserRouter>
+          </LockupContext.Provider>
+      )
 }
