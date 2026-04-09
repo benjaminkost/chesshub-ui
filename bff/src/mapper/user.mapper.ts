@@ -14,7 +14,7 @@ export const mapUserSimpleVmToMemberVm = (user: UserSimpleVm, memberRoles: TeamR
     return {
         id: user.id,
         name: user.name,
-        username: user.userName,
+        userName: user.userName,
         roles: memberRoles
     }
 }

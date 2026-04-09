@@ -1,5 +1,4 @@
 import {BrowserRouter, Route, Routes} from "react-router";
-import {UploadFileContent} from "./components/UploadFileContent";
 import {Home} from "./pages/Home";
 import OwnGamesHistory from "./pages/OwnGamesHistory";
 import TeamGamesHistory from "./pages/TeamGamesHistory";
@@ -44,7 +43,6 @@ export function App() {
                           <Route path="/auth/signup" element={< RegistrationPage />} />
                           <Route path="/auth/login" element={< LoginPage />} />
                           <Route path="/auth/signin" element={< LoginPage />} />
-                          <Route path="/uploadImage" element={< UploadFileContent />} />
                           <Route path="/own-games-history" element={< OwnGamesHistory />} />
                           <Route path="/team-games-history" element={< TeamGamesHistory />} />
                           <Route path="/view-game" element={< ViewSingleGame /> } />

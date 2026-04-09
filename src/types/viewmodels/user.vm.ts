@@ -23,6 +23,6 @@ export interface UserSimpleVm {
 export interface TeamMemberVm {
     id: number;
     name: string;
-    username?: string;
+    userName?: string;
     roles: TeamRole[];
 }
