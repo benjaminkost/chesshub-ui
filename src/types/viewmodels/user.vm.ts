@@ -11,7 +11,7 @@ export interface UserVm {
     lichessUsername?: string;
     chesscomUsername?: string;
     clubs?: ClubSimpleVm[];
-    teamIds?: TeamVm[];
+    teams?: TeamVm[];
 }
 
 export interface UserSimpleVm {
