@@ -17,6 +17,7 @@ import {BugReport} from "@/pages/BugReport";
 import {LookupContext, LookupData} from "@/context/LookupContext";
 import React from "react";
 import {allUsers, dummyAllClubs} from "@/dummyData";
+import {ROUTES} from "@/routes";
 
 export function App() {
 
@@ -38,23 +39,21 @@ export function App() {
               <BrowserRouter>
                   <main>
                       <Routes>
-                          <Route path="/" element={< Home />} />
-                          <Route path="/auth/register" element={< RegistrationPage />} />
-                          <Route path="/auth/signup" element={< RegistrationPage />} />
-                          <Route path="/auth/login" element={< LoginPage />} />
-                          <Route path="/auth/signin" element={< LoginPage />} />
-                          <Route path="/own-games-history" element={< OwnGamesHistory />} />
-                          <Route path="/team-games-history" element={< TeamGamesHistory />} />
-                          <Route path="/view-game" element={< ViewSingleGame /> } />
-                          <Route path="/club-affiliation" element={< ClubAffiliation />} />
-                          <Route path={"/team-management"} element={< TeamManagement />} />
-                          <Route path={"/club-management"} element={< ClubManagement />} />
-                          <Route path={"/input-game"} element={< InputGame />} />
-                          <Route path={"/profile-settings"} element={<ProfileSettingsPage/>} />
-                          <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
-                          <Route path={"/impressum"} element={< Impressum />} />
-                          <Route path={"/about"} element={< AboutChessHub />} />
-                          <Route path={"/bug-report"} element={< BugReport />}/>
+                          <Route path={ROUTES.HOME.url} element={< Home />} />
+                          <Route path={ROUTES.AUTH.REGISTER.url} element={< RegistrationPage />} />
+                          <Route path={ROUTES.AUTH.LOGIN.url} element={< LoginPage />} />
+                          <Route path={ROUTES.USER.CLUB_AFFILIATION.url} element={< ClubAffiliation />} />
+                          <Route path={ROUTES.USER.SETTINGS.url} element={<ProfileSettingsPage/>} />
+                          <Route path={ROUTES.GAMES.LIST_USER.url} element={< OwnGamesHistory />} />
+                          <Route path={ROUTES.GAMES.LIST_TEAM.url} element={< TeamGamesHistory />} />
+                          <Route path={ROUTES.GAMES.VIEW.url} element={< ViewSingleGame /> } />
+                          <Route path={ROUTES.GAMES.CREATE} element={< InputGame />} />
+                          <Route path={ROUTES.TEAMS.MANAGE.url} element={< TeamManagement />} />
+                          <Route path={ROUTES.CLUBS.MANAGE.url} element={< ClubManagement />} />
+                          <Route path={ROUTES.AUTH.REQUEST_NEW_PASSWORD.url} element={<RequestNewPasswordPage/>} />
+                          <Route path={ROUTES.IMPRESSUM.url} element={< Impressum />} />
+                          <Route path={ROUTES.ABOUT.url} element={< AboutChessHub />} />
+                          <Route path={ROUTES.BUG_REPORT.url} element={< BugReport />}/>
                       </Routes>
                   </main>
               </BrowserRouter>
