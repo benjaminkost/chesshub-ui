@@ -1,6 +1,7 @@
 import {Button, Grid, Paper, TextField, Typography} from "@mui/material";
 import React from "react";
 import {useNavigate} from "react-router-dom";
+import {ROUTES} from "@/routes";
 
 export function RequestNewPassword() {
     const [email, setEmail] = React.useState<string>();
@@ -11,7 +12,7 @@ export function RequestNewPassword() {
     }
 
     const handleEmailRequest = () => {
-        navigate("/");
+        navigate(ROUTES.HOME.func());
     }
 
     return (

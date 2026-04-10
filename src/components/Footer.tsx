@@ -1,5 +1,6 @@
 import {Box, Link} from "@mui/material";
 import "@/styles/App.css";
+import {ROUTES} from "@/routes";
 
 interface MediaAttributes {
     label: string,
@@ -12,9 +13,9 @@ export interface FooterProps{
 }
 
 export const defaultMedia = [
-    { label: "Über ChessHub", path: "/about"},
-    { label: "Impressum", path: "/impressum"},
-    { label: "Problem melden", path: "/bug-report"}
+    { label: "Über ChessHub", path: ROUTES.ABOUT.func()},
+    { label: "Impressum", path: ROUTES.IMPRESSUM.func()},
+    { label: "Problem melden", path: ROUTES.BUG_REPORT.func()}
 ];
 
 export default function Footer({media=defaultMedia}: FooterProps) {

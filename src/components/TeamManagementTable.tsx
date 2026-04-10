@@ -10,11 +10,12 @@ import {DataGrid, GridColDef, GridRowId} from "@mui/x-data-grid";
 import React from "react";
 import TeamMemberRoleManager from "./TeamMemberRoleManager";
 import {AddUserToTeamSearchBar} from "@/components/TableSearchAndAddButton";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {TeamRole} from "@/types/common/roles";
 import {TeamMemberVm, UserSimpleVm} from "@/types/viewmodels/user.vm";
 import {TeamVm} from "@/types/viewmodels/team.vm";
 import {mapUserSimpleVmToMemberVm} from "../../bff/src/mapper/user.mapper";
+import {ROUTES} from "@/routes";
 
 interface TeamManagementTableProps {
     team: TeamVm;
@@ -59,6 +60,7 @@ const cssForMemberRole = (role: TeamRole) => {
 export default function TeamManagementTable({team, allUsers}: TeamManagementTableProps) {
     const [currentMembers, setCurrentMembers] = React.useState<TeamMemberVm[]>(team.members ?? []);
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>();
+    const { clubId } = useParams();
     const navigate = useNavigate();
 
     const addUserToTeam = (selectedUser: UserSimpleVm | null) => {
@@ -163,7 +165,7 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
                     <Grid size={6}>
                         <Typography sx={{fontWeight: "bold"}}>Vereinsname:</Typography>
                     </Grid>
-                    <Grid size={6} onClick={() => navigate("/club-management")}
+                    <Grid size={6} onClick={() => clubId && navigate(ROUTES.CLUBS.MANAGE.func(Number(clubId)))}
                           sx={{
                               "&:hover":
                                   {color: "blue", cursor: "pointer"}

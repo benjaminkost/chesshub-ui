@@ -44,9 +44,9 @@ export const ROUTES = {
             func: () => "/game/new",
             url: "/game/new"
         },
-        LIST_TEAM: {
-            func: (teamId: number) => `/games/team/${teamId}`,
-            url: "/games/team/:teamId"
+        LIST_CLUB: {
+            func: (clubId: number) => `/games/club/${clubId}`,
+            url: "/games/club/:clubId"
         },
         LIST_USER: {
             func: (userId: number) => `/games/user/${userId}`,

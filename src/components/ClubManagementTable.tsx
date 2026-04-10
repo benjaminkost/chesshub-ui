@@ -7,6 +7,8 @@ import {ClubWithTeamsVm} from "@/types/viewmodels/club.vm";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
 import {mapTeamSimpleVmToTeamVm} from "../../bff/src/mapper/team.mapper";
 import {useLookup} from "@/context/LookupContext";
+import {ROUTES} from "@/routes";
+import {useAuth} from "@/context/AuthContext";
 
 interface ClubManagementTable{
     club: ClubWithTeamsVm;
@@ -15,6 +17,7 @@ interface ClubManagementTable{
 export default function ClubManagementTable({club}: ClubManagementTable){
     const [rows, setRows] = React.useState<TeamVm[]>(club?.teams || []);
     const allUsers = Object.values(useLookup().usersSimple);
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const addTeam = (newTeam:TeamSimpleVm) => {
@@ -24,7 +27,11 @@ export default function ClubManagementTable({club}: ClubManagementTable){
     }
 
     const navigateToTeam = () => {
-        navigate("/team-management");
+        if(!user) {
+            navigate(ROUTES.AUTH.LOGIN.func());
+            return;
+        }
+        navigate(ROUTES.TEAMS.MANAGE.func(user.id));
     };
 
     const columns = React.useMemo<GridColDef[]>(() => [

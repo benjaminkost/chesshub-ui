@@ -1,6 +1,7 @@
 import Box from "@mui/material/Box";
 import { Link } from "react-router-dom";
 import Typography from "@mui/material/Typography";
+import {ROUTES} from "@/routes";
 
 export function HomeIcon(){
     return (
@@ -9,7 +10,7 @@ export function HomeIcon(){
                 <Typography
                     variant="h5"
                     component={Link}
-                    to="/"
+                    to={ROUTES.HOME.url}
                     sx={{
                         alignItems: 'center',
                         "&:hover": {color: "primary.main"}

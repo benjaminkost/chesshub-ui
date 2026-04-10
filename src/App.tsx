@@ -1,7 +1,7 @@
 import {BrowserRouter, Route, Routes} from "react-router";
 import {Home} from "./pages/Home";
 import OwnGamesHistory from "./pages/OwnGamesHistory";
-import TeamGamesHistory from "./pages/TeamGamesHistory";
+import ClubsGamesHistory from "./pages/ClubsGamesHistory";
 import ViewSingleGame from "./pages/ViewSingleGame";
 import ClubAffiliation from "./pages/ClubAffiliation";
 import TeamManagement from "./pages/TeamManagement";
@@ -47,7 +47,7 @@ export function App() {
                           <Route path={ROUTES.USER.CLUB_AFFILIATION.url} element={< ClubAffiliation />} />
                           <Route path={ROUTES.USER.SETTINGS.url} element={<ProfileSettingsPage/>} />
                           <Route path={ROUTES.GAMES.LIST_USER.url} element={< OwnGamesHistory />} />
-                          <Route path={ROUTES.GAMES.LIST_TEAM.url} element={< TeamGamesHistory />} />
+                          <Route path={ROUTES.GAMES.LIST_CLUB.url} element={< ClubsGamesHistory />} />
                           <Route path={ROUTES.GAMES.VIEW.url} element={< ViewSingleGame /> } />
                           <Route path={ROUTES.GAMES.CREATE.url} element={< InputGame />} />
                           <Route path={ROUTES.TEAMS.MANAGE.url} element={< TeamManagement />} />
