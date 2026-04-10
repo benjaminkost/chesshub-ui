@@ -1,16 +1,16 @@
-import {TeamModel} from "@/types/models/team.model";
-import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
-import {TeamMemberVm, UserSimpleVm} from "@/types/viewmodels/user.vm";
-import {ClubSimpleVm} from "@/types/viewmodels/club.vm";
-import {teamMembersOfDummyTeam} from "@/dummyData";
+import { TeamModel } from "@/types/models/team.model";
+import { TeamSimpleVm, TeamVm } from "@/types/viewmodels/team.vm";
+import { TeamMemberVm, UserSimpleVm } from "@/types/viewmodels/user.vm";
+import { ClubSimpleVm } from "@/types/viewmodels/club.vm";
+import { teamMembersOfDummyTeam } from "@/dummyData";
 
 export const mapTeamModelToTeamVm = (team: TeamModel,
-                                     clubs: Record<number,ClubSimpleVm>,
-                                     users: Record<number, UserSimpleVm>):TeamVm => {
-    const {clubId, adminId} = team;
+    clubs: Record<number, ClubSimpleVm>,
+    users: Record<number, UserSimpleVm>): TeamVm => {
+    const { clubId, adminId } = team;
 
-    const adminName = adminId && users[adminId].name || undefined;
-    const clubName = clubId && clubs[clubId].name || undefined;
+    const adminName = adminId && users[adminId]?.name || undefined;
+    const clubName = clubId && clubs[clubId]?.name || undefined;
 
     return {
         id: team.id,
@@ -30,7 +30,7 @@ interface MappingContext {
     memberIds?: TeamMemberVm[];
 }
 
-export const mapTeamSimpleVmToTeamVm = (team: TeamSimpleVm, clubId: number, context:MappingContext):TeamVm => {
+export const mapTeamSimpleVmToTeamVm = (team: TeamSimpleVm, clubId: number, context: MappingContext): TeamVm => {
     return {
         ...team,
         clubId: clubId,
