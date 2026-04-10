@@ -8,12 +8,15 @@ import { MetaDataForGameInput } from "@/components/MetaDataForGameInput";
 import { _post } from "../../bff/src/clients/apiChessHubCoreClient";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { parsePgnToGameState } from "../../bff/src/pgnParsing"
+import { parsePgnToGameState } from "../../bff/src/utils/pgnParsing"
 import { GameState, GameStateNode } from "@/types/models/game.model";
 import { produce } from "immer";
 import { GameMetaData, GameWithTeamVm } from "@/types/viewmodels/game.vm";
 import { mapGameWithTeamVmToGameMetaData } from "../../bff/src/mapper/game.mapper";
 import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
+import {ROUTES} from "@/routes";
+import {useAuth} from "@/context/AuthContext";
+import {convertGameStateToPgn} from "../../bff/src/utils/interactWithGameState";
 
 export interface ChessBoardEditorProps {
     allTeams: TeamSimpleVm[];
@@ -25,11 +28,8 @@ export function ChessBoardEditor({ allTeams, game }: ChessBoardEditorProps) {
     const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
     const [gameState, setGameState] = React.useState<GameState>(parsePgnToGameState(game.moves));
     const [gameMetaData, setGameMetaData] = React.useState<GameMetaData>(mapGameWithTeamVmToGameMetaData(game));
+    const { user } = useAuth();
     const navigate = useNavigate();
-
-    const convertTreeToPGNMoves = (): string => {
-        return ""; // TODO: Define method
-    };
 
     React.useEffect(() => {
         const chess = new Chess(gameState.allGameStates[gameState.activeStateId].fen);
@@ -87,13 +87,18 @@ export function ChessBoardEditor({ allTeams, game }: ChessBoardEditorProps) {
         const payload = {
             "white_player_name": gameMetaData.whitePlayerName,
             "black_player_name": gameMetaData.blackPlayerName,
-            "moves": convertTreeToPGNMoves(),
+            "moves": convertGameStateToPgn(gameState),
             "event": gameMetaData.event,
             "date": gameMetaData.date?.toISOString(),
             "team": gameMetaData.teamId
         };
         await _post("", payload);
-        navigate("/own-games-history");
+
+        if (!user){
+            navigate(ROUTES.AUTH.LOGIN.func());
+            return;
+        }
+        navigate(ROUTES.GAMES.LIST_USER.func(user.id));
     }
 
     const handleMoveSelect = (id: string) => {
