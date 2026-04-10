@@ -18,6 +18,7 @@ import {LookupContext, LookupData} from "@/context/LookupContext";
 import React from "react";
 import {allUsers, dummyAllClubs} from "@/dummyData";
 import {ROUTES} from "@/routes";
+import {AuthProvider} from "@/context/AuthContext";
 
 export function App() {
 
@@ -35,6 +36,7 @@ export function App() {
     }, []);
 
     return (
+        <AuthProvider>
           <LookupContext.Provider value={lookup}>
               <BrowserRouter>
                   <main>
@@ -47,7 +49,7 @@ export function App() {
                           <Route path={ROUTES.GAMES.LIST_USER.url} element={< OwnGamesHistory />} />
                           <Route path={ROUTES.GAMES.LIST_TEAM.url} element={< TeamGamesHistory />} />
                           <Route path={ROUTES.GAMES.VIEW.url} element={< ViewSingleGame /> } />
-                          <Route path={ROUTES.GAMES.CREATE} element={< InputGame />} />
+                          <Route path={ROUTES.GAMES.CREATE.url} element={< InputGame />} />
                           <Route path={ROUTES.TEAMS.MANAGE.url} element={< TeamManagement />} />
                           <Route path={ROUTES.CLUBS.MANAGE.url} element={< ClubManagement />} />
                           <Route path={ROUTES.AUTH.REQUEST_NEW_PASSWORD.url} element={<RequestNewPasswordPage/>} />
@@ -58,5 +60,6 @@ export function App() {
                   </main>
               </BrowserRouter>
           </LookupContext.Provider>
+        </AuthProvider>
       )
 }

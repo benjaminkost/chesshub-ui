@@ -11,6 +11,8 @@ import {
 import Typography from "@mui/material/Typography";
 import React from "react";
 import {useNavigate} from "react-router-dom";
+import {ROUTES} from "@/routes";
+import {useAuth} from "@/context/AuthContext";
 
 interface RepositoryStruct {
     label: string,
@@ -30,6 +32,7 @@ interface BugReportContentProps {
 export function BugReportContent({repositoryOptions=defaultRepositoryOptions}: BugReportContentProps) {
     const [repo, setRepo] = React.useState<string>();
     const [bugDescription, setBugDescription] = React.useState<string>();
+    const { user } = useAuth();
     const navigate = useNavigate();
 
     const handleTextInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,11 +40,14 @@ export function BugReportContent({repositoryOptions=defaultRepositoryOptions}: B
     }
 
     const handleSend = () => {
-        // TODO Here comes the n8n api call
-        navigate("/own-games-history");
+        if(!user) {
+            navigate(ROUTES.AUTH.LOGIN.func());
+            return;
+        }
+        navigate(ROUTES.GAMES.LIST_USER.func(user.id));
     }
 
-    const handleSelectrepo = (event: SelectChangeEvent) => {
+    const handleSelectRepo = (event: SelectChangeEvent) => {
         setRepo(event.target.value);
     }
 
@@ -66,7 +72,7 @@ export function BugReportContent({repositoryOptions=defaultRepositoryOptions}: B
             }}>
                 <Typography variant={"h5"} sx={{mb: 2, color: "white"}}>Problem melden</Typography>
                 <FormControl fullWidth sx={{backgroundColor: "white"}}>
-                    <Select value={repo} onChange={handleSelectrepo}>
+                    <Select value={repo} onChange={handleSelectRepo}>
                         {repositoryOptions.map((repositoryOption) => (
                             <MenuItem value={repositoryOption.path}>{repositoryOption.label}</MenuItem>
                         ))
