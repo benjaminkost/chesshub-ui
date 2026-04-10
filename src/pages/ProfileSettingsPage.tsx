@@ -4,6 +4,6 @@ import {allUsers} from "@/dummyData";
 
 export function ProfileSettingsPage(){
     return (
-        <PageLayout loggedIn={true} children={<ProfileSettings user={allUsers[1]} />} />
+        <PageLayout children={<ProfileSettings user={allUsers[1]} />} />
     )
 }

@@ -8,7 +8,6 @@ import PageLayout from "@/components/PageLayout";
 
 export default function ViewSingleGame() {
     return (
-        <PageLayout loggedIn={true} children={<ChessBoardEditor allTeams={allDummyTeamsVm}
-                                                                game={dummyGamesTableData[0]} />} />
+        <PageLayout children={<ChessBoardEditor allTeams={allDummyTeamsVm} game={dummyGamesTableData[0]} />} />
     );
 }

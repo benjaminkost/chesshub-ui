@@ -5,6 +5,6 @@ import HomeContent from "@/components/HomeContent";
 export function Home() {
 
     return (
-        <PageLayout loggedIn={false} children={<HomeContent/>} />
+        <PageLayout children={<HomeContent/>} />
     )
 }

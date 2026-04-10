@@ -3,6 +3,6 @@ import {AboutChessHubContent} from "@/components/AboutChessHubContent";
 
 export function AboutChessHub() {
     return (
-        <PageLayout loggedIn={false} children={< AboutChessHubContent />} />
+        <PageLayout children={< AboutChessHubContent />} />
     )
 }

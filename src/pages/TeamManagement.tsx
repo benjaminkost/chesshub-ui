@@ -4,7 +4,7 @@ import PageLayout from "@/components/PageLayout";
 
 export default function TeamManagement(){
     return (
-        <PageLayout loggedIn={true} children={<TeamManagementTable
+        <PageLayout children={<TeamManagementTable
             allUsers={allUsers}
             team={dummyTeamVm}
         />} />

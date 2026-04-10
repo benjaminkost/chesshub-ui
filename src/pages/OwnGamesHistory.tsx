@@ -7,7 +7,7 @@ export default function OwnGamesHistory() {
     const userGames = dummyGamesTableData.filter(games => games.whitePlayerName === userName || games.blackPlayerName === userName);
 
     return (
-        <PageLayout loggedIn={true} children={<GamesTable
+        <PageLayout children={<GamesTable
             games={userGames} // TODO: muss später aus der datenbank ausgelesen werden
             ownGamesOrTeamGames={true}
         />}

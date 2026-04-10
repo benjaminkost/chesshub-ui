@@ -4,7 +4,7 @@ import {InputGameContent} from "@/components/InputGameContent";
 
 export function InputGame(){
     return (
-        <PageLayout loggedIn={true} children={< InputGameContent allTeams={allDummyTeamsVm} game={dummyGamesTableData[0]} />}
+        <PageLayout children={< InputGameContent allTeams={allDummyTeamsVm} game={dummyGamesTableData[0]} />}
         />
     )
 }

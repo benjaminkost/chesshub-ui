@@ -7,8 +7,7 @@ import {mapClubToSimpleVM} from "../../bff/src/mapper/club.mapper";
 export default function ClubAffiliation(){
 
     return (
-        < PageLayout loggedIn={true}
-                     children={<ClubsTable allClubs={dummyAllClubs.map(mapClubToSimpleVM)} clubsOfUser={dummyClubAffiliation}/>}
+        < PageLayout children={<ClubsTable allClubs={dummyAllClubs.map(mapClubToSimpleVM)} clubsOfUser={dummyClubAffiliation}/>}
         />
     )
 }
