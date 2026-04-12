@@ -2,37 +2,48 @@ import {Box, Paper} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
 import {AddClubToAffiliation} from "@/components/TableSearchAndAddButton";
-import {ClubMemberStatus} from "@/types/common/roles";
-import {ClubAffiliationVm, ClubSimpleVm} from "@/types/viewmodels/club.vm";
-import {mapClubModelToClubAffiliation, mapClubToSimpleVM} from "../../bff/src/mapper/club.mapper";
-import {useLookup} from "@/context/LookupContext";
+import { ClubAffiliation, ClubMemberStatus, ClubSimple } from "@benaurel/chesshub-core-client";
 
 interface ClubsTableProps {
-    allClubs: ClubSimpleVm[];
-    clubsOfUser: ClubAffiliationVm[];
+    allClubs: ClubSimple[];
+    clubsOfUser: ClubAffiliation[];
 }
+
+const parseMemberStatus = (memberStatus: ClubMemberStatus): string => {
+    switch (memberStatus) {
+        case ClubMemberStatus.Applicant:
+            return "Bewerber";
+        case ClubMemberStatus.Member:
+            return "Mitglied";
+        case ClubMemberStatus.FormerMember:
+            return "Ehemaliges Mitglied";
+        case ClubMemberStatus.Banned:
+            return "Gesperrt";
+        default:
+            return "Unbekannt";
+    }
+};
 
 const clubsTableColumns: GridColDef[] = [
     {field: "id", headerName: "ID", resizable: false, flex: 1},
     {field: "name", headerName: "Vereinsname", resizable: false, flex: 2},
     {field: "address", headerName: "Adresse", resizable: false, flex: 3},
-    {field: "adminName", headerName: "Vorsitzender", resizable: false, flex: 2},
     {field: "status", headerName: "Mitgliedsstatus", resizable: false, flex: 1,
         renderCell: (params) => {
         const status = params.value as ClubMemberStatus;
         let textColor = "black";
 
         switch (status) {
-            case ClubMemberStatus.APPLICANT:
+            case ClubMemberStatus.Applicant:
                 textColor = "orange";
                 break;
-            case ClubMemberStatus.MEMBER:
+            case ClubMemberStatus.Member:
                 textColor = "green";
                 break;
-            case ClubMemberStatus.FORMER_MEMBER:
+            case ClubMemberStatus.FormerMember:
                 textColor = "purple";
                 break;
-            case ClubMemberStatus.BANNED:
+            case ClubMemberStatus.Banned:
                 textColor = "red";
                 break;
             default:
@@ -41,7 +52,7 @@ const clubsTableColumns: GridColDef[] = [
 
         return (
             <Box sx={{color: textColor}}>
-                {status}
+                {parseMemberStatus(status)}
             </Box>
         );
         }
@@ -49,14 +60,17 @@ const clubsTableColumns: GridColDef[] = [
 ];
 
 export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
-    const [currentClubs, setCurrentClubs] = React.useState<ClubAffiliationVm[]>(clubsOfUser);
-    const { usersSimple } = useLookup();
+    const [currentClubs, setCurrentClubs] = React.useState<ClubAffiliation[]>(clubsOfUser);
 
-    const addClubToUser = (newClubId: number) => {
-        const newClub = allClubs.find(club => club.id === newClubId);
-
+    const addClubToUser = (newClub: ClubSimple | null | undefined) => {
         if (newClub){
-            const newClubAffiliation = mapClubModelToClubAffiliation(newClub, ClubMemberStatus.APPLICANT, usersSimple);
+            // Note: Temporary fallback as joining clubs API is not yet available
+            const newClubAffiliation: ClubAffiliation = {
+                id: newClub.id,
+                name: newClub.name,
+                status: ClubMemberStatus.Applicant,
+                adminId: newClub.adminId
+            };
             setCurrentClubs([...currentClubs, newClubAffiliation]);
         } else {
             console.warn("Selected club was null or undefined");
@@ -81,9 +95,9 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
                 rows={currentClubs}
                 slots={{
                     footer: () => <AddClubToAffiliation
-                        allClubs={allClubs.map(club => mapClubToSimpleVM(club))}
-                        clubsOfUser={currentClubs}
-                        addClubToUser={addClubToUser}/>
+                        allClubs={allClubs as any}
+                        clubsOfUser={currentClubs as any}
+                        addClubToUser={addClubToUser as any}/>
                 }}
             />
         </Paper>

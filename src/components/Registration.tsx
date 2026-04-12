@@ -1,7 +1,8 @@
 import React, {useState} from "react";
-import {_post} from "../../bff/src/clients/apiChessHubCoreClient";
-import {Box, Button, Link, Paper, TextField, Typography } from "@mui/material";
+import {Box, Button, Link, Paper, TextField, Typography, Alert } from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import {authApi} from "@/api/chesshub";
+import { RegisterRequest } from "@benaurel/chesshub-core-client";
 
 export function Registration() {
     const [email, setEmail] = useState("");
@@ -11,252 +12,170 @@ export function Registration() {
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [phone, setPhone] = useState("");
-    const [passwordsMatch, setPasswordsMatch] = useState(false);
+    const [passwordsMatch, setPasswordsMatch] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [userRegistered, setUserRegistered] = useState(false);
-    const [buttonClicked, setButtonClicked] = useState(false);
     const navigate = useNavigate();
 
-    // Methods
-    const EmailInput = (event:React.ChangeEvent<HTMLInputElement>) => {
-       setEmail(event.target.value);
+    const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => setEmail(event.target.value);
+    const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const val = event.target.value;
+        setPassword(val);
+        setPasswordsMatch(val === confirmPassword);
     };
-
-    const PasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPassword(event.target.value);
+    const handleConfirmPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const val = event.target.value;
+        setConfirmPassword(val);
+        setPasswordsMatch(val === password);
     };
-
-    const ConfirmPasswordInput = (value:string) => {
-        setConfirmPassword(value);
-    }
-
-    const UsernameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setUsername(event.target.value);
-    };
-
-    const FirstNameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setFirstName(event.target.value);
-    }
-
-    const LastNameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setLastName(event.target.value);
-    }
-
-    const PhoneInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPhone(event.target.value);
-    }
-
-    const CheckIfPasswordsMatch = (confirmPassword: string) => {
-
-
-        if (password === confirmPassword) {
-            setPasswordsMatch(true);
-        } else {
-            setPasswordsMatch(false);
-        }
-    }
-
-    let statusMessage;
-
-    if(!passwordsMatch && buttonClicked){
-        statusMessage = (<Typography sx={{
-            color: "red"
-        }}>
-            Passwords do not match!
-        </Typography>);
-    } else if(buttonClicked && !userRegistered){
-        statusMessage = (<Typography sx={{
-            color: "red"
-        }}>
-            User konnte nicht gespeichert werden
-        </Typography>);
-    }
-        else{
-        statusMessage = (<p><br/></p>);
-    }
+    const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => setUsername(event.target.value);
+    const handleFirstNameChange = (event: React.ChangeEvent<HTMLInputElement>) => setFirstName(event.target.value);
+    const handleLastNameChange = (event: React.ChangeEvent<HTMLInputElement>) => setLastName(event.target.value);
+    const handlePhoneChange = (event: React.ChangeEvent<HTMLInputElement>) => setPhone(event.target.value);
 
     const registerUser = async () => {
-        setButtonClicked(true);
-
-        if(passwordsMatch) {
-            const payload = {
-                username: username,
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                password: password,
-                phone: phone
-            }
-            const value= await _post('/auth/register', payload);
-
-            setUserRegistered(value);
-
-            if (value){
-                navigate("/");
-            }
+        setError(null);
+        if (!passwordsMatch) {
+            setError("Die Passwörter stimmen nicht überein!");
+            return;
         }
-    }
 
-    const handleConfirmedPassword = (event:React.ChangeEvent<HTMLInputElement>) => {
-        const newConfirmedPasswordValue = event.target.value;
+        try {
+            const registerRequest: RegisterRequest = {
+                username,
+                password,
+                email,
+                firstName,
+                lastName,
+                phoneNumber: phone
+            };
+            
+            await authApi.register(registerRequest);
+            setUserRegistered(true);
+            setTimeout(() => {
+                navigate("/auth/login");
+            }, 2000);
+        } catch (err: any) {
+            console.error("Registration failed:", err);
+            setError("Benutzer konnte nicht gespeichert werden. Eventuell existiert der Benutzername oder die E-Mail bereits.");
+        }
+    };
 
-        ConfirmPasswordInput(newConfirmedPasswordValue);
-
-        CheckIfPasswordsMatch(newConfirmedPasswordValue);
-    }
-
-    let registerButton;
-
-    if (email && password && confirmPassword && username){
-        registerButton = (<Button
-            id="buttonRegistration"
-            type="button"
-            onClick={registerUser}
-            sx={{
-                color: "white",
-                backgroundColor: "gray"
-            }}
-        >
-            Register
-        </Button>);
-    } else {
-        registerButton = (<Button
-            id="buttonRegistration"
-            type="button"
-            sx={{
-                color: "white",
-                backgroundColor: "#cfcfcf"
-        }}
-        >
-            Register
-        </Button>);
-    }
+    const isFormValid = email && password && confirmPassword && username && passwordsMatch;
 
     return (
-            <>
-                <Box
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center"
+            }}
+        >
+            <Paper sx={{
+                display: "flex",
+                mt: 4,
+                flexGrow: 1,
+                flexDirection: "column",
+                gap: 2,
+                maxWidth: "sm",
+                mb: 3,
+                backgroundColor: "lightgray",
+                padding: 5
+            }}>
+                <Typography variant={"h5"} sx={{ color: "#424242", mb: 2 }}>
+                    Registrierung
+                </Typography>
+
+                {userRegistered && (
+                    <Alert severity="success" sx={{ mb: 2 }}>
+                        Registrierung erfolgreich! Du wirst zum Login weitergeleitet...
+                    </Alert>
+                )}
+
+                {error && (
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                        {error}
+                    </Alert>
+                )}
+
+                <TextField
+                    label={"E-Mail Adresse"}
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    required
+                    sx={{ backgroundColor: "white" }}
+                />
+
+                <TextField
+                    label={"Passwort"}
+                    type="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    required
+                    sx={{ backgroundColor: "white" }}
+                />
+                <TextField
+                    label={"Passwort bestätigen"}
+                    type="password"
+                    value={confirmPassword}
+                    onChange={handleConfirmPasswordChange}
+                    error={!passwordsMatch}
+                    helperText={!passwordsMatch ? "Passwörter stimmen nicht überein" : ""}
+                    required
+                    sx={{ backgroundColor: "white" }}
+                />
+                <TextField
+                    label={"Benutzername"}
+                    value={username}
+                    onChange={handleUsernameChange}
+                    required
+                    sx={{ backgroundColor: "white" }}
+                />
+                <TextField
+                    label={"Vorname"}
+                    value={firstName}
+                    onChange={handleFirstNameChange}
+                    sx={{ backgroundColor: "white" }}
+                />
+                <TextField
+                    label={"Nachname"}
+                    value={lastName}
+                    onChange={handleLastNameChange}
+                    sx={{ backgroundColor: "white" }}
+                />
+                <TextField
+                    label={"Telefonnummer"}
+                    value={phone}
+                    onChange={handlePhoneChange}
+                    sx={{ backgroundColor: "white" }}
+                />
+                
+                <Button
+                    onClick={registerUser}
+                    disabled={!isFormValid || userRegistered}
                     sx={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center"
+                        color: "white",
+                        backgroundColor: isFormValid ? "gray" : "#cfcfcf",
+                        "&:hover": {
+                            backgroundColor: isFormValid ? "#616161" : "#cfcfcf"
+                        }
                     }}
                 >
-                    <Paper sx={{
-                        display: "flex",
-                        mt: 4,
-                        flexGrow: 1,
-                        flexDirection: "column",
-                        gap: 2,
-                        maxWidth: "sm",
-                        maxHeight: "sm",
-                        mb: 3,
-                        backgroundColor: "lightgray",
-                        padding: 5
-                    }}>
-                        <Typography variant={"h5"}
-                                    sx={{
-                                        color: "#424242"
-                                    }}
-                        >
-                            Registration
-                        </Typography>
-                        <TextField
-                            label={"Email address"}
-                            type="text"
-                            id="email"
-                            name="email"
-                            value={email}
-                            onChange={EmailInput}
-                            required
-                            sx={{
-                                backgroundColor: "white"
-                            }}
-                        />
-
-                        <TextField
-                            label={"Password"}
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={password}
-                            onChange={PasswordInput}
-                            required
-                            sx={{
-                                backgroundColor: "white"
-                            }}
-                        />
-                        <TextField
-                            label={"Confirmed Password"}
-                            type="password"
-                            id="confirmed_password"
-                            name="confirmed_password"
-                            value={confirmPassword}
-                            onChange={handleConfirmedPassword}
-                            required
-                            sx={{
-                                backgroundColor: "white"
-                            }}
-                        />
-                        <TextField
-                            label={"Username"}
-                            type="text"
-                            id="username"
-                            name="username"
-                            value={username}
-                            onChange={UsernameInput}
-                            required
-                            sx={{
-                                backgroundColor: "white"
-                            }}
-                        />
-                        <TextField
-                            label={"Firstname"}
-                            type="text"
-                            id="firstname"
-                            name="firstname"
-                            value={firstName}
-                            onChange={FirstNameInput}
-                            sx={{
-                                backgroundColor: "white"
-                            }}
-                        />
-                        <TextField
-                            label={"Lastname"}
-                            type="text"
-                            id="lastname"
-                            name="lastname"
-                            value={lastName}
-                            onChange={LastNameInput}
-                            sx={{
-                                backgroundColor: "white"
-                            }}
-                        />
-                        <TextField
-                            label={"Phone Number"}
-                            type="text"
-                            id="phone"
-                            name="phone"
-                            value={phone}
-                            onChange={PhoneInput}
-                            sx={{
-                                backgroundColor: "white"
-                            }}
-                        />
-                        {registerButton}
-                        <Link
-                            href={"/auth/login"}
-                            sx={{
-                                mt: -2,
-                                color: "gray",
-                                textAlign: "center"
-                            }}
-                        >
-                            Log dich hier ein
-                        </Link>
-                        <Box>
-                            {statusMessage}
-                        </Box>
-                    </Paper>
-                </Box>
-            </>
-        )
+                    Registrieren
+                </Button>
+                
+                <Link
+                    href={"/auth/login"}
+                    sx={{
+                        mt: 1,
+                        color: "gray",
+                        textAlign: "center"
+                    }}
+                >
+                    Bereits ein Konto? Hier einloggen
+                </Link>
+            </Paper>
+        </Box>
+    );
 }

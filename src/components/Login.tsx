@@ -1,13 +1,17 @@
 import React, {useState} from "react";
-import {Box, Paper, TextField, Typography, Button, Link } from "@mui/material";
-import {_post} from "../../bff/src/clients/apiChessHubCoreClient";
+import {Box, Paper, TextField, Typography, Button, Link, Alert} from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import {authApi} from "@/api/chesshub";
+import {useAuth} from "@/context/AuthContext";
+import { LoginRequest } from "@benaurel/chesshub-core-client";
 
 
 export function Login() {
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
     const navigate = useNavigate();
+    const { login: authLogin } = useAuth();
 
     const emailOrUsernameInput = (event:React.ChangeEvent<HTMLInputElement>) => {
         setEmailOrUsername(event.target.value);
@@ -17,42 +21,28 @@ export function Login() {
         setPassword(event.target.value);
     };
 
-    const login = async () => {
-        const payload = {
-            emailOrUsername: emailOrUsername,
-            password: password
-        }
-        if(await _post("auth/signin", payload)) {
-            navigate("/");
+    const handleLogin = async () => {
+        setError(null);
+        try {
+            const loginRequest: LoginRequest = {
+                username: emailOrUsername, // The API might expect 'username' or handle emailOrUsername
+                password: password
+            };
+            const response = await authApi.login(loginRequest);
+            
+            if (response.data.accessToken && response.data.user) {
+                authLogin(response.data.accessToken, response.data.user as any);
+                navigate("/");
+            } else {
+                setError("Ungültige Antwort vom Server.");
+            }
+        } catch (err: any) {
+            console.error("Login failed:", err);
+            setError("Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.");
         }
     }
 
-    let loginButton;
-
-    if(emailOrUsername && password){
-        loginButton = (
-            <Button
-                onClick={login}
-                sx={{
-                    backgroundColor: "gray",
-                    color: "white"
-                }}
-            >
-                Login
-            </Button>
-        );
-    } else {
-        loginButton = (
-            <Button
-                sx={{
-                    backgroundColor: "#cfcfcf",
-                    color: "white"
-                }}
-            >
-                Login
-            </Button>
-        );
-    }
+    const disabled = !emailOrUsername || !password;
 
     return (
         <>
@@ -89,27 +79,46 @@ export function Login() {
                     >
                         Login
                     </Typography>
+
+                    {error && (
+                        <Alert severity="error" sx={{ mb: 2 }}>
+                            {error}
+                        </Alert>
+                    )}
+
                     <TextField
-                        label={"Email or Username"}
+                        label={"Email oder Benutzername"}
                         type={"text"}
                         required
                         value={emailOrUsername}
-                        onInput={emailOrUsernameInput}
+                        onChange={emailOrUsernameInput}
                         sx={{
                             backgroundColor: "white"
                         }}
                     />
                     <TextField
-                        label={"Password"}
+                        label={"Passwort"}
                         type={"password"}
                         required
                         value={password}
-                        onInput={passwordInput}
+                        onChange={passwordInput}
                         sx={{
                             backgroundColor: "white"
                         }}
                     />
-                    {loginButton}
+                    <Button
+                        onClick={handleLogin}
+                        disabled={disabled}
+                        sx={{
+                            backgroundColor: disabled ? "#cfcfcf" : "gray",
+                            color: "white",
+                            "&:hover": {
+                                backgroundColor: disabled ? "#cfcfcf" : "#616161"
+                            }
+                        }}
+                    >
+                        Login
+                    </Button>
                     <Link
                         href={"/auth/register"}
                         sx={{

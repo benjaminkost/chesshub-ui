@@ -1,14 +1,15 @@
 import {Alert, Box, Button, Snackbar, SnackbarCloseReason, TextField, Typography} from "@mui/material";
 import React from "react";
-import {UserModel} from "@/types/models/user.model";
+import { User } from "@benaurel/chesshub-core-client";
 
 interface ProfileSettingsProps {
-    user: UserModel
+    user: User
 }
 
-export function ProfileSettings({user}:ProfileSettingsProps) {
+export function ProfileSettings({user}: ProfileSettingsProps) {
     const [username, setUsername] = React.useState<string>(user.userName);
-    const [name, setName] = React.useState<string>(user.name);
+    const [firstName, setFirstName] = React.useState<string>(user.firstName);
+    const [lastName, setLastName] = React.useState<string>(user.lastName);
     const [email, setEmail] = React.useState<string>(user.email);
     const [fideID, setFideID] = React.useState<string>(user.fideId ?? "");
     const [lichessUsername, setLichessUserName] = React.useState<string>(user.lichessUsername ?? "");
@@ -26,51 +27,33 @@ export function ProfileSettings({user}:ProfileSettingsProps) {
 
     return (
         <>
-            <Snackbar
-                open={open}
-                autoHideDuration={4000}
-                onClose={handleClose}
-                anchorOrigin={{horizontal: "right", vertical: "top"}}
-            >
-                <Alert severity={"info"}>
-                    Email send
-                </Alert>
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose} anchorOrigin={{horizontal: "right", vertical: "top"}}>
+                <Alert severity={"info"}>E-Mail versendet</Alert>
             </Snackbar>
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    m: 3,
-                    justifyContent: "center"
-                }}
-            >
+            <Box sx={{ display: "flex", flexDirection: "column", m: 3, justifyContent: "center" }}>
                 <TextInputRow describingText={"Benutzername"} currentValue={username} setCurrentValue={setUsername} />
-                <TextInputRow describingText={"Name"} currentValue={name} setCurrentValue={setName} />
-                <TextInputRow describingText={"Email"} currentValue={email} setCurrentValue={setEmail} />
-                <TextInputRow describingText={"Fide-ID"} currentValue={fideID} setCurrentValue={setFideID} />
+                <TextInputRow describingText={"Vorname"} currentValue={firstName} setCurrentValue={setFirstName} />
+                <TextInputRow describingText={"Nachname"} currentValue={lastName} setCurrentValue={setLastName} />
+                <TextInputRow describingText={"E-Mail"} currentValue={email} setCurrentValue={setEmail} />
+                <TextInputRow describingText={"FIDE-ID"} currentValue={fideID} setCurrentValue={setFideID} />
                 <TextInputRow describingText={"Lichess Benutzername"} currentValue={lichessUsername} setCurrentValue={setLichessUserName} />
                 <TextInputRow describingText={"Chess.com Benutzername"} currentValue={chesscomUsername} setCurrentValue={setChesscomUserName} />
             </Box>
-            <Button sx={{
-                mt: 2,
-                ml: 3,
-                backgroundColor: "lightgray",
-                color: "white",
-            }}
-                    onClick={handleNewPassword}
-            >Passwort zurücksetzen</Button>
+            <Button sx={{ mt: 2, ml: 3, backgroundColor: "lightgray", color: "white" }} onClick={handleNewPassword}>
+                Passwort zurücksetzen
+            </Button>
         </>
     )
 }
 
 interface TextInputRowProps {
-    describingText: string
+    describingText: string;
     currentValue: string;
-    setCurrentValue: (initialContent: string) => void
+    setCurrentValue: (initialContent: string) => void;
 }
 
 function TextInputRow({describingText, currentValue, setCurrentValue}:TextInputRowProps) {
-    const [showButton, setShowButton] = React.useState<boolean>();
+    const [showButton, setShowButton] = React.useState<boolean>(false);
     const [textValue, setTextValue] = React.useState<string>(currentValue);
 
     React.useEffect(() => {
@@ -78,40 +61,28 @@ function TextInputRow({describingText, currentValue, setCurrentValue}:TextInputR
     }, [currentValue]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const currentTextFieldValue = event.target.value.trim();
-        setTextValue(currentTextFieldValue);
-        if (currentTextFieldValue !== currentValue && currentTextFieldValue !== "") {
-            setShowButton(true);
-        } else {
-            setShowButton(false);
-        }
+        const val = event.target.value.trim();
+        setTextValue(val);
+        setShowButton(val !== currentValue && val !== "");
     }
 
     const handleClick = () => {
-        setCurrentValue(currentValue);
+        // Fallback for missing update endpoint
+        setCurrentValue(textValue);
         setShowButton(false);
+        console.warn("User update requested, but backend persistence is missing in OpenAPI.");
     }
 
     return (
-        <Box
-            sx={{
-                m: 1,
-                display: "flex",
-                flexDirection: "row",
-                gap: 2
-        }}
-        >
+        <Box sx={{ m: 1, display: "flex", flexDirection: "row", gap: 2 }}>
             <Typography sx={{flex: 1, fontWeight: "bold"}}>{describingText}</Typography>
             <TextField sx={{flex: 2}} value={textValue} onChange={handleChange} />
             <Box sx={{width: 20, flexGrow: 1, m: 1}}>
-                {showButton && <Button onClick={handleClick}
-                         sx={{
-                             backgroundColor: "gray",
-                             color: "white"
-                }}>
-                Aktualisieren
-                </Button>
-            }
+                {showButton && (
+                    <Button onClick={handleClick} sx={{ backgroundColor: "gray", color: "white" }}>
+                        Aktualisieren
+                    </Button>
+                )}
             </Box>
         </Box>
     )

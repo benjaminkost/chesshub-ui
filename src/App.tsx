@@ -16,23 +16,37 @@ import {AboutChessHub} from "@/pages/AboutChessHub";
 import {BugReport} from "@/pages/BugReport";
 import {LookupContext, LookupData} from "@/context/LookupContext";
 import React from "react";
-import {allUsers, dummyAllClubs} from "@/dummyData";
 import {ROUTES} from "@/routes";
 import {AuthProvider} from "@/context/AuthContext";
+
+import { clubsApi, usersApi } from "@/api/chesshub";
 
 export function App() {
 
     const [lookup, setLookup] = React.useState<LookupData>({ usersSimple: {}, clubsSimple: {} });
 
     React.useEffect(() => {
-        setLookup({
-            clubsSimple: Object.fromEntries(
-                dummyAllClubs.map(c => [c.id, { ...c }])
-            ),
-            usersSimple: Object.fromEntries(
-                allUsers.map(u => [u.id, {...u}])
-            )
-        });
+        const fetchLookups = async () => {
+            try {
+                const [clubsRes, usersRes] = await Promise.all([
+                    clubsApi.getAllClubs(),
+                    usersApi.getAllUsers()
+                ]);
+
+                setLookup({
+                    clubsSimple: Object.fromEntries(
+                        clubsRes.data.map(c => [c.id, { ...c }])
+                    ),
+                    usersSimple: Object.fromEntries(
+                        usersRes.data.map(u => [u.id, { ...u }])
+                    )
+                });
+            } catch (error) {
+                console.error("Failed to fetch lookup data:", error);
+            }
+        };
+
+        fetchLookups();
     }, []);
 
     return (

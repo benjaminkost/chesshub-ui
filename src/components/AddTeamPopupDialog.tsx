@@ -1,120 +1,123 @@
-import React from "react";
 import {
-    Autocomplete,
+    Box,
     Button,
     Dialog,
+    DialogActions,
     DialogContent,
     DialogTitle,
-    IconButton,
+    FormControl,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
     TextField
 } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import {GridFooterContainer} from "@mui/x-data-grid";
-import CloseIcon from '@mui/icons-material/Close';
-import {TeamSimpleVm} from "@/types/viewmodels/team.vm";
-import {UserSimpleVm} from "@/types/viewmodels/user.vm";
+import React from "react";
+import { TeamSimple, UserSimple } from "@benaurel/chesshub-core-client";
 
 interface AddTeamPopupDialogProps {
-    allUsers: UserSimpleVm[];
-    addTeam: (team: TeamSimpleVm) => void;
+    addTeam: (team: Partial<TeamSimple>) => void;
+    allUsers: UserSimple[];
     currentHighestID: number;
 }
 
-export function AddTeamPopupDialog({allUsers,addTeam,currentHighestID}:AddTeamPopupDialogProps) {
-    const [open, setOpen] = React.useState<boolean>(false);
-    const [name, setName] = React.useState<string>();
-    const [admin, setAdmin] = React.useState<UserSimpleVm | null>();
-    const isFormIncomplete = !name?.trim() || !admin;
+export function AddTeamPopupDialog({addTeam, allUsers, currentHighestID}: AddTeamPopupDialogProps) {
+    const [open, setOpen] = React.useState(false);
+    const [teamName, setTeamName] = React.useState("");
+    const [admin, setAdmin] = React.useState<UserSimple | null>(null);
 
-    const nameInput = (event: React.ChangeEvent<HTMLInputElement>)=> {
-        setName(event.target.value);
-    };
-
+    const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
+        setTeamName("");
         setAdmin(null);
-        setName("");
     };
 
-    const handleAdd = () => {
-        if (name && admin){
-            addTeam({
-                id: (currentHighestID+1),
-                name: name,
-                adminId: admin.id,
-            });
-            handleClose();
-        }
+    const handleTeamNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTeamName(event.target.value);
+    };
+
+    const handleAdminChange = (event: SelectChangeEvent<string>) => {
+        const selectedId = Number(event.target.value);
+        const selectedUser = allUsers.find(u => u.id === selectedId);
+        setAdmin(selectedUser || null);
+    };
+
+    const handleSave = () => {
+        if (!teamName || !admin) return;
+
+        const newTeam: Partial<TeamSimple> = {
+            id: currentHighestID + 1,
+            name: teamName,
+            adminId: admin.id,
+            adminName: `${admin.firstName} ${admin.lastName}`
+        };
+
+        addTeam(newTeam);
+        handleClose();
     };
 
     return (
-        <GridFooterContainer
-            sx={{
-                display: "flex",
-                justifyContent: "center"
-            }}
-        >
-        {
-            open ?
-                <>
-                    <Dialog
-                        open={open}
-                        fullWidth
-                        maxWidth={"md"}
-                    >
-                        <DialogTitle>Neue Mannschaft erstellen</DialogTitle>
-                        <IconButton
-                            onClick={handleClose}
-                            sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8}}
-                        >
-                            <CloseIcon/>
-                        </IconButton>
-                        <DialogContent
-                            dividers
-                            sx={{
-                                gap: 2,
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center"
-                            }}
-                        >
-                            <TextField placeholder={"Mannschaftsname"} onInput={nameInput} required/>
-                            <Autocomplete
-                                getOptionLabel={(option:UserSimpleVm | string) => typeof option === 'string' ? option : `${option.name} (${option.userName})`}
-                                renderInput={(params) => <TextField {...params} placeholder={"Mannschaftsleiter"}/>}
-                                options={allUsers}
-                                onChange={(_,selectedUser: UserSimpleVm | string | null) => {
-                                    typeof selectedUser === 'string' ?
-                                        console.log("No UserModel was selected")
-                                        :
-                                        setAdmin(selectedUser)
-                                }}
-                                aria-placeholder={"Admin"}
-                            />
-                            <Button
-                                onClick={handleAdd}
-                                disabled={isFormIncomplete}
-                                sx={{
-                                    backgroundColor: isFormIncomplete ? "lightgray" : "gray",
-                                    color: "white",
-                                    m: 1
-                                    }}
-                            >
-                                Hinzufügen
-                            </Button>
-                        </DialogContent>
-                    </Dialog>
-                </>
-            :
+        <React.Fragment>
             <Button
-                fullWidth
-                sx={{backgroundColor: "lightgray", color: "white"}}
-                startIcon={<AddIcon/>}
-                onClick={() => setOpen(true)}/>
-        }
-        </GridFooterContainer>
+                onClick={handleOpen}
+                sx={{
+                    m: 2,
+                    backgroundColor: "gray",
+                    color: "white"
+                }}
+            >
+                Mannschaft hinzufügen
+            </Button>
+            <Dialog open={open} onClose={handleClose}>
+                <DialogTitle>Neue Mannschaft erstellen</DialogTitle>
+                <DialogContent>
+                    <Box
+                        component="form"
+                        sx={{
+                            display: "flex",
+                            flexDirection: "column",
+                            gap: 2,
+                            mt: 1,
+                            minWidth: 300
+                        }}
+                    >
+                        <TextField
+                            label="Mannschaftsname"
+                            variant="outlined"
+                            fullWidth
+                            value={teamName}
+                            onChange={handleTeamNameChange}
+                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="admin-select-label">Mannschaftsleiter</InputLabel>
+                            <Select
+                                labelId="admin-select-label"
+                                value={admin?.id?.toString() || ""}
+                                label="Mannschaftsleiter"
+                                onChange={handleAdminChange}
+                            >
+                                {allUsers.map((user) => (
+                                    <MenuItem key={user.id} value={user.id?.toString()}>
+                                        {user.firstName} {user.lastName} ({user.userName})
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose}>Abbrechen</Button>
+                    <Button 
+                        onClick={handleSave} 
+                        disabled={!teamName || !admin}
+                        variant="contained"
+                        sx={{ backgroundColor: "gray" }}
+                    >
+                        Speichern
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </React.Fragment>
     );
 }

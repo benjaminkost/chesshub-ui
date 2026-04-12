@@ -1,13 +1,62 @@
-import {GamesTable} from "@/components/GamesTable";
-import {dummyGamesTableData} from "@/dummyData";
+import React, { useEffect, useState } from "react";
+import { GamesTable } from "@/components/GamesTable";
 import PageLayout from "@/components/PageLayout";
+import { useParams } from "react-router-dom";
+import { gamesApi } from "@/api/chesshub";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import { Game } from "@benaurel/chesshub-core-client";
 
 export default function ClubsGamesHistory() {
-    const userTeam = "SV Empor"; // TODO: muss später mit user daten ausgelesen werden
+    const { clubId } = useParams<{ clubId: string }>();
+    const [games, setGames] = useState<Game[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    const teamGames = dummyGamesTableData.filter(game => game.teamName === userTeam);
+    useEffect(() => {
+        const fetchGames = async () => {
+            if (!clubId) return;
+            try {
+                setLoading(true);
+                const gamesRes = await gamesApi.getGamesByClub(Number(clubId));
+                setGames(gamesRes.data);
+                setError(null);
+            } catch (err: any) {
+                console.error("Failed to fetch games for club:", err);
+                setError("Spiele konnten nicht geladen werden.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchGames();
+    }, [clubId]);
+
+    if (loading) {
+        return (
+            <PageLayout>
+                <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+                    <CircularProgress />
+                </Box>
+            </PageLayout>
+        );
+    }
+
+    if (error) {
+        return (
+            <PageLayout>
+                <Box p={4} textAlign="center">
+                    <Typography color="error">{error}</Typography>
+                </Box>
+            </PageLayout>
+        );
+    }
 
     return (
-        <PageLayout children={<GamesTable games={teamGames} ownGamesOrTeamGames={false} />} />
+        <PageLayout>
+            <GamesTable
+                rows={games as any}
+                ownGamesOrTeamGames={false}
+            />
+        </PageLayout>
     );
 }

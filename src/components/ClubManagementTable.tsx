@@ -3,35 +3,34 @@ import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
 import {useNavigate} from "react-router-dom";
 import {AddTeamPopupDialog} from "@/components/AddTeamPopupDialog";
-import {ClubWithTeamsVm} from "@/types/viewmodels/club.vm";
-import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
-import {mapTeamSimpleVmToTeamVm} from "../../bff/src/mapper/team.mapper";
 import {useLookup} from "@/context/LookupContext";
 import {ROUTES} from "@/routes";
-import {useAuth} from "@/context/AuthContext";
+import { Club, TeamSimple } from "@benaurel/chesshub-core-client";
 
-interface ClubManagementTable{
-    club: ClubWithTeamsVm;
+interface ClubManagementTableProps {
+    club: Club & { teams: TeamSimple[] };
 }
 
-export default function ClubManagementTable({club}: ClubManagementTable){
-    const [rows, setRows] = React.useState<TeamVm[]>(club?.teams || []);
+export default function ClubManagementTable({club}: ClubManagementTableProps){
+    const [rows, setRows] = React.useState<TeamSimple[]>(club?.teams || []);
     const allUsers = Object.values(useLookup().usersSimple);
-    const { user } = useAuth();
     const navigate = useNavigate();
 
-    const addTeam = (newTeam:TeamSimpleVm) => {
-        const admin = allUsers.find(user => user.id === newTeam.adminId);
-        const newTeamVm = mapTeamSimpleVmToTeamVm(newTeam, club.id, {adminName: admin?.name});
-        setRows((prevState) => [...prevState, newTeamVm]);
+    const addTeam = (newTeam: Partial<TeamSimple>) => {
+        // Since the backend currently lacks a POST endpoint for teams, 
+        // we add it to the local state for now for UI feedback.
+        const teamWithId = {
+            ...newTeam,
+            id: Math.max(0, ...rows.map(r => r.id)) + 1,
+            clubName: club.name
+        } as TeamSimple;
+        
+        setRows((prevState) => [...prevState, teamWithId]);
+        console.warn("Team addition requested, but backend persistence is missing in OpenAPI.");
     }
 
-    const navigateToTeam = () => {
-        if(!user) {
-            navigate(ROUTES.AUTH.LOGIN.func());
-            return;
-        }
-        navigate(ROUTES.TEAMS.MANAGE.func(user.id));
+    const navigateToTeam = (teamId: number) => {
+        navigate(ROUTES.TEAMS.MANAGE.func(teamId));
     };
 
     const columns = React.useMemo<GridColDef[]>(() => [
@@ -45,11 +44,11 @@ export default function ClubManagementTable({club}: ClubManagementTable){
                                 cursor: "pointer"}
                         }
                     }
-                    onClick={navigateToTeam}>
+                    onClick={() => navigateToTeam(params.row.id)}>
                     {params.value}
                 </Box>)
             }},
-        {field: "adminName", headerName: "Mannschaftsleiter", resizable: false, flex: 3, valueFormatter: (value:string, _) => value}
+        {field: "adminName", headerName: "Mannschaftsleiter", resizable: false, flex: 3}
     ],[rows]);
 
     return (
@@ -90,12 +89,6 @@ export default function ClubManagementTable({club}: ClubManagementTable){
                     <Grid size={6}>
                         <Typography>{club.address}</Typography>
                     </Grid>
-                    <Grid size={6}>
-                        <Typography sx={{fontWeight: "bold"}}>Vereinsvorsitzender:</Typography>
-                    </Grid>
-                    <Grid size={6}>
-                        <Typography>{club?.adminName}</Typography>
-                    </Grid>
                 </Grid>
             </Paper>
             <Paper sx={{m:2}}>
@@ -110,8 +103,8 @@ export default function ClubManagementTable({club}: ClubManagementTable){
                     rows={rows}
                     slots={{
                         footer: () => <AddTeamPopupDialog
-                                                allUsers={allUsers}
-                                                addTeam={addTeam}
+                                                allUsers={allUsers as any}
+                                                addTeam={addTeam as any}
                                                 currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
                         />
                     }}
