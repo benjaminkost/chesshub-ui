@@ -8,6 +8,14 @@ export default defineConfig({
       react(),
       tailwindcss()
   ],
+  server: {
+    proxy: {
+      '/api/chesshub-core/v1': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      }
+    }
+  },
   test: {
       globals: true,
       environment: 'jsdom',
