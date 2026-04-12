@@ -41,8 +41,11 @@ export function App() {
                         usersRes.data.map(u => [u.id, { ...u }])
                     )
                 });
-            } catch (error) {
-                console.error("Failed to fetch lookup data:", error);
+            } catch (error: any) {
+                // Suppress errors for unauthenticated users as they don't have access to lookups yet
+                if (error.response?.status !== 401 && error.response?.status !== 403) {
+                    console.error("Failed to fetch lookup data:", error);
+                }
             }
         };
 
