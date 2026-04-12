@@ -1,18 +1,16 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { User } from "@benaurel/chesshub-core-client";
-import { authApi } from "@/api/chesshub";
+import { authApi, usersApi } from "@/api/chesshub";
 
 interface AuthContextData {
     user: User | null;
-    token: string | null;
     isLoggedIn: boolean;
-    login: (token: string, user: User) => void;
+    login: (user: User) => void;
     logout: () => void;
 }
 
 export const AuthContext = React.createContext<AuthContextData>({
     user: null,
-    token: null,
     isLoggedIn: false,
     login: () => {},
     logout: () => {}
@@ -28,15 +26,27 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
         }
     });
 
-    const [token, setToken] = React.useState<string | null>(() => {
-        return localStorage.getItem("token");
-    });
+    // Verify session on mount (cookie check)
+    useEffect(() => {
+        const syncAuth = async () => {
+            try {
+                const response = await usersApi.getCurrentUser();
+                if (response.data) {
+                    setUser(response.data);
+                    localStorage.setItem("user", JSON.stringify(response.data));
+                }
+            } catch (e) {
+                // If 401, we are not logged in/session expired
+                setUser(null);
+                localStorage.removeItem("user");
+            }
+        };
+        syncAuth();
+    }, []);
 
-    const login = (token: string, userData: User) => {
+    const login = (userData: User) => {
         setUser(userData);
-        setToken(token);
         localStorage.setItem("user", JSON.stringify(userData));
-        localStorage.setItem("token", token);
     };
 
     const logout = async () => {
@@ -46,14 +56,12 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
             console.error("Logout API call failed", e);
         } finally {
             setUser(null);
-            setToken(null);
             localStorage.removeItem("user");
-            localStorage.removeItem("token");
         }
     };
 
     return (
-        <AuthContext.Provider value={{user, token, isLoggedIn: !!token, login, logout}}>
+        <AuthContext.Provider value={{user, isLoggedIn: !!user, login, logout}}>
             {children}
         </AuthContext.Provider>
     );
