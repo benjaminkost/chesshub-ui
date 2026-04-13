@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import {authApi} from "@/api/chesshub";
 import {useAuth} from "@/context/AuthContext";
 import { LoginRequest } from "@benaurel/chesshub-core-client";
+import {ROUTES} from "@/routes";
 
 
 export function Login() {
@@ -25,20 +26,21 @@ export function Login() {
         setError(null);
         try {
             const loginRequest: LoginRequest = {
-                username: emailOrUsername, // The API might expect 'username' or handle emailOrUsername
+                usernameOrEmail: emailOrUsername,
                 password: password
             };
             const response = await authApi.login(loginRequest);
             
-            if (response.data.accessToken && response.data.user) {
-                authLogin(response.data.accessToken, response.data.user as any);
-                navigate("/");
+            if (response.data) {
+                authLogin(response.data as any);
+                navigate(ROUTES.GAMES.CREATE.func());
             } else {
                 setError("Ungültige Antwort vom Server.");
             }
         } catch (err: any) {
             console.error("Login failed:", err);
-            setError("Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.");
+            const backendMessage = err.response?.data?.message || err.response?.data?.error;
+            setError(backendMessage ? `Fehler: ${backendMessage}` : "Login fehlgeschlagen. Bitte überprüfe deine Anmeldedaten.");
         }
     }
 

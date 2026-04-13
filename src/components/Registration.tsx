@@ -42,7 +42,7 @@ export function Registration() {
 
         try {
             const registerRequest: RegisterRequest = {
-                username,
+                userName: username,
                 password,
                 email,
                 firstName,
@@ -57,11 +57,12 @@ export function Registration() {
             }, 2000);
         } catch (err: any) {
             console.error("Registration failed:", err);
-            setError("Benutzer konnte nicht gespeichert werden. Eventuell existiert der Benutzername oder die E-Mail bereits.");
+            const backendMessage = err.response?.data?.message || err.response?.data?.error;
+            setError(backendMessage ? `Fehler: ${backendMessage}` : "Benutzer konnte nicht gespeichert werden. Bitte überprüfe deine Eingaben.");
         }
     };
 
-    const isFormValid = email && password && confirmPassword && username && passwordsMatch;
+    const isFormValid = email && password && confirmPassword && username && firstName && lastName && passwordsMatch;
 
     return (
         <Box
