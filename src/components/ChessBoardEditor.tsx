@@ -1,55 +1,82 @@
 import { Box, Button, Grid } from "@mui/material";
 import { SmartChessBoard } from "@/components/ChessBoard";
 import MoveList from "@/components/MoveList";
-import React, { Key } from "react";
+import React, { Key, useState, useEffect } from "react";
 import { Api } from "@lichess-org/chessground/api";
 import { Chess, Move } from "chess.js";
 import { MetaDataForGameInput } from "@/components/MetaDataForGameInput";
-import { _post } from "../../bff/src/clients/apiChessHubCoreClient";
+import { gamesApi } from "@/api/chesshub";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import { parsePgnToGameState } from "../../bff/src/utils/pgnParsing"
-import { GameState, GameStateNode } from "@/types/models/game.model";
+import dayjs, { Dayjs } from "dayjs";
 import { produce } from "immer";
-import { GameMetaData, GameWithTeamVm } from "@/types/viewmodels/game.vm";
-import { mapGameWithTeamVmToGameMetaData } from "../../bff/src/mapper/game.mapper";
+import { User, GameRequest } from "@benaurel/chesshub-core-client";
+import { ROUTES } from "@/routes";
+import { GameState, GameStateNode } from "@/types/models/game.model";
+import { GameMetaData } from "@/types/viewmodels/game.vm";
 import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
-import {ROUTES} from "@/routes";
-import {useAuth} from "@/context/AuthContext";
+import { parsePgnToGameState } from "../../bff/src/utils/pgnParsing";
 import {convertGameStateToPgn} from "../../bff/src/utils/interactWithGameState";
 
 export interface ChessBoardEditorProps {
     allTeams: TeamSimpleVm[];
-    game: GameWithTeamVm;
+    user: User;
+    initialWhitePlayer?: string;
+    initialBlackPlayer?: string;
+    initialDate?: Dayjs | null;
+    initialEvent?: string;
+    initialRound?: number;
+    initialTeam?: TeamSimpleVm | undefined;
+    initialMoves?: string;
 }
 
-export function ChessBoardEditor({ allTeams, game }: ChessBoardEditorProps) {
-    const [chessApi, setChessApi] = React.useState<Api | null>(null);
-    const [lastMove, setLastMove] = React.useState<Key[] | undefined>();
-    const [gameState, setGameState] = React.useState<GameState>(parsePgnToGameState(game.moves));
-    const [gameMetaData, setGameMetaData] = React.useState<GameMetaData>(mapGameWithTeamVmToGameMetaData(game));
-    const { user } = useAuth();
+export function ChessBoardEditor({ 
+    allTeams,
+    user,
+    initialWhitePlayer = "",
+    initialBlackPlayer = "",
+    initialDate = null,
+    initialEvent = "",
+    initialRound = undefined,
+    initialTeam = undefined,
+    initialMoves = ""
+}: ChessBoardEditorProps) {
     const navigate = useNavigate();
+    
+    const [chessApi, setChessApi] = useState<Api | null>(null);
+    const [lastMove, setLastMove] = useState<Key[] | undefined>();
+    const [gameState, setGameState] = useState<GameState>(parsePgnToGameState(initialMoves));
 
-    React.useEffect(() => {
-        const chess = new Chess(gameState.allGameStates[gameState.activeStateId].fen);
+    const [metaData, setMetaData] = useState<GameMetaData>({
+        whitePlayerName: initialWhitePlayer,
+        blackPlayerName: initialBlackPlayer,
+        date: initialDate || dayjs(),
+        event: initialEvent,
+        round: initialRound,
+        teamId: initialTeam?.id,
+        teamName: initialTeam?.name
+    });
+
+    const handleMetaChange = (update: Partial<GameMetaData>) => {
+        setMetaData(prev => ({ ...prev, ...update }));
+    };
+
+    useEffect(() => {
+        if (!lastMove) return;
+        const currentFen = gameState.allGameStates[gameState.activeStateId].fen;
+        const chess = new Chess(currentFen);
         try {
-            if (lastMove?.length !== 2) throw Error("Move given from chessboard is no completet move");
-            const move: Move = chess.move({ from: lastMove[0].toString(), to: lastMove[1].toString() });
+            const move: Move = chess.move({ 
+                from: lastMove[0].toString(), 
+                to: lastMove[1].toString(),
+                promotion: 'q'
+            });
             chessApi?.set({ fen: chess.fen() });
             const parentId = gameState.activeStateId;
-
             setGameState(prev => {
                 const parentState = prev.allGameStates[parentId];
-
-                const existingMoveId = parentState.nextMoves.find(id => (
-                    prev.allGameStates[id].notation === move.san
-                ));
-
-                if (existingMoveId) {
-                    return { ...prev, activeStateId: existingMoveId };
-                }
-
+                const existingMoveId = parentState.nextMoves.find(id => prev.allGameStates[id].notation === move.san);
+                if (existingMoveId) return { ...prev, activeStateId: existingMoveId };
                 const newStateId = uuidv4();
                 const newState: GameStateNode = {
                     id: newStateId,
@@ -60,98 +87,62 @@ export function ChessBoardEditor({ allTeams, game }: ChessBoardEditorProps) {
                     moveNumber: parentState.color === "w" ? parentState.moveNumber : parentState.moveNumber + 1,
                     nextMoves: []
                 };
-
                 return {
                     ...prev,
                     activeStateId: newStateId,
                     allGameStates: {
                         ...prev.allGameStates,
-                        [parentId]: {
-                            ...prev.allGameStates[parentId],
-                            nextMoves: [...prev.allGameStates[parentId].nextMoves, newStateId]
-                        },
+                        [parentId]: { ...prev.allGameStates[parentId], nextMoves: [...prev.allGameStates[parentId].nextMoves, newStateId] },
                         [newStateId]: newState
                     }
                 }
             });
         } catch (e) {
-            chessApi?.set({ fen: chess.fen() });
+            chessApi?.set({ fen: currentFen });
         }
     }, [lastMove]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         chessApi?.set({ fen: gameState.allGameStates[gameState.activeStateId].fen });
-    }, [gameState.activeStateId]);
+    }, [gameState.activeStateId, chessApi]);
 
     const handleSaveGame = async () => {
-        const payload = {
-            "white_player_name": gameMetaData.whitePlayerName,
-            "black_player_name": gameMetaData.blackPlayerName,
-            "moves": convertGameStateToPgn(gameState),
-            "event": gameMetaData.event,
-            "date": gameMetaData.date?.toISOString(),
-            "team": gameMetaData.teamId
+        const gameRequest: GameRequest = {
+            whitePlayerName: metaData.whitePlayerName,
+            blackPlayerName: metaData.blackPlayerName,
+            moves: convertGameStateToPgn(gameState),
+            event: metaData.event,
+            date: metaData.date ? metaData.date.format("YYYY-MM-DD") : undefined,
+            teamId: metaData.teamId,
         };
-        await _post("", payload);
-
-        if (!user){
-            navigate(ROUTES.AUTH.LOGIN.func());
-            return;
+        try {
+            await gamesApi.createGame(gameRequest);
+            navigate(ROUTES.GAMES.LIST_USER.func(user.id!));
+        } catch (error) {
+            console.error("Failed to save game:", error);
+            alert("Fehler beim Speichern der Partie.");
         }
-        navigate(ROUTES.GAMES.LIST_USER.func(user.id));
-    }
-
-    const handleMoveSelect = (id: string) => {
-        setGameState(prev => ({
-            ...prev,
-            activeStateId: id
-        }));
-    };
-
-    const handleEvaluationChange = (id: string, evaluation: number | null) => {
-        setGameState(produce((prev: GameState) => {
-            const node = prev.allGameStates[id];
-            if (!node) return prev;
-
-            if (!node.analysis) {
-                node.analysis = {
-                    recommendedMoves: [],
-                    depth: 0,
-                    eval: { centiPawn: 0, isMate: false, mateIn: 0 }
-                }
-            }
-
-            node.analysis.eval.centiPawn = evaluation ?? 0;
-        }))
-    }
-
-    const onChangeGameMetaData = (update: Partial<GameMetaData>) => {
-        setGameMetaData(prev => ({ ...prev, ...update }));
     }
 
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "column",
-                m: 2
-            }}
-        >
+        <Box sx={{ display: "flex", flexDirection: "column", m: 2 }}>
             <Grid container>
                 <Grid size={2}></Grid>
                 <Grid size={8}>
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            mb: 2
-                        }}
-                    >
+                    <Box sx={{ display: "flex", flexDirection: "row", mb: 2 }}>
                         <SmartChessBoard setChessApi={setChessApi} setLastMove={setLastMove} config={{ fen: gameState.allGameStates[gameState.activeStateId].fen }} />
-                        <MoveList
-                            gameState={gameState}
-                            onMoveSelect={handleMoveSelect}
-                            setEvaluation={handleEvaluationChange}
+                        <MoveList 
+                            gameState={gameState} 
+                            onMoveSelect={(id) => setGameState(prev => ({ ...prev, activeStateId: id }))} 
+                            setEvaluation={(id, evalVal) => {
+                                setGameState(produce((prev: GameState) => {
+                                    const node = prev.allGameStates[id];
+                                    if (node) {
+                                        if (!node.analysis) node.analysis = { recommendedMoves: [], depth: 0, eval: { centiPawn: 0, isMate: false, mateIn: 0 } };
+                                        node.analysis.eval.centiPawn = evalVal ?? 0;
+                                    }
+                                }));
+                            }} 
                         />
                     </Box>
                 </Grid>
@@ -160,23 +151,19 @@ export function ChessBoardEditor({ allTeams, game }: ChessBoardEditorProps) {
                 <Grid size={8}>
                     <MetaDataForGameInput
                         allTeams={allTeams}
-                        gameMetaData={gameMetaData}
-                        onChangeGameMetaData={onChangeGameMetaData}
+                        gameMetaData={metaData}
+                        onChangeGameMetaData={handleMetaChange}
                     />
                 </Grid>
                 <Grid size={2}></Grid>
                 <Grid size={2}></Grid>
                 <Grid size={8}>
-                    <Button fullWidth onClick={handleSaveGame} sx={{
-                        width: 600,
-                        mt: 2,
-                        backgroundColor: "gray",
-                        color: "white"
-                    }}
-                    >Partie speichern</Button>
+                    <Button fullWidth onClick={handleSaveGame} sx={{ width: 600, mt: 2, backgroundColor: "gray", color: "white" }}>
+                        Partie speichern
+                    </Button>
                 </Grid>
                 <Grid size={2}></Grid>
             </Grid>
         </Box>
-    )
+    );
 }

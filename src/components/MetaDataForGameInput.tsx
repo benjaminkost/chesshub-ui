@@ -2,11 +2,10 @@ import { Autocomplete, Box, Grid, TextField, Typography } from "@mui/material";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker, DateValidationError, PickerChangeHandlerContext } from "@mui/x-date-pickers";
-import { PickerValue } from "@mui/x-date-pickers/internals";
+import { DatePicker } from "@mui/x-date-pickers";
 import { GameMetaData } from "@/types/viewmodels/game.vm";
 import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
-import {useLookup} from "@/context/LookupContext";
+import { useLookup } from "@/context/LookupContext";
 
 interface MetaDataForGameInputProps {
     allTeams: TeamSimpleVm[];
@@ -20,40 +19,20 @@ export function MetaDataForGameInput({
     onChangeGameMetaData }: MetaDataForGameInputProps) {
     const allUsers = Object.values(useLookup().usersSimple);
 
-    const handleDate = (value: PickerValue, _: PickerChangeHandlerContext<DateValidationError>) => {
-        onChangeGameMetaData({ date: value });
-    }
-
-    const handleEvent = (event: React.ChangeEvent<HTMLInputElement>) => {
-        onChangeGameMetaData({ event: event.target.value });
-    }
-
-    const handleRound = (event: React.ChangeEvent<HTMLInputElement>) => {
-        onChangeGameMetaData({ round: Number(event.target.value) });
-    }
-
     return (
-        <Box
-            sx={{
-                width: 600,
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center"
-            }}
-        >
-            <Grid container rowSpacing={1} columnSpacing={1} >
+        <Box sx={{ width: 600, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <Grid container rowSpacing={1} columnSpacing={1}>
+                {/* Weiße Player */}
                 <Grid size={2}>
                     <Typography>Weiß</Typography>
                 </Grid>
                 <Grid size={10}>
-                    <Autocomplete freeSolo
+                    <Autocomplete 
+                        freeSolo
                         value={gameMetaData.whitePlayerName || null}
-                        renderInput={(params) => { return <TextField {...params} /> }}
                         options={allUsers}
-                        getOptionLabel={(option) => {
-                            if (typeof option === "string") return option;
-                            return `${option.name} (${option.userName})`;
-                        }}
+                        getOptionLabel={(option) => typeof option === "string" ? option : `${option.name} (${option.userName})`}
+                        renderInput={(params) => <TextField {...params} />}
                         onChange={(_, newValue) => {
                             if (newValue === null) return;
                             if (typeof newValue === "string") {
@@ -64,18 +43,18 @@ export function MetaDataForGameInput({
                         }}
                     />
                 </Grid>
+
+                {/* Schwarze Player */}
                 <Grid size={2}>
                     <Typography>Schwarz</Typography>
                 </Grid>
                 <Grid size={10}>
-                    <Autocomplete freeSolo
-                        renderInput={(params) => { return <TextField {...params} /> }}
+                    <Autocomplete 
+                        freeSolo
                         value={gameMetaData.blackPlayerName || null}
                         options={allUsers}
-                        getOptionLabel={(option) => {
-                            if (typeof option === "string") return option
-                            return `${option.name} (${option.userName})`;
-                        }}
+                        getOptionLabel={(option) => typeof option === "string" ? option : `${option.name} (${option.userName})`}
+                        renderInput={(params) => <TextField {...params} />}
                         onChange={(_, newValue) => {
                             if (newValue === null) return;
                             if (typeof newValue === "string") {
@@ -86,6 +65,8 @@ export function MetaDataForGameInput({
                         }}
                     />
                 </Grid>
+
+                {/* Datum */}
                 <Grid size={2}>
                     <Typography>Datum</Typography>
                 </Grid>
@@ -94,43 +75,56 @@ export function MetaDataForGameInput({
                         <DatePicker
                             value={gameMetaData.date}
                             format={"DD.MM.YYYY"}
-                            onChange={handleDate}
-                            slotProps={{
-                                textField: {
-                                    fullWidth: true
-                                }
-                            }}
+                            onChange={(val) => onChangeGameMetaData({ date: val })}
+                            slotProps={{ textField: { fullWidth: true } }}
                         />
                     </LocalizationProvider>
                 </Grid>
+
+                {/* Event */}
                 <Grid size={2}>
                     <Typography>Event</Typography>
                 </Grid>
                 <Grid size={10}>
-                    <TextField fullWidth value={gameMetaData.event} onChange={handleEvent} />
+                    <TextField 
+                        fullWidth 
+                        value={gameMetaData.event || ""} 
+                        onChange={(e) => onChangeGameMetaData({ event: e.target.value })} 
+                    />
                 </Grid>
+
+                {/* Runde */}
                 <Grid size={2}>
                     <Typography>Runde</Typography>
                 </Grid>
                 <Grid size={10}>
-                    <TextField fullWidth value={gameMetaData.round} onChange={handleRound} />
+                    <TextField 
+                        fullWidth 
+                        type="number"
+                        value={gameMetaData.round || ""} 
+                        onChange={(e) => onChangeGameMetaData({ round: Number(e.target.value) })} 
+                    />
                 </Grid>
+
+                {/* Mannschaft */}
                 <Grid size={2}>
                     <Typography>Mannschaft</Typography>
                 </Grid>
                 <Grid size={10}>
                     <Autocomplete
-                        renderInput={(params) => { return <TextField {...params} /> }}
                         options={allTeams}
-                        getOptionLabel={(option) => {
-                            return `${option.clubName} - ${option.name}`;
-                        }}
+                        value={allTeams.find(t => t.id === gameMetaData.teamId) || null}
+                        getOptionLabel={(option) => `${option.clubName} - ${option.name}`}
+                        renderInput={(params) => <TextField {...params} />}
                         onChange={(_, value) => {
-                            value ? onChangeGameMetaData({ teamName: value.name, teamId: value.id }) : console.warn("Input cound not be safed");
+                            onChangeGameMetaData({ 
+                                teamName: value?.name || undefined, 
+                                teamId: value?.id || undefined 
+                            });
                         }}
                     />
                 </Grid>
             </Grid>
         </Box>
-    )
+    );
 }
