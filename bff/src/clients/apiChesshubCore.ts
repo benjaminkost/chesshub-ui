@@ -8,7 +8,7 @@ import {
     UsersApi 
 } from '@benaurel/chesshub-core-client';
 
-const BASE_URL = import.meta.env.VITE_CHESSHUB_CORE_BASEURL || 'http://129.212.164.241:8080/api/chesshub-core/v1';
+const BASE_URL = import.meta.env.VITE_CHESSHUB_CORE_BASEURL || 'https://chesshub.app:8080/api/chesshub-core/v1';
 
 /**
  * Configure global axios instance for the API client

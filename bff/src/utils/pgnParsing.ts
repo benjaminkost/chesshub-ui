@@ -1,6 +1,7 @@
 import {Chess, DEFAULT_POSITION} from "chess.js";
 import {v4 as uuidv4} from "uuid";
 import {defaultStartValue, GameState, GameStateNode} from "@/types/models/game.model";
+import {GameRequest} from "@benaurel/chesshub-core-client";
 
 export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>  { // TODO: written bei Gemini -> needs review
     const chess = new Chess();
@@ -83,3 +84,42 @@ export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>
         allGameStates
     };
 }
+
+export const parsePGN = (pgnString: string, teamId?: number): GameRequest => {
+    const lines = pgnString.split('\n');
+    const result: Partial<GameRequest> = {
+        moves: '',
+        teamId: teamId
+    };
+
+    const tagRegex = /\[(\w+)\s+"(.*?)"\]/;
+
+    lines.forEach(line => {
+        const match = line.match(tagRegex);
+        if (match) {
+            const [_, key, value] = match;
+            switch (key.toLowerCase()) {
+                case 'white':
+                    result.whitePlayerName = value;
+                    break;
+                case 'black':
+                    result.blackPlayerName = value;
+                    break;
+                case 'date':
+                    result.date = value;
+                    break;
+                case 'event':
+                    result.event = value;
+                    break;
+            }
+        } else if (line.trim() !== '' && !line.startsWith('[')) {
+            // Alles, was kein Tag ist, gehört zu den Zügen
+            result.moves += line.trim() + ' ';
+        }
+    });
+
+    return {
+        ...result,
+        moves: result.moves?.trim() || ''
+    } as GameRequest;
+};
