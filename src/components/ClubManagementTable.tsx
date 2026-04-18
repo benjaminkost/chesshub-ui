@@ -91,8 +91,9 @@ export default function ClubManagementTable({club}: ClubManagementTableProps){
                     </Grid>
                 </Grid>
             </Paper>
-            <Paper sx={{m:2}}>
+            <Paper sx={{ m: 2 }}>
                 <DataGrid
+                    autoHeight
                     sx={{
                         "& .MuiDataGrid-columnHeader": {
                             backgroundColor: "gray",
@@ -102,11 +103,16 @@ export default function ClubManagementTable({club}: ClubManagementTableProps){
                     columns={columns}
                     rows={rows}
                     slots={{
-                        footer: () => <AddTeamPopupDialog
-                                                allUsers={allUsers as any}
-                                                addTeam={addTeam as any}
-                                                currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
-                        />
+                        footer: () => {
+                            const maxId = rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0;
+                            return (
+                                <AddTeamPopupDialog
+                                    allUsers={allUsers as any}
+                                    addTeam={addTeam as any}
+                                    currentHighestID={maxId}
+                                />
+                            );
+                        }
                     }}
                 />
             </Paper>

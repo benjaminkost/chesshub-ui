@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import { User } from "@benaurel/chesshub-core-client";
-import { authApi, usersApi } from "@/api/chesshub";
+import { authApi, usersApi } from "../../bff/src/clients/apiChesshubCore";
 
 interface AuthContextData {
     user: User | null;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Stack, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import {TeamRole} from "@/types/common/roles";
+import { TeamRole } from "@benaurel/chesshub-core-client";
 
 interface TeamMemberRoleManagerProps {
     rolesOfUser: TeamRole[];

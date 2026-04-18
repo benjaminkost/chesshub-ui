@@ -78,13 +78,9 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
     };
 
     return (
-        <Paper
-            sx={{
-                m: 2,
-                display: "flex"
-            }}
-        >
+        <Paper sx={{ m: 2 }}>
             <DataGrid
+                autoHeight
                 sx={{
                     "& .MuiDataGrid-columnHeader": {
                         backgroundColor: "gray",
@@ -95,11 +91,11 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
                 rows={currentClubs}
                 slots={{
                     footer: () => <AddClubToAffiliation
-                        allClubs={allClubs as any}
-                        clubsOfUser={currentClubs as any}
-                        addClubToUser={addClubToUser as any}/>
+                        allClubs={allClubs}
+                        clubsOfUser={currentClubs}
+                        addClubToUser={addClubToUser}/>
                 }}
             />
         </Paper>
-    )
+    );
 }

@@ -19,7 +19,7 @@ import React from "react";
 import {ROUTES} from "@/routes";
 import {AuthProvider} from "@/context/AuthContext";
 
-import { clubsApi, usersApi } from "@/api/chesshub";
+import { clubsApi, usersApi } from "../bff/src/clients/apiChesshubCore";
 
 export function App() {
 
@@ -42,13 +42,11 @@ export function App() {
                     )
                 });
             } catch (error: any) {
-                // Suppress errors for unauthenticated users as they don't have access to lookups yet
                 if (error.response?.status !== 401 && error.response?.status !== 403) {
                     console.error("Failed to fetch lookup data:", error);
                 }
             }
         };
-
         fetchLookups();
     }, []);
 

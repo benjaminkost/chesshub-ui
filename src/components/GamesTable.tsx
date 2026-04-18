@@ -1,14 +1,14 @@
 import { Paper } from "@mui/material";
 import React from "react";
-import {DataGrid, GridColDef, GridColumnVisibilityModel} from "@mui/x-data-grid";
-import {useNavigate} from "react-router-dom";
+import { DataGrid, GridColDef, GridColumnVisibilityModel } from "@mui/x-data-grid";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { Game } from "@benaurel/chesshub-core-client";
 import { ROUTES } from "@/routes";
+import { GameVm } from "@/types/viewmodels/game.vm";
 
 interface GameTableProps {
-    rows: Game[],
-    ownGamesOrTeamGames: boolean
+    rows: GameVm[];
+    ownGamesOrTeamGames: boolean;
 }
 
 const columns: GridColDef[] = [
@@ -16,15 +16,20 @@ const columns: GridColDef[] = [
     { field: "whitePlayerName", headerName: "Weiß", resizable: false, flex: 2 },
     { field: "blackPlayerName", headerName: "Schwarz", resizable: false, flex: 2 },
     { field: "teamName", headerName: "Mannschaft", resizable: false, flex: 2 },
-    { field: "date", headerName: "Datum", type: "date", resizable: false, flex: 1.5,
-        valueGetter: (value: string) => value ? dayjs(value).toDate() : null,
-        valueFormatter: (value: Date) => value ? dayjs(value).format("DD.MM.YYYY") : ""
+    { 
+        field: "date", 
+        headerName: "Datum", 
+        type: "date", 
+        resizable: false, 
+        flex: 1.5,
+        valueGetter: (value) => value ? (value as dayjs.Dayjs).toDate() : null,
+        valueFormatter: (value) => value ? dayjs(value).format("DD.MM.YYYY") : ""
     },
     { field: "opening", headerName: "Eröffnung", resizable: false, flex: 2 },
     { field: "moves", headerName: "Züge", resizable: false, flex: 5 }
 ];
 
-export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
+export function GamesTable({ rows, ownGamesOrTeamGames }: GameTableProps) {
     const [columnVisibilityModel, setColumnVisibilityModel] = React.useState<GridColumnVisibilityModel>({});
     const navigate = useNavigate();
 
@@ -38,9 +43,10 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
         navigate(ROUTES.GAMES.VIEW.func(params.id));
     }
 
-    return(
+    return (
         <Paper sx={{ m: 3, maxWidth: "100%" }}>
             <DataGrid
+                autoHeight
                 sx={{
                     '& .MuiDataGrid-columnHeader': { backgroundColor: 'gray', color: "white" },
                     '& .MuiDataGrid-filler': { backgroundColor: 'gray!important' },
@@ -55,10 +61,10 @@ export function GamesTable({rows, ownGamesOrTeamGames}: GameTableProps){
                 initialState={{
                     pagination: { paginationModel: { pageSize: 5 } }
                 }}
-                pageSizeOptions={[1,5,10,25,100]}
+                pageSizeOptions={[1, 5, 10, 25, 100]}
                 disableRowSelectionOnClick
                 getRowHeight={() => 'auto'}
             />
         </Paper>
-    )
+    );
 }

@@ -140,7 +140,7 @@ export default function MoveList({width=200, height=600, gameState, setEvaluatio
 interface MoveProps {
     onMoveSelect: (id: string) => void;
     whiteMoveNode: GameStateNode;
-    blackMoveNode: GameStateNode;
+    blackMoveNode: GameStateNode | null;
     handleCurrentColorOfCurrentMoveBox: (id: string) => string;
 }
 
@@ -153,7 +153,7 @@ function Move({onMoveSelect, whiteMoveNode, blackMoveNode, handleCurrentColorOfC
                 flexDirection: "row"
             }}
         >
-            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,355,255,255,0.1)"}}>
+            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,255,255,0.1)"}}>
                 {whiteMoveNode.moveNumber}</Box>
             <Box onClick={() => onMoveSelect(whiteMoveNode.id)}
                  sx={{padding: 1,

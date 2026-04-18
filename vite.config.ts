@@ -8,19 +8,20 @@ export default defineConfig({
       react(),
       tailwindcss()
   ],
-  server: {
-    proxy: {
-      '/api/chesshub-core/v1': {
-        target: 'http://localhost:8080',
-        changeOrigin: true,
-      }
-    }
-  },
   test: {
       globals: true,
       environment: 'jsdom',
   },
+  server: {
+    proxy: {
+      '/api/chesshub-core/v1': {
+        target: 'http://chesshub-core:8080',
+        changeOrigin: true,
+      }
+    }
+  },
   preview: {
+    allowedHosts: ['chesshub.app', 'www.chesshub.app'],
     host: true,
     port: 9000
   },
@@ -28,5 +29,6 @@ export default defineConfig({
       alias: {
           '@': path.resolve(__dirname, "./src")
       }
-  }
+  },
+    allowedHosts: ['chesshub.app', 'www.chesshub.app']
 })

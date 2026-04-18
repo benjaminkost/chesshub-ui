@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { GamesTable } from "@/components/GamesTable";
 import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
-import { gamesApi } from "@/api/chesshub";
+import { gamesApi } from "../../bff/src/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { Game } from "@benaurel/chesshub-core-client";
+import { GameVm } from "@/types/viewmodels/game.vm";
+import { mapGameToVm } from "../../bff/src/mapper/mapper";
 
 export default function OwnGamesHistory() {
     const { userId } = useParams<{ userId: string }>();
-    const [games, setGames] = useState<Game[]>([]);
+    const [games, setGames] = useState<GameVm[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +19,7 @@ export default function OwnGamesHistory() {
             try {
                 setLoading(true);
                 const gamesRes = await gamesApi.getGamesByUser(Number(userId));
-                setGames(gamesRes.data);
+                setGames(gamesRes.data.map(mapGameToVm));
                 setError(null);
             } catch (err: any) {
                 console.error("Failed to fetch games for user:", err);

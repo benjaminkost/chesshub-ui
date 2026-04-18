@@ -22,7 +22,6 @@ export function MetaDataForGameInput({
     return (
         <Box sx={{ width: 600, display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <Grid container rowSpacing={1} columnSpacing={1}>
-                {/* Weiße Player */}
                 <Grid size={2}>
                     <Typography>Weiß</Typography>
                 </Grid>

@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import ClubManagementTable from "@/components/ClubManagementTable";
 import { useParams } from "react-router-dom";
-import { clubsApi, usersApi } from "@/api/chesshub";
+import { clubsApi } from "../../bff/src/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { Club, TeamSimple, UserSimple } from "@benaurel/chesshub-core-client";
+import { Club, TeamSimple } from "@benaurel/chesshub-core-client";
 
 export default function ClubManagement() {
     const { clubId } = useParams<{ clubId: string }>();
     const [clubData, setClubData] = useState<(Club & { teams: TeamSimple[] }) | null>(null);
-    const [allUsers, setAllUsers] = useState<UserSimple[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -19,17 +18,15 @@ export default function ClubManagement() {
             try {
                 setLoading(true);
                 // 1. Fetch club details and teams and users in parallel
-                const [clubRes, teamsRes, usersRes] = await Promise.all([
+                const [clubRes, teamsRes] = await Promise.all([
                     clubsApi.getClubById(Number(clubId)),
                     clubsApi.getTeamsByClub(Number(clubId)),
-                    usersApi.getAllUsers()
                 ]);
 
                 setClubData({
                     ...clubRes.data,
                     teams: teamsRes.data
                 });
-                setAllUsers(usersRes.data);
                 setError(null);
             } catch (err: any) {
                 console.error("Failed to fetch club management data:", err);
@@ -64,7 +61,7 @@ export default function ClubManagement() {
 
     return (
         <PageLayout>
-            <ClubManagementTable club={clubData as any} allUsers={allUsers as any} />
+            <ClubManagementTable club={clubData as any} />
         </PageLayout>
     );
 }

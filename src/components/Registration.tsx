@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {Box, Button, Link, Paper, TextField, Typography, Alert } from "@mui/material";
 import {useNavigate} from "react-router-dom";
-import {authApi} from "@/api/chesshub";
+import {authApi} from "../../bff/src/clients/apiChesshubCore";
 import { RegisterRequest } from "@benaurel/chesshub-core-client";
 
 export function Registration() {

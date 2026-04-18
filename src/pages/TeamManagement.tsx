@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import TeamManagementTable from "@/components/TeamManagementTable";
 import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
-import { clubsApi, teamsApi } from "@/api/chesshub";
+import { clubsApi, teamsApi } from "../../bff/src/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { Team, TeamMember } from "@benaurel/chesshub-core-client";
 
@@ -18,12 +18,10 @@ export default function TeamManagement() {
             if (!teamId) return;
             try {
                 setLoading(true);
-                // 1. Fetch team details
                 const teamRes = await teamsApi.getTeamById(Number(teamId));
                 const currentTeam = teamRes.data;
                 setTeam(currentTeam);
 
-                // 2. Fetch club members as potential team members
                 if (currentTeam.clubId) {
                     const membersRes = await clubsApi.getClubMembers(currentTeam.clubId);
                     setAllPotentialMembers(membersRes.data.map(m => ({
