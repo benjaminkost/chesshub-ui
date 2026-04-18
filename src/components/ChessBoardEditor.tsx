@@ -10,12 +10,13 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import dayjs, { Dayjs } from "dayjs";
 import { produce } from "immer";
-import { User, GameRequest } from "@benaurel/chesshub-core-client";
+import { User } from "@benaurel/chesshub-core-client";
 import { ROUTES } from "@/routes";
 import { GameState, GameStateNode } from "@/types/models/game.model";
 import { GameMetaData } from "@/types/viewmodels/game.vm";
 import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
 import { parsePgnToGameState } from "../../bff/src/utils/pgnParsing";
+import { mapGameVmToRequest } from "@/utils/mapper";
 import {convertGameStateToPgn} from "../../bff/src/utils/interactWithGameState";
 
 export interface ChessBoardEditorProps {
@@ -107,14 +108,8 @@ export function ChessBoardEditor({
     }, [gameState.activeStateId, chessApi]);
 
     const handleSaveGame = async () => {
-        const gameRequest: GameRequest = {
-            whitePlayerName: metaData.whitePlayerName,
-            blackPlayerName: metaData.blackPlayerName,
-            moves: convertGameStateToPgn(gameState),
-            event: metaData.event,
-            date: metaData.date ? metaData.date.format("YYYY-MM-DD") : undefined,
-            teamId: metaData.teamId,
-        };
+        const gameRequest = mapGameVmToRequest(metaData, convertGameStateToPgn(gameState));
+
         try {
             await gamesApi.createGame(gameRequest);
             navigate(ROUTES.GAMES.LIST_USER.func(user.id!));

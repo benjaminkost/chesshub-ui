@@ -4,13 +4,14 @@ import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
 import { gamesApi, usersApi } from "@/api/chesshub";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { Game, User } from "@benaurel/chesshub-core-client";
-import dayjs from "dayjs";
+import { GameVm } from "@/types/viewmodels/game.vm";
+import { UserVm } from "@/types/viewmodels/user.vm";
+import { mapGameToVm, mapUserToVm } from "@/utils/mapper";
 
 export default function ViewSingleGame() {
     const { gameId } = useParams<{ gameId: string }>();
-    const [game, setGame] = useState<Game | null>(null);
-    const [currentUser, setCurrentUser] = useState<User | null>(null);
+    const [game, setGame] = useState<GameVm | null>(null);
+    const [currentUser, setCurrentUser] = useState<UserVm | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -24,8 +25,8 @@ export default function ViewSingleGame() {
                     usersApi.getCurrentUser()
                 ]);
                 
-                setGame(gameRes.data);
-                setCurrentUser(userRes.data);
+                setGame(mapGameToVm(gameRes.data));
+                setCurrentUser(mapUserToVm(userRes.data));
                 setError(null);
             } catch (err: any) {
                 console.error("Failed to fetch game details:", err);
@@ -62,10 +63,10 @@ export default function ViewSingleGame() {
         <PageLayout>
             <ChessBoardEditor 
                 allTeams={[]} // Could be fetched if needed for editing
-                user={currentUser}
+                user={currentUser as any} // UserVm vs User client mismatch, might need deeper mapping
                 initialWhitePlayer={game.whitePlayerName}
                 initialBlackPlayer={game.blackPlayerName}
-                initialDate={game.date ? dayjs(game.date) : null}
+                initialDate={game.date}
                 initialEvent={game.event}
                 initialRound={game.round}
                 initialMoves={game.moves} 

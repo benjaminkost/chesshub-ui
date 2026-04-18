@@ -4,11 +4,12 @@ import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
 import { gamesApi } from "@/api/chesshub";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { Game } from "@benaurel/chesshub-core-client";
+import { GameVm } from "@/types/viewmodels/game.vm";
+import { mapGameToVm } from "@/utils/mapper";
 
 export default function ClubsGamesHistory() {
     const { clubId } = useParams<{ clubId: string }>();
-    const [games, setGames] = useState<Game[]>([]);
+    const [games, setGames] = useState<GameVm[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +19,7 @@ export default function ClubsGamesHistory() {
             try {
                 setLoading(true);
                 const gamesRes = await gamesApi.getGamesByClub(Number(clubId));
-                setGames(gamesRes.data);
+                setGames(gamesRes.data.map(mapGameToVm));
                 setError(null);
             } catch (err: any) {
                 console.error("Failed to fetch games for club:", err);
@@ -54,7 +55,7 @@ export default function ClubsGamesHistory() {
     return (
         <PageLayout>
             <GamesTable
-                rows={games as any}
+                rows={games}
                 ownGamesOrTeamGames={false}
             />
         </PageLayout>
