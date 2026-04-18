@@ -1,6 +1,5 @@
-import {TeamRole} from "@/types/common/roles";
 import {ClubSimpleVm} from "@/types/viewmodels/club.vm";
-import {TeamVm} from "@/types/viewmodels/team.vm";
+import {TeamRole} from "@benaurel/chesshub-core-client";
 
 export interface UserVm {
     id: number;
@@ -11,7 +10,7 @@ export interface UserVm {
     lichessUsername?: string;
     chesscomUsername?: string;
     clubs?: ClubSimpleVm[];
-    teams?: TeamVm[];
+    teams?: TeamMemberVm[];
 }
 
 export interface UserSimpleVm {

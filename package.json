@@ -12,7 +12,7 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "@benaurel/chesshub-core-client": "^1.0.0-SNAPSHOT.202604122250",
+    "@benaurel/chesshub-core-client": "^1.0.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@lichess-org/chessground": "^10.1.0",

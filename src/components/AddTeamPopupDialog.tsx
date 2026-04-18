@@ -50,7 +50,6 @@ export function AddTeamPopupDialog({addTeam, allUsers, currentHighestID}: AddTea
             id: currentHighestID + 1,
             name: teamName,
             adminId: admin.id,
-            adminName: `${admin.firstName} ${admin.lastName}`
         };
 
         addTeam(newTeam);
@@ -99,7 +98,7 @@ export function AddTeamPopupDialog({addTeam, allUsers, currentHighestID}: AddTea
                             >
                                 {allUsers.map((user) => (
                                     <MenuItem key={user.id} value={user.id?.toString()}>
-                                        {user.firstName} {user.lastName} ({user.userName})
+                                        {user.name} ({user.userName})
                                     </MenuItem>
                                 ))}
                             </Select>
