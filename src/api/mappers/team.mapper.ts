@@ -2,7 +2,6 @@ import { TeamModel } from "@/types/models/team.model";
 import { TeamSimpleVm, TeamVm } from "@/types/viewmodels/team.vm";
 import { TeamMemberVm, UserSimpleVm } from "@/types/viewmodels/user.vm";
 import { ClubSimpleVm } from "@/types/viewmodels/club.vm";
-import { teamMembersOfDummyTeam } from "@/dummyData";
 
 export const mapTeamModelToTeamVm = (team: TeamModel,
     clubs: Record<number, ClubSimpleVm>,
@@ -19,7 +18,6 @@ export const mapTeamModelToTeamVm = (team: TeamModel,
         name: team.name,
         adminId: team?.adminId,
         adminName: adminName,
-        members: teamMembersOfDummyTeam // TODO: Abfrage über backend
     }
 }
 
