@@ -28,3 +28,5 @@ package-lock.json
 
 # Security
 .env
+.env.local
+.env.production
