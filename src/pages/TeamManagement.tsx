@@ -67,7 +67,6 @@ export default function TeamManagement() {
         <PageLayout>
             <TeamManagementTable
                 team={team}
-                allUsers={allPotentialMembers}
             />
         </PageLayout>
     );

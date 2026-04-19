@@ -1,22 +1,15 @@
-import {
-    Alert,
-    Grid,
-    Paper,
-    Snackbar,
-    SnackbarCloseReason,
-    Typography
-} from "@mui/material";
+import {Alert, Grid, Paper, Snackbar, SnackbarCloseReason, Typography} from "@mui/material";
 import {DataGrid, GridColDef, GridRowId} from "@mui/x-data-grid";
 import React from "react";
-import MemberRoleManager from "./MemberRoleManager.js";
 import {AddUserToTeamSearchBar} from "@/components/TableSearchAndAddButton";
 import {useNavigate} from "react-router-dom";
-import { Team, TeamMember, TeamRole } from "@benaurel/chesshub-core-client";
-import { ROUTES } from "@/routes";
+import {Team, TeamMember, TeamRole, UserSimple} from "@benaurel/chesshub-core-client";
+import {ROUTES} from "@/routes";
+import TeamMemberRoleManager from "@/components/TeamMemberRoleManager";
+import {mapUserSimpleVmToTeamMember} from "@/api/mappers/user.mapper";
 
 interface TeamManagementTableProps {
     team: Team;
-    allUsers: TeamMember[];
 }
 
 const cssForMemberRole = (role: TeamRole) => {
@@ -36,17 +29,14 @@ const cssForMemberRole = (role: TeamRole) => {
     }
 }
 
-export default function TeamManagementTable({team, allUsers}: TeamManagementTableProps) {
+export default function TeamManagementTable({team}: TeamManagementTableProps) {
     const [currentMembers, setCurrentMembers] = React.useState<TeamMember[]>(team.members ?? []);
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>(false);
     const navigate = useNavigate();
 
-    const addUserToTeam = (selectedUser: TeamMember | null) => {
+    const addUserToTeam = (selectedUser: UserSimple | null) => {
         if (!selectedUser) return;
-        const memberToAdd: TeamMember = {
-            ...selectedUser,
-            roles: [...(selectedUser.roles ?? []), TeamRole.Player]
-        };
+        const memberToAdd: TeamMember = mapUserSimpleVmToTeamMember(selectedUser, [TeamRole.Player]);
         setCurrentMembers([...currentMembers, memberToAdd]);
     };
 
@@ -80,11 +70,11 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
         {
             field: "roles", headerName: "Rollen", resizable: false, flex: 6,
             renderCell: (params) => (
-                <MemberRoleManager
+                <TeamMemberRoleManager
                     rolesOfUser={params.value as TeamRole[]}
-                    onAddRole={(role) => addRole(params.id, role as TeamRole)}
-                    onDeleteRole={(role) => deleteRole(params.id, role as TeamRole)}
-                    cssForMemberRole={cssForMemberRole as any}
+                    onAddRole={(role) => addRole(params.id, role)}
+                    onDeleteRole={(role) => deleteRole(params.id, role)}
+                    cssForMemberRole={cssForMemberRole}
                 />
             )
         }
@@ -120,16 +110,16 @@ export default function TeamManagementTable({team, allUsers}: TeamManagementTabl
                     </Grid>
                 </Grid>
             </Paper>
-            <Paper sx={{ m: 2, display: "flex" }}>
+            <Paper sx={{ m: 2 }}>
                 <DataGrid
+                    autoHeight
                     sx={{ "& .MuiDataGrid-columnHeader": { backgroundColor: "gray", color: "white" } }}
                     columns={columns}
                     rows={currentMembers}
                     slots={{
                         footer: () => <AddUserToTeamSearchBar
-                            allUsers={allUsers as any}
-                            membersInTeam={currentMembers as any}
-                            addUserToTeam={addUserToTeam as any}/>
+                            membersInTeam={currentMembers}
+                            addUserToTeam={addUserToTeam}/>
                     }}
                     getRowHeight={() => 'auto'}
                 />
