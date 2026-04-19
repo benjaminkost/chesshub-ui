@@ -1,4 +1,4 @@
-import {TeamModel} from "./types/models/team.model";
+import {TeamModel} from "@/types/models/team.model";
 import {UserModel} from "@/types/models/user.model";
 import dayjs from "dayjs";
 import {AppRole, ClubMemberStatus} from "@/types/common/roles";
