@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import TeamManagementTable from "@/components/TeamManagementTable";
 import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
-import { clubsApi, teamsApi } from "../../bff/src/clients/apiChesshubCore";
+import { clubsApi, teamsApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { Team, TeamMember } from "@benaurel/chesshub-core-client";
 

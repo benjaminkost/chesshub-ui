@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PageLayout from "../components/PageLayout";
 import { InputGameContent } from "@/components/InputGameContent";
-import { clubsApi, usersApi } from "../../bff/src/clients/apiChesshubCore";
+import { clubsApi, usersApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { TeamSimple, User } from "@benaurel/chesshub-core-client";
 

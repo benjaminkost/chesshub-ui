@@ -1,11 +1,12 @@
 import {TeamModel} from "./types/models/team.model";
 import {UserModel} from "@/types/models/user.model";
 import dayjs from "dayjs";
-import {AppRole, ClubMemberStatus, TeamRole} from "@/types/common/roles";
+import {AppRole, ClubMemberStatus} from "@/types/common/roles";
 import {ClubAffiliationVm, ClubVm, ClubWithTeamsVm} from "@/types/viewmodels/club.vm";
 import {TeamMemberVm} from "@/types/viewmodels/user.vm";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
 import {GameWithTeamVm} from "@/types/viewmodels/game.vm";
+import {TeamRole} from "@benaurel/chesshub-core-client";
 
 export const allUsers: UserModel[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideId: "123456789", appRole: AppRole.USER, lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -104,18 +105,18 @@ export const dummyGamesTableData: GameWithTeamVm[] = [
 ];
 
 export const allMembers: TeamMemberVm[] = [
-    {id: 1, name: "Benjamin Kostka", roles: [TeamRole.PLAYER, TeamRole.ADMIN]},
-    {id: 2, name: "Lukas Zander", roles: [TeamRole.PLAYER, TeamRole.HEAD_COACH]},
-    {id: 3, name: "Filip Topic", roles: [TeamRole.PLAYER, TeamRole.CAPTAIN]},
+    {id: 1, name: "Benjamin Kostka", roles: [TeamRole.Player, TeamRole.DeputyAdmin]},
+    {id: 2, name: "Lukas Zander", roles: [TeamRole.Player, TeamRole.HeadCoach]},
+    {id: 3, name: "Filip Topic", roles: [TeamRole.Player, TeamRole.Captain]},
     {id: 4, name: "Sebastian Kostka", roles: []},
     {id: 5, name: "Kurt Zander", roles: []},
     {id: 6, name: "Ursula Topic", roles: []},
 ];
 
 export const teamMembersOfDummyTeam: TeamMemberVm[] = [
-    {id: 1, name: "Benjamin Kostka", roles: [TeamRole.PLAYER, TeamRole.ADMIN]},
-    {id: 2, name: "Lukas Zander", roles: [TeamRole.PLAYER, TeamRole.HEAD_COACH]},
-    {id: 3, name: "Filip Topic", roles: [TeamRole.PLAYER, TeamRole.CAPTAIN]},
+    {id: 1, name: "Benjamin Kostka", roles: [TeamRole.Player, TeamRole.DeputyAdmin]},
+    {id: 2, name: "Lukas Zander", roles: [TeamRole.Player, TeamRole.HeadCoach]},
+    {id: 3, name: "Filip Topic", roles: [TeamRole.Player, TeamRole.Captain]},
 ];
 
 export const dummyTeam: TeamModel = {

@@ -5,7 +5,7 @@ import React, { Key, useState, useEffect } from "react";
 import { Api } from "@lichess-org/chessground/api";
 import { Chess, Move } from "chess.js";
 import { MetaDataForGameInput } from "@/components/MetaDataForGameInput";
-import { gamesApi } from "../../bff/src/clients/apiChesshubCore";
+import { gamesApi } from "@/api/clients/apiChesshubCore";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import dayjs, { Dayjs } from "dayjs";
@@ -15,9 +15,9 @@ import { ROUTES } from "@/routes";
 import { GameState, GameStateNode } from "@/types/models/game.model";
 import { GameMetaData } from "@/types/viewmodels/game.vm";
 import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
-import { parsePgnToGameState } from "../../bff/src/utils/pgnParsing";
-import { mapGameVmToRequest } from "../../bff/src/mapper/mapper";
-import {convertGameStateToPgn} from "../../bff/src/utils/interactWithGameState";
+import { parsePgnToGameState } from "@/api/utils/pgnParsing";
+import { mapGameVmToRequest } from "@/api/mappers/mapper";
+import {convertGameStateToPgn} from "@/api/utils/interactWithGameState";
 
 export interface ChessBoardEditorProps {
     allTeams: TeamSimpleVm[];

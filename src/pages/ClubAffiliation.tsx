@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ClubsTable from "@/components/ClubsTable";
 import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
-import { clubsApi, usersApi } from "@/api/chesshub";
+import { clubsApi, usersApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { ClubAffiliation, ClubSimple } from "@benaurel/chesshub-core-client";
 
@@ -18,10 +18,9 @@ export default function ClubAffiliationPage() {
             if (!userId) return;
             try {
                 setLoading(true);
-                // Fetch user-specific clubs if userId matches, or fetch for the given userId
                 const [allRes, myRes] = await Promise.all([
                     clubsApi.getAllClubs(),
-                    usersApi.getClubsByUser(Number(userId)) // Note: Ensure getClubsByUser exists or use similar
+                    usersApi.getClubsByUser(Number(userId))
                 ]);
                 setAllClubs(allRes.data);
                 setMyClubs(myRes.data);
@@ -39,7 +38,7 @@ export default function ClubAffiliationPage() {
 
     if (loading) {
         return (
-            <PageLayout loggedIn={true}>
+            <PageLayout>
                 <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
                     <CircularProgress />
                 </Box>
@@ -49,7 +48,7 @@ export default function ClubAffiliationPage() {
 
     if (error) {
         return (
-            <PageLayout loggedIn={true}>
+            <PageLayout>
                 <Box p={4} textAlign="center">
                     <Typography color="error">{error}</Typography>
                 </Box>
@@ -58,7 +57,7 @@ export default function ClubAffiliationPage() {
     }
 
     return (
-        <PageLayout loggedIn={true}>
+        <PageLayout>
             <ClubsTable allClubs={allClubs} clubsOfUser={myClubs} />
         </PageLayout>
     );

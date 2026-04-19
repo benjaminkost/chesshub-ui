@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { GamesTable } from "@/components/GamesTable";
 import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
-import { gamesApi } from "../../bff/src/clients/apiChesshubCore";
+import { gamesApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { GameVm } from "@/types/viewmodels/game.vm";
-import { mapGameToVm } from "../../bff/src/mapper/mapper";
+import { mapGameToVm } from "@/api/mappers/mapper";
 
 export default function OwnGamesHistory() {
     const { userId } = useParams<{ userId: string }>();

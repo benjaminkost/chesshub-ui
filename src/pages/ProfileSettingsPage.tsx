@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PageLayout from "@/components/PageLayout";
 import { ProfileSettings } from "@/components/ProfileSettings";
 import { useParams } from "react-router-dom";
-import { usersApi } from "@/api/chesshub";
+import { usersApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { User } from "@benaurel/chesshub-core-client";
 

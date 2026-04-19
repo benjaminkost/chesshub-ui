@@ -3,7 +3,7 @@ import GameNavBar from "./GameNavBar";
 import React from "react";
 import {defaultStartValue, GameState, GameStateNode} from "@/types/models/game.model";
 import {StockfishTurnOnBar} from "@/components/StockfishTurnOnBar";
-import {createMainLine} from "../../bff/src/utils/interactWithGameState";
+import {createMainLine} from "@/api/utils/interactWithGameState";
 
 interface MoveListProps {
     gameState: GameState,

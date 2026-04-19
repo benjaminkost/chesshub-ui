@@ -19,7 +19,7 @@ import React from "react";
 import {ROUTES} from "@/routes";
 import {AuthProvider} from "@/context/AuthContext";
 
-import { clubsApi, usersApi } from "../bff/src/clients/apiChesshubCore";
+import { clubsApi, usersApi } from "@/api/clients/apiChesshubCore";
 
 export function App() {
 

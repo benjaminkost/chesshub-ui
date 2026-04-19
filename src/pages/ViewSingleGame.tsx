@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { ChessBoardEditor } from "@/components/ChessBoardEditor";
 import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
-import { gamesApi, usersApi } from "../../bff/src/clients/apiChesshubCore";
+import { gamesApi, usersApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { GameVm } from "@/types/viewmodels/game.vm";
 import { UserVm } from "@/types/viewmodels/user.vm";
-import { mapGameToVm, mapUserToVm } from "../../bff/src/mapper/mapper";
+import { mapGameToVm, mapUserToVm } from "@/api/mappers/mapper";
 
 export default function ViewSingleGame() {
     const { gameId } = useParams<{ gameId: string }>();
