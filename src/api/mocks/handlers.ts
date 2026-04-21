@@ -2,14 +2,8 @@ import { http, HttpResponse } from 'msw';
 import { allUsers, dummyAllClubs } from './dummyData';
 import { User, ClubSimple, UserSimple } from '@benaurel/chesshub-core-client';
 
-// Helper to simulate network delay
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
-
 export const handlers = [
-    // Mock for getCurrentUser
     http.get('*/users/me', async () => {
-        await delay(300);
-        // Map dummy user to the generated User type
         const currentUser: User = {
             id: allUsers[0].id,
             firstName: "Benjamin",

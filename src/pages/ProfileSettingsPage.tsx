@@ -17,8 +17,7 @@ export function ProfileSettingsPage() {
             if (!userId) return;
             try {
                 setLoading(true);
-                // Fetch specific user if authorized, or current user if ID matches
-                const res = await usersApi.getUserById(Number(userId));
+                const res = await usersApi.getCurrentUser();
                 setUser(res.data);
                 setError(null);
             } catch (err: any) {
