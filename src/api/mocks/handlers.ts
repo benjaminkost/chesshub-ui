@@ -1,10 +1,10 @@
 import { http, HttpResponse } from 'msw';
-import { allUsers, dummyAllClubs } from './dummyData';
-import { User, ClubSimple, UserSimple } from '@benaurel/chesshub-core-client';
+import {allDummySimple, allUsers, dummyAllClubs} from './dummyData';
+import { UserResponse, ClubSimple, UserSimple } from '@benaurel/chesshub-core-client';
 
 export const handlers = [
     http.get('*/users/me', async () => {
-        const currentUser: User = {
+        const currentUser: UserResponse = {
             id: allUsers[0].id,
             firstName: "Benjamin",
             lastName: "Kostka",
@@ -50,4 +50,9 @@ export const handlers = [
     http.post('*/auth/logout', () => {
         return new HttpResponse(null, { status: 200 });
     }),
+
+    // Mock for teams
+    http.get("*/teams", () => {
+        return HttpResponse.json(allDummySimple)
+    })
 ];

@@ -6,7 +6,7 @@ import {ClubAffiliationVm, ClubVm, ClubWithTeamsVm} from "@/types/viewmodels/clu
 import {TeamMemberVm} from "@/types/viewmodels/user.vm";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
 import {GameWithTeamVm} from "@/types/viewmodels/game.vm";
-import {TeamRole} from "@benaurel/chesshub-core-client";
+import {TeamRole, TeamSimple} from "@benaurel/chesshub-core-client";
 
 export const allUsers: UserModel[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideId: "123456789", appRole: AppRole.USER, lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -145,6 +145,37 @@ export const dummyClubTeams: ClubWithTeamsVm = {
     teams: [dummyTeamVm],
     address: "Choriner Straße 1"
 }
+
+export const allDummySimple: TeamSimple[] = [
+    {id: 1, name: "1. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 2, name: "2. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 3, name: "3. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 4, name: "4. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 5, name: "1. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 1},
+    {id: 6, name: "2. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 7, name: "3. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 8, name: "4. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 9, name: "1. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 10, name: "2. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 11, name: "3. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 12, name: "4. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 13, name: "1. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 14, name: "2. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 15, name: "3. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 16, name: "4. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 13, name: "1. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 14, name: "2. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 15, name: "3. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 16, name: "4. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 17, name: "1. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 18, name: "2. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 19, name: "3. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 20, name: "4. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 21, name: "1. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 22, name: "2. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 23, name: "3. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
+    {id: 24, name: "4. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0}
+];
 
 export const allDummyTeamsVm: TeamSimpleVm[] = [
     {id: 1, name: "1. Mannschaft", clubName: dummyAllClubs[0].name, adminId: 0},
