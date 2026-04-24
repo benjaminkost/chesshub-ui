@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import TeamManagementTable from "@/components/TeamManagementTable";
 import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
-import { clubsApi, teamsApi } from "@/api/clients/apiChesshubCore";
+import { teamsApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { Team, TeamMember } from "@benaurel/chesshub-core-client";
+import {TeamVm} from "@/types/viewmodels/team.vm";
+import {mapTeamDtoToTeamVm} from "@/api/mappers/team.mapper";
 
 export default function TeamManagement() {
     const { teamId } = useParams<{ teamId: string }>();
-    const [team, setTeam] = useState<Team | null>(null);
-    const [allPotentialMembers, setAllPotentialMembers] = useState<TeamMember[]>([]);
+    const [team, setTeam] = useState<TeamVm | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,16 +20,7 @@ export default function TeamManagement() {
                 setLoading(true);
                 const teamRes = await teamsApi.getTeamById(Number(teamId));
                 const currentTeam = teamRes.data;
-                setTeam(currentTeam);
-
-                if (currentTeam.clubId) {
-                    const membersRes = await clubsApi.getClubMembers(currentTeam.clubId);
-                    setAllPotentialMembers(membersRes.data.map(m => ({
-                        id: m.userId,
-                        name: `${m.firstName} ${m.lastName}`,
-                        roles: []
-                    } as TeamMember)));
-                }
+                setTeam(mapTeamDtoToTeamVm(currentTeam));
 
                 setError(null);
             } catch (err: any) {

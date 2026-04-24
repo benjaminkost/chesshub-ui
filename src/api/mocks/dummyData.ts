@@ -6,7 +6,7 @@ import {ClubAffiliationVm, ClubVm, ClubWithTeamsVm} from "@/types/viewmodels/clu
 import {TeamMemberVm} from "@/types/viewmodels/user.vm";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
 import {GameWithTeamVm} from "@/types/viewmodels/game.vm";
-import {ClubMemberStatus, TeamRole, TeamSimple} from "@benaurel/chesshub-core-client";
+import {ClubMemberStatus, TeamDto, TeamMember, TeamRole, TeamSimple} from "@benaurel/chesshub-core-client";
 
 export const allUsers: UserModel[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideId: "123456789", appRole: AppRole.USER, lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -113,6 +113,12 @@ export const allMembers: TeamMemberVm[] = [
     {id: 6, name: "Ursula Topic", roles: []},
 ];
 
+export const teamMembersOfDummyTeamDto: TeamMember[] = [
+    {id: 1, firstName: "Benjamin", lastName: "Kostka", roles: [TeamRole.Player, TeamRole.DeputyAdmin]},
+    {id: 2, firstName: "Lukas", lastName: "Zander", roles: [TeamRole.Player, TeamRole.HeadCoach]},
+    {id: 3, firstName: "Filip", lastName: "Topic", roles: [TeamRole.Player, TeamRole.Captain]},
+];
+
 export const teamMembersOfDummyTeam: TeamMemberVm[] = [
     {id: 1, name: "Benjamin Kostka", roles: [TeamRole.Player, TeamRole.DeputyAdmin]},
     {id: 2, name: "Lukas Zander", roles: [TeamRole.Player, TeamRole.HeadCoach]},
@@ -135,6 +141,17 @@ export const dummyTeamVm: TeamVm = {
     members: teamMembersOfDummyTeam,
     adminId: 1,
     adminName: "Benjamin Kostka"
+}
+
+export const dummyTeamDto: TeamDto = {
+    id: 1,
+    clubId: 1,
+    clubName: "Dummy ClubModel",
+    name: "Mannschaft 1",
+    members: teamMembersOfDummyTeamDto,
+    adminId: 1,
+    adminFirstName: "Benjamin",
+    adminLastName: "Kostka"
 }
 
 export const dummyClubTeams: ClubWithTeamsVm = {

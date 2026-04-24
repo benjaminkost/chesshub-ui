@@ -5,7 +5,7 @@ import {
     dummyAllClubs,
     dummyClubAffiliation,
     dummyClubTeams,
-    dummyGamesTableData, dummyTeamVm
+    dummyGamesTableData, dummyTeamDto, dummyTeamVm
 } from './dummyData';
 import { UserResponse, ClubSimple, UserSimple } from '@benaurel/chesshub-core-client';
 
@@ -68,6 +68,10 @@ export const handlers = [
     }),
 
     // Mock for teams
+    http.get("*/teams/*", () => {
+        return HttpResponse.json(dummyTeamDto);
+    }),
+
     http.get("*/teams", () => {
         return HttpResponse.json(allDummySimple);
     }),

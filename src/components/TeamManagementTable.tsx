@@ -3,13 +3,14 @@ import {DataGrid, GridColDef, GridRowId} from "@mui/x-data-grid";
 import React from "react";
 import {AddUserToTeamSearchBar} from "@/components/TableSearchAndAddButton";
 import {useNavigate} from "react-router-dom";
-import {Team, TeamMember, TeamRole, UserSimple} from "@benaurel/chesshub-core-client";
+import {TeamMember, TeamRole, UserSimple} from "@benaurel/chesshub-core-client";
 import {ROUTES} from "@/routes";
 import TeamMemberRoleManager from "@/components/TeamMemberRoleManager";
 import {mapUserSimpleVmToTeamMember} from "@/api/mappers/user.mapper";
+import {TeamVm} from "@/types/viewmodels/team.vm";
 
 interface TeamManagementTableProps {
-    team: Team;
+    team: TeamVm;
 }
 
 const cssForMemberRole = (role: TeamRole) => {
@@ -30,6 +31,7 @@ const cssForMemberRole = (role: TeamRole) => {
 }
 
 export default function TeamManagementTable({team}: TeamManagementTableProps) {
+    debugger
     const [currentMembers, setCurrentMembers] = React.useState<TeamMember[]>(team.members ?? []);
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>(false);
     const navigate = useNavigate();
