@@ -1,12 +1,12 @@
 import {TeamModel} from "@/types/models/team.model";
 import {UserModel} from "@/types/models/user.model";
 import dayjs from "dayjs";
-import {AppRole, ClubMemberStatus} from "@/types/common/roles";
+import {AppRole} from "@/types/common/roles";
 import {ClubAffiliationVm, ClubVm, ClubWithTeamsVm} from "@/types/viewmodels/club.vm";
 import {TeamMemberVm} from "@/types/viewmodels/user.vm";
 import {TeamSimpleVm, TeamVm} from "@/types/viewmodels/team.vm";
 import {GameWithTeamVm} from "@/types/viewmodels/game.vm";
-import {TeamRole, TeamSimple} from "@benaurel/chesshub-core-client";
+import {ClubMemberStatus, TeamRole, TeamSimple} from "@benaurel/chesshub-core-client";
 
 export const allUsers: UserModel[] = [
     {id: 1, name: "Benjamin Kostka", userName: "b", email: "a", fideId: "123456789", appRole: AppRole.USER, lichessUsername: "benboomer01", chesscomUsername: "benboomer02"},
@@ -28,9 +28,9 @@ export const dummyAllClubs:ClubVm[] = [
 ];
 
 export const dummyClubAffiliation: ClubAffiliationVm[] = [
-    {id: 1, name: "SV Empor", address: "Straße 1", adminId: allUsers[0].id, adminName: allUsers[0].name, status: ClubMemberStatus.MEMBER},
-    {id: 2, name: "SV Brauereien", address: "Straße 2", adminId: allUsers[1].id, adminName: allUsers[1].name, status: ClubMemberStatus.APPLICANT},
-    {id: 3, name: "Bayern München", address: "Straße 3", adminId: allUsers[2].id, adminName: allUsers[2].name , status: ClubMemberStatus.FORMER_MEMBER}
+    {id: 1, name: "SV Empor", address: "Straße 1", adminId: allUsers[0].id, adminName: allUsers[0].name, status: ClubMemberStatus.Member},
+    {id: 2, name: "SV Brauereien", address: "Straße 2", adminId: allUsers[1].id, adminName: allUsers[1].name, status: ClubMemberStatus.Applicant},
+    {id: 3, name: "Bayern München", address: "Straße 3", adminId: allUsers[2].id, adminName: allUsers[2].name , status: ClubMemberStatus.FormerMember}
 ];
 
 export const dummyPgn = "[Event \"?\"]\n" +

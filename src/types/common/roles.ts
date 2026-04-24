@@ -1,10 +1,3 @@
-export enum ClubMemberStatus {
-    APPLICANT="Bewerber",
-    MEMBER="Mitglied",
-    FORMER_MEMBER="Ehemaliges Mitglied",
-    BANNED="Gesperrt"
-}
-
 export enum TeamRole {
     ADMIN = "Admin",
     CAPTAIN = "Kapitän",

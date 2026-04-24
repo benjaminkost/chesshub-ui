@@ -20,7 +20,7 @@ export default function ClubAffiliationPage() {
                 setLoading(true);
                 const [allRes, myRes] = await Promise.all([
                     clubsApi.getAllClubs(),
-                    usersApi.getClubsByUser(Number(userId))
+                    usersApi.getMyClubs()
                 ]);
                 setAllClubs(allRes.data);
                 setMyClubs(myRes.data);

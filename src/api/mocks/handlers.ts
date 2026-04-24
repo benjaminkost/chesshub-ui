@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import {allDummySimple, allUsers, dummyAllClubs, dummyGamesTableData} from './dummyData';
+import {allDummySimple, allUsers, dummyAllClubs, dummyClubAffiliation, dummyGamesTableData} from './dummyData';
 import { UserResponse, ClubSimple, UserSimple } from '@benaurel/chesshub-core-client';
 
 export const handlers = [
@@ -25,6 +25,9 @@ export const handlers = [
             userName: u.userName
         }));
         return HttpResponse.json(users);
+    }),
+    http.get("*/users/me/clubs", () => {
+        return HttpResponse.json(dummyClubAffiliation)
     }),
 
     // Mock for getAllClubs
