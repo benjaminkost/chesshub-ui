@@ -1,11 +1,11 @@
 import React, {useEffect} from "react";
-import { User } from "@benaurel/chesshub-core-client";
+import { UserResponse } from "@benaurel/chesshub-core-client";
 import { authApi, usersApi } from "@/api/clients/apiChesshubCore";
 
 interface AuthContextData {
-    user: User | null;
+    user: UserResponse | null;
     isLoggedIn: boolean;
-    login: (user: User) => void;
+    login: (user: UserResponse) => void;
     logout: () => void;
 }
 
@@ -17,7 +17,7 @@ export const AuthContext = React.createContext<AuthContextData>({
 });
 
 export function AuthProvider({children}: { children: React.ReactNode }) {
-    const [user, setUser] = React.useState<User | null>(() => {
+    const [user, setUser] = React.useState<UserResponse | null>(() => {
         const storedUser = localStorage.getItem("user");
         try {
             return storedUser ? JSON.parse(storedUser) : null;
@@ -44,7 +44,7 @@ export function AuthProvider({children}: { children: React.ReactNode }) {
         syncAuth();
     }, []);
 
-    const login = (userData: User) => {
+    const login = (userData: UserResponse) => {
         setUser(userData);
         localStorage.setItem("user", JSON.stringify(userData));
     };
