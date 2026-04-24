@@ -2,7 +2,7 @@
 
 # loading .env file
 set -o allexport
-source .env
+source .env.production
 set +o allexport
 
 # login into docker hub

@@ -4,33 +4,13 @@ import React from "react";
 import Divider from '@mui/material/Divider';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import {useNavigate} from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
-import HistoryIcon from '@mui/icons-material/History';
-import Diversity3Icon from '@mui/icons-material/Diversity3';
-import OtherHousesIcon from '@mui/icons-material/OtherHouses';
-import ManageSearchIcon from '@mui/icons-material/ManageSearch';
-import DescriptionIcon from '@mui/icons-material/Description';
-
-export interface NavItem {
-    label: string;
-    path: string;
-    icon?: React.ReactNode;
-}
+import {NavItem} from "@/types/viewmodels/navigation.vm";
 
 export interface MenuButtonProps{
-    navItems?: NavItem[];
+    navItems: NavItem[];
 }
 
-export const defaultNavItems: NavItem[] = [
-    {label: "Partie erstellen", path: "/input-game", icon: <AddIcon/>},
-    {label: "Eigene Partien", path: "/own-games-history", icon: <HistoryIcon />},
-    {label: "Mannschaftspartien", path: "/team-games-history", icon: <Diversity3Icon/>},
-    {label: "Vereinszugehörigkeit", path: "/club-affiliation", icon:< OtherHousesIcon/> },
-    {label: "Vereinsverwaltung", path: "/club-management", icon: <ManageSearchIcon/>},
-    {label: "Mannschaftsverwaltung", path: "/team-management", icon: <DescriptionIcon/>}
-];
-
-export default function MenuButton({navItems=defaultNavItems}:MenuButtonProps) {
+export function MenuButton({navItems}:MenuButtonProps) {
     const [open, setOpen] = React.useState(false);
 
     const toggleDrawer = () => {
@@ -71,11 +51,11 @@ export default function MenuButton({navItems=defaultNavItems}:MenuButtonProps) {
 }
 
 interface DrawerList{
-    drawerElements?: NavItem[];
+    drawerElements: NavItem[];
     onItemClick: () => void;
 }
 
-function DrawerList({drawerElements=defaultNavItems, onItemClick}:DrawerList) {
+function DrawerList({drawerElements, onItemClick}:DrawerList) {
     const navigate = useNavigate();
 
     const handleNav = (path:string) => {

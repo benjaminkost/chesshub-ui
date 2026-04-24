@@ -3,6 +3,6 @@ import {RequestNewPassword} from "@/components/RequestNewPassword";
 
 export function RequestNewPasswordPage() {
     return (
-        <PageLayout loggedIn={false} children={<RequestNewPassword />}/>
+        <PageLayout children={<RequestNewPassword />}/>
     );
 }

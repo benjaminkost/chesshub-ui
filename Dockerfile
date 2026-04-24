@@ -1,8 +1,8 @@
-FROM node:18-alpine as BUILD_IMAGE
+FROM node:20
 
 WORKDIR /app/react-app/
 
-COPY package.json ./
+COPY package.json package-lock.json ./
 
 RUN npm install
 
@@ -10,17 +10,6 @@ COPY . .
 
 RUN npm run build
 
-FROM node:18-alpine as PRODUCTION_IMAGE
+EXPOSE 80
 
-WORKDIR /app/react-app/
-
-COPY --from=BUILD_IMAGE /app/react-app/dist/ /app/react-app/dist/
-
-COPY package.json .
-COPY vite.config.ts .
-
-RUN npm install javascript
-
-EXPOSE 9000
-
-CMD ["npm", "run", "preview"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "80"]

@@ -1,27 +1,38 @@
 import {Box, Grid, Paper, Typography} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
-import {ClubTeams} from "@/types/club";
-import {Team} from "@/types/team";
-import {Member, User} from "@/types/user";
 import {useNavigate} from "react-router-dom";
 import {AddTeamPopupDialog} from "@/components/AddTeamPopupDialog";
+import {useLookup} from "@/context/LookupContext";
+import {ROUTES} from "@/routes";
+import {TeamVm} from "@/types/viewmodels/team.vm";
+import {ClubVm} from "@/types/viewmodels/club.vm";
 
-interface ClubManagementTable{
-    club: ClubTeams;
-    allUsers: User[];
+interface ClubManagementTableProps {
+    club: ClubVm & { teams: TeamVm[] };
 }
 
-export default function ClubManagementTable({club, allUsers}: ClubManagementTable){
-    const [rows, setRows] = React.useState<Team[]>(club.teams);
+export default function ClubManagementTable({club}: ClubManagementTableProps){
+    const [rows, setRows] = React.useState<TeamVm[]>(club?.teams || []);
+    const allUsers = Object.values(useLookup().usersSimple);
     const navigate = useNavigate();
 
-    const addTeam = (newTeam:Team) => {
-        setRows((prevState) => [...prevState, newTeam]);
+    const addTeam = (newTeam: Partial<TeamVm>) => {
+        // Since the backend currently lacks a POST endpoint for teams, 
+        // we add it to the local state for now for UI feedback.
+
+        const teamWithId = {
+            ...newTeam,
+            id: Math.max(0, ...rows.map(r => r.id)) + 1,
+            clubName: club.name,
+        } as TeamVm;
+        
+        setRows((prevState) => [...prevState, teamWithId]);
+        console.warn("Team addition requested, but backend persistence is missing in OpenAPI.");
     }
 
-    const navigateToTeam = () => {
-        navigate("/team-management");
+    const navigateToTeam = (teamId: number) => {
+        navigate(ROUTES.TEAMS.MANAGE.func(teamId));
     };
 
     const columns = React.useMemo<GridColDef[]>(() => [
@@ -35,11 +46,11 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                                 cursor: "pointer"}
                         }
                     }
-                    onClick={navigateToTeam}>
+                    onClick={() => navigateToTeam(params.row.id)}>
                     {params.value}
                 </Box>)
             }},
-        {field: "admin", headerName: "Mannschaftsleiter", resizable: false, flex: 3, valueFormatter: (value:Member, _) => value.name}
+        {field: "adminName", headerName: "Mannschaftsleiter", resizable: false, flex: 3}
     ],[rows]);
 
     return (
@@ -80,16 +91,11 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                     <Grid size={6}>
                         <Typography>{club.address}</Typography>
                     </Grid>
-                    <Grid size={6}>
-                        <Typography sx={{fontWeight: "bold"}}>Vereinsvorsitzender:</Typography>
-                    </Grid>
-                    <Grid size={6}>
-                        <Typography>{club.admin?.name}</Typography>
-                    </Grid>
                 </Grid>
             </Paper>
-            <Paper sx={{m:2}}>
+            <Paper sx={{ m: 2 }}>
                 <DataGrid
+                    autoHeight
                     sx={{
                         "& .MuiDataGrid-columnHeader": {
                             backgroundColor: "gray",
@@ -99,12 +105,16 @@ export default function ClubManagementTable({club, allUsers}: ClubManagementTabl
                     columns={columns}
                     rows={rows}
                     slots={{
-                        footer: () => < AddTeamPopupDialog
-                                                            allUsers={allUsers}
-                                                           addTeam={addTeam}
-                                                           currentHighestID={rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0}
-                                                            club={club}
-                        />
+                        footer: () => {
+                            const maxId = rows.length > 0 ? Math.max(...rows.map(r => Number(r.id))) : 0;
+                            return (
+                                <AddTeamPopupDialog
+                                    allUsers={allUsers as any}
+                                    addTeam={addTeam as any}
+                                    currentHighestID={maxId}
+                                />
+                            );
+                        }
                     }}
                 />
             </Paper>

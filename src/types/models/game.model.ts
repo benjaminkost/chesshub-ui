@@ -1,24 +1,22 @@
-import {Team} from "@/types/team";
 import {Dayjs} from "dayjs";
 
-export interface Game {
-    id: number,
-    whites: string,
-    blacks: string,
-    dates: Dayjs,
-    opening?: string,
-    event?: string,
-    board?: string,
-    moves: string
+export interface GameModel {
+    id: number;
+    whiteId: number;
+    blackId: number;
+    date: Dayjs;
+    opening?: string;
+    event?: string;
+    site?: string;
+    board?: string;
+    result?: string;
+    moves: string;
 }
 
-export interface GameSetting extends Game{
-    team: Team;
-}
 export const defaultStartValue = "START";
 
 export interface Evaluation {
-    centiPawn: number;
+    centiPawn: number | null;
     isMate: boolean;
     mateIn?: number;
 }
@@ -50,5 +48,5 @@ export interface GameStateNode {
 export interface GameState {
     activeStateId: string;
     rootId: string;
-    allGameStates: Record<string, GameStateNode>,
+    allGameStates: Record<string, GameStateNode>;
 }

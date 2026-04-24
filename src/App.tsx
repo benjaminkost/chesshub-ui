@@ -1,8 +1,7 @@
 import {BrowserRouter, Route, Routes} from "react-router";
-import {UploadFileContent} from "./components/UploadFileContent";
 import {Home} from "./pages/Home";
 import OwnGamesHistory from "./pages/OwnGamesHistory";
-import TeamGamesHistory from "./pages/TeamGamesHistory";
+import ClubsGamesHistory from "./pages/ClubsGamesHistory";
 import ViewSingleGame from "./pages/ViewSingleGame";
 import ClubAffiliation from "./pages/ClubAffiliation";
 import TeamManagement from "./pages/TeamManagement";
@@ -15,35 +14,67 @@ import {RequestNewPasswordPage} from "@/pages/RequestNewPasswordPage";
 import {Impressum} from "@/pages/Impressum";
 import {AboutChessHub} from "@/pages/AboutChessHub";
 import {BugReport} from "@/pages/BugReport";
+import {LookupContext, LookupData} from "@/context/LookupContext";
+import React from "react";
+import {ROUTES} from "@/routes";
+import {AuthProvider} from "@/context/AuthContext";
+
+import { clubsApi, usersApi } from "@/api/clients/apiChesshubCore";
 
 export function App() {
 
-  return (
-      <>
-          <BrowserRouter>
-              <main>
-                  <Routes>
-                      <Route path="/" element={< Home />} />
-                      <Route path="/auth/register" element={< RegistrationPage />} />
-                      <Route path="/auth/signup" element={< RegistrationPage />} />
-                      <Route path="/auth/login" element={< LoginPage />} />
-                      <Route path="/auth/signin" element={< LoginPage />} />
-                      <Route path="/uploadImage" element={< UploadFileContent />} />
-                      <Route path="/own-games-history" element={< OwnGamesHistory />} />
-                      <Route path="/team-games-history" element={< TeamGamesHistory />} />
-                      <Route path="/view-game" element={< ViewSingleGame /> } />
-                      <Route path="/club-affiliation" element={< ClubAffiliation />} />
-                      <Route path={"/team-management"} element={< TeamManagement />} />
-                      <Route path={"/club-management"} element={< ClubManagement />} />
-                      <Route path={"/input-game"} element={< InputGame />} />
-                      <Route path={"/profile-settings"} element={<ProfileSettingsPage/>} />
-                      <Route path={"/request-new-password"} element={<RequestNewPasswordPage/>} />
-                      <Route path={"/impressum"} element={< Impressum />} />
-                      <Route path={"/about"} element={< AboutChessHub />} />
-                      <Route path={"/bug-report"} element={< BugReport />}/>
-                  </Routes>
-              </main>
-          </BrowserRouter>
-      </>
-  )
+    const [lookup, setLookup] = React.useState<LookupData>({ usersSimple: {}, clubsSimple: {} });
+
+    React.useEffect(() => {
+        const fetchLookups = async () => {
+            try {
+                const [clubsRes, usersRes] = await Promise.all([
+                    clubsApi.getAllClubs(),
+                    usersApi.getAllUsers()
+                ]);
+
+                setLookup({
+                    clubsSimple: Object.fromEntries(
+                        clubsRes.data.map(c => [c.id, { ...c }])
+                    ),
+                    usersSimple: Object.fromEntries(
+                        usersRes.data.map(u => [u.id, { ...u }])
+                    )
+                });
+            } catch (error: any) {
+                if (error.response?.status !== 401 && error.response?.status !== 403) {
+                    console.error("Failed to fetch lookup data:", error);
+                }
+            }
+        };
+        fetchLookups();
+    }, []);
+
+    return (
+        <AuthProvider>
+          <LookupContext.Provider value={lookup}>
+              <BrowserRouter>
+                  <main>
+                      <Routes>
+                          <Route path={ROUTES.HOME.url} element={< Home />} />
+                          <Route path={ROUTES.AUTH.REGISTER.url} element={< RegistrationPage />} />
+                          <Route path={ROUTES.AUTH.LOGIN.url} element={< LoginPage />} />
+                          <Route path={ROUTES.USER.CLUB_AFFILIATION.url} element={< ClubAffiliation />} />
+                          <Route path={ROUTES.USER.SETTINGS.url} element={<ProfileSettingsPage/>} />
+                          <Route path={ROUTES.GAMES.LIST_USER.url} element={< OwnGamesHistory />} />
+                          <Route path={ROUTES.GAMES.LIST_CLUB.url} element={< ClubsGamesHistory />} />
+                          <Route path={ROUTES.GAMES.VIEW.url} element={< ViewSingleGame /> } />
+                          <Route path={ROUTES.GAMES.CREATE.url} element={< InputGame />} />
+                          <Route path={ROUTES.TEAMS.MANAGE.url} element={< TeamManagement />} />
+                          <Route path={ROUTES.CLUBS.MANAGE.url} element={< ClubManagement />} />
+                          <Route path={ROUTES.AUTH.REQUEST_NEW_PASSWORD.url} element={<RequestNewPasswordPage/>} />
+                          <Route path={ROUTES.IMPRESSUM.url} element={< Impressum />} />
+                          <Route path={ROUTES.ABOUT.url} element={< AboutChessHub />} />
+                          <Route path={ROUTES.BUG_REPORT.url} element={< BugReport />}/>
+                      </Routes>
+                  </main>
+              </BrowserRouter>
+          </LookupContext.Provider>
+        </AuthProvider>
+      )
 }

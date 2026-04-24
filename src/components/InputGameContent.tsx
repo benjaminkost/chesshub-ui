@@ -8,7 +8,7 @@ type InputGameContentProps = ChessBoardEditorProps;
 export function InputGameContent(props: InputGameContentProps) {
     const [tabValue, setTabValue] = React.useState<number>(0);
 
-    const handleTabChange = (event: React.SyntheticEvent, newValue: number)=> {
+    const handleTabChange = (_: React.SyntheticEvent, newValue: number)=> {
         setTabValue(newValue);
     }
 

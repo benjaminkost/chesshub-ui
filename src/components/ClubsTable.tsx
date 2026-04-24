@@ -1,23 +1,23 @@
 import {Box, Paper} from "@mui/material";
 import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
-import {Club, ClubAffiliation, MemberStatus} from "@/types/club";
 import {AddClubToAffiliation} from "@/components/TableSearchAndAddButton";
+import { ClubAffiliation, ClubMemberStatus, ClubSimple } from "@benaurel/chesshub-core-client";
 
 interface ClubsTableProps {
-    allClubs: Club[];
+    allClubs: ClubSimple[];
     clubsOfUser: ClubAffiliation[];
 }
 
-const parseMemberStatus = (memberStatus: MemberStatus): string => {
+const parseMemberStatus = (memberStatus: ClubMemberStatus): string => {
     switch (memberStatus) {
-        case MemberStatus.APPLICANT:
+        case ClubMemberStatus.Applicant:
             return "Bewerber";
-        case MemberStatus.MEMBER:
+        case ClubMemberStatus.Member:
             return "Mitglied";
-        case MemberStatus.FORMER_MEMBER:
+        case ClubMemberStatus.FormerMember:
             return "Ehemaliges Mitglied";
-        case MemberStatus.BANNED:
+        case ClubMemberStatus.Banned:
             return "Gesperrt";
         default:
             return "Unbekannt";
@@ -28,24 +28,22 @@ const clubsTableColumns: GridColDef[] = [
     {field: "id", headerName: "ID", resizable: false, flex: 1},
     {field: "name", headerName: "Vereinsname", resizable: false, flex: 2},
     {field: "address", headerName: "Adresse", resizable: false, flex: 3},
-    {field: "president", headerName: "Vorsitzender", resizable: false, flex: 2},
     {field: "status", headerName: "Mitgliedsstatus", resizable: false, flex: 1,
-        valueFormatter: (value: MemberStatus) => parseMemberStatus(value),
         renderCell: (params) => {
-        const status = params.value as MemberStatus;
+        const status = params.value as ClubMemberStatus;
         let textColor = "black";
 
         switch (status) {
-            case MemberStatus.APPLICANT:
+            case ClubMemberStatus.Applicant:
                 textColor = "orange";
                 break;
-            case MemberStatus.MEMBER:
+            case ClubMemberStatus.Member:
                 textColor = "green";
                 break;
-            case MemberStatus.FORMER_MEMBER:
+            case ClubMemberStatus.FormerMember:
                 textColor = "purple";
                 break;
-            case MemberStatus.BANNED:
+            case ClubMemberStatus.Banned:
                 textColor = "red";
                 break;
             default:
@@ -64,9 +62,15 @@ const clubsTableColumns: GridColDef[] = [
 export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
     const [currentClubs, setCurrentClubs] = React.useState<ClubAffiliation[]>(clubsOfUser);
 
-    const addClubToUser = (newClub: Club | null | undefined) => {
+    const addClubToUser = (newClub: ClubSimple | null | undefined) => {
         if (newClub){
-            const newClubAffiliation:ClubAffiliation = {...newClub, status: MemberStatus.APPLICANT}
+            // Note: Temporary fallback as joining clubs API is not yet available
+            const newClubAffiliation: ClubAffiliation = {
+                id: newClub.id,
+                name: newClub.name,
+                status: ClubMemberStatus.Applicant,
+                adminId: newClub.adminId
+            };
             setCurrentClubs([...currentClubs, newClubAffiliation]);
         } else {
             console.warn("Selected club was null or undefined");
@@ -74,13 +78,9 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
     };
 
     return (
-        <Paper
-            sx={{
-                m: 2,
-                display: "flex"
-            }}
-        >
+        <Paper sx={{ m: 2 }}>
             <DataGrid
+                autoHeight
                 sx={{
                     "& .MuiDataGrid-columnHeader": {
                         backgroundColor: "gray",
@@ -97,5 +97,5 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
                 }}
             />
         </Paper>
-    )
+    );
 }

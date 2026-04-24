@@ -1,20 +1,20 @@
 import React from 'react';
 import { Stack, Chip, IconButton, Menu, MenuItem } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import {MemberRole} from "@/types/user";
+import { TeamRole } from "@benaurel/chesshub-core-client";
 
-interface MemberRoleManagerProps {
-    rolesOfUser: MemberRole[];
-    onAddRole: (role: MemberRole) => void;
-    onDeleteRole: (role: MemberRole) => void;
-    cssForMemberRole: (role: MemberRole) => {}
+interface TeamMemberRoleManagerProps {
+    rolesOfUser: TeamRole[];
+    onAddRole: (role: TeamRole) => void;
+    onDeleteRole: (role: TeamRole) => void;
+    cssForMemberRole: (role: TeamRole) => {}
 }
 
-export default function MemberRoleManager ({rolesOfUser, onAddRole, onDeleteRole, cssForMemberRole}:MemberRoleManagerProps){
+export default function TeamMemberRoleManager ({rolesOfUser, onAddRole, onDeleteRole, cssForMemberRole}:TeamMemberRoleManagerProps){
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
 
-    const allPossibleRoles = Object.values(MemberRole);
+    const allPossibleRoles = Object.values(TeamRole);
     const rolesUserDoesNotHave = allPossibleRoles.filter(
         (role) => !rolesOfUser.includes(role)
     );

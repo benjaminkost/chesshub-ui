@@ -1,21 +1,21 @@
-import {Club, ClubAffiliation} from "@/types/club";
 import React from "react";
-import {GridFooterContainer} from "@mui/x-data-grid";
-import {Autocomplete, Box, Button, ClickAwayListener, TextField} from "@mui/material";
+import { GridFooterContainer } from "@mui/x-data-grid";
+import { Autocomplete, Box, Button, ClickAwayListener, TextField } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import {Member} from "@/types/user";
+import { ClubSimple, TeamMember, UserSimple } from "@benaurel/chesshub-core-client";
+import {useLookup} from "@/context/LookupContext";
 
-export interface AddClubToAffiliation {
-    allClubs: Club[],
-    clubsOfUser: ClubAffiliation[],
-    addClubToUser: (club: Club | null | undefined) => void
+export interface AddClubToAffiliationProps {
+    allClubs: ClubSimple[];
+    clubsOfUser: (ClubSimple & { status?: any })[];
+    addClubToUser: (club: ClubSimple | null) => void;
 }
 
-export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: AddClubToAffiliation){
+export function AddClubToAffiliation({ allClubs, clubsOfUser, addClubToUser }: AddClubToAffiliationProps) {
     const [clicked, setClicked] = React.useState(false);
-    const clubsOfUserIds = new Set(clubsOfUser.map((c) => c.id))
+    const clubsOfUserIds = new Set(clubsOfUser.map((c) => c.id));
     const clubsUserIsNotApart = allClubs.filter((club) => !clubsOfUserIds.has(club.id));
-    const [selectedClub, setSelectedClub] = React.useState<Club | null>();
+    const [selectedClub, setSelectedClub] = React.useState<ClubSimple | null>(null);
 
     return (
         <GridFooterContainer>
@@ -27,73 +27,71 @@ export function AddClubToAffiliation({allClubs, clubsOfUser, addClubToUser}: Add
                     width: "100%"
                 }}
             >
-                {
-                    clicked ?
-                        <>
-                            <Autocomplete
-                                fullWidth
-                                freeSolo
-                                options={clubsUserIsNotApart}
-                                getOptionLabel={(option:Club | string) => {
-                                    return typeof option === 'string' ? option : `${option.name} (${option.id})`
-                                }}
-                                renderInput={(params) => <TextField{...params}/>}
-                                onChange={(event, selectedClub:Club | string | null) => {
-                                    typeof selectedClub === 'string' ?
-                                        console.log("String was tipped in no Club selected")
-                                        :
-                                        setSelectedClub(selectedClub)
-                                }}
-                            />
-                            <Button
-                                sx={{
-                                    backgroundColor: "lightgray",
-                                    color: "white",
-                                    mr: 1,
-                                    ml: 1
-                                }}
-                                onClick={() => addClubToUser(selectedClub)}
-                            >
-                                Anfragen
-                            </Button>
-                        </>
-                        :
-                        <Button
-                            startIcon={<AddIcon/>}
+                {clicked ? (
+                    <>
+                        <Autocomplete
                             fullWidth
-                            sx={{backgroundColor: "lightgray", color: "white"}}
-                            onClick={() => clicked ? setClicked(false) : setClicked(true)}
+                            freeSolo
+                            options={clubsUserIsNotApart}
+                            getOptionLabel={(option) => {
+                                return typeof option === 'string' ? option : `${option.name} (${option.id})`;
+                            }}
+                            renderInput={(params) => <TextField {...params} placeholder="Verein suchen..." />}
+                            onChange={(_, selected) => {
+                                typeof selected === 'string'
+                                    ? console.log("String was typed in no ClubModel selected")
+                                    : setSelectedClub(selected);
+                            }}
                         />
-                }
+                        <Button
+                            sx={{
+                                backgroundColor: "lightgray",
+                                color: "white",
+                                mr: 1,
+                                ml: 1
+                            }}
+                            onClick={() => selectedClub && addClubToUser(selectedClub)}
+                        >
+                            Anfragen
+                        </Button>
+                    </>
+                ) : (
+                    <Button
+                        startIcon={<AddIcon />}
+                        fullWidth
+                        sx={{ backgroundColor: "lightgray", color: "white" }}
+                        onClick={() => setClicked(true)}
+                    />
+                )}
             </Box>
         </GridFooterContainer>
     );
 }
 
 export interface AddUserToTeamSearchBarProps {
-    allUsers: Member[],
-    membersInTeam: Member[],
-    addUserToTeam: (newMember: Member) => void
+    membersInTeam: TeamMember[];
+    addUserToTeam: (newMember: UserSimple | null) => void;
 }
 
-export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}: AddUserToTeamSearchBarProps){
+export function AddUserToTeamSearchBar({membersInTeam, addUserToTeam }: AddUserToTeamSearchBarProps) {
     const [open, setOpen] = React.useState(false);
-    const membersInTeamIds = new Set(membersInTeam.map((m) => m.id))
-    const usersNotApartOfTeam = allUsers.filter((member) => !membersInTeamIds.has(member.id));
-    const [selectedUser, setSelectedUser] = React.useState<Member | null>(null);
+    const membersInTeamIds = new Set(membersInTeam.map((m) => m.id));
+    const { usersSimple } = useLookup();
+    const usersNotApartOfTeam = Object.values(usersSimple).filter((member) => !membersInTeamIds.has(member.id));
+    const [selectedUser, setSelectedUser] = React.useState<UserSimple | null>(null);
 
     const handleOnClick = () => {
-        if (selectedUser){
+        if (selectedUser) {
             addUserToTeam(selectedUser);
             setOpen(false);
             setSelectedUser(null);
         }
-    }
+    };
 
     const handleClose = () => {
         setOpen(false);
         setSelectedUser(null);
-    }
+    };
 
     return (
         <GridFooterContainer>
@@ -105,48 +103,46 @@ export function AddUserToTeamSearchBar({allUsers, membersInTeam, addUserToTeam}:
                     width: "100%"
                 }}
             >
-                {
-                    open ?
-                        (<>
-                            <ClickAwayListener onClickAway={handleClose} >
-                                <Box sx={{display: "flex", width: "100%"}}>
-                                    <Autocomplete
-                                        fullWidth
-                                        freeSolo
-                                        options={usersNotApartOfTeam}
-                                        getOptionLabel={(option:Member | string) => {
-                                            return typeof option === 'string' ? option : `${option.name} (${option.id})`
-                                        }}
-                                        renderInput={(params) => <TextField{...params} placeholder={"Neueres Mannschaftsmitglied"}/>}
-                                        onChange={(event, selectedUser:Member | string | null) => {
-                                            typeof selectedUser === 'string' ?
-                                                console.log("String was tipped in no User selected")
-                                                :
-                                                setSelectedUser(selectedUser)
-                                        }}
-                                    />
-                                    <Button
-                                        sx={{
-                                            backgroundColor: "lightgray",
-                                            color: "white",
-                                            mr: 1,
-                                            ml: 1
-                                        }}
-                                        onClick={handleOnClick}
-                                    >
-                                        Hinzufügen
-                                    </Button>
-                                </Box>
-                            </ClickAwayListener>
-                        </>)
-                        :
-                        (<Button
-                            startIcon={<AddIcon/>}
-                            fullWidth
-                            sx={{backgroundColor: "lightgray", color: "white"}}
-                            onClick={() => open ? setOpen(false) : setOpen(true)}
-                        />)
-                }
+                {open ? (
+                    <>
+                        <ClickAwayListener onClickAway={handleClose}>
+                            <Box sx={{ display: "flex", width: "100%" }}>
+                                <Autocomplete
+                                    fullWidth
+                                    freeSolo
+                                    options={usersNotApartOfTeam}
+                                    getOptionLabel={(option) => {
+                                        return typeof option === 'string' ? option : `${option.name} (${option.id})`;
+                                    }}
+                                    renderInput={(params) => <TextField {...params} placeholder={"Neueres Mannschaftsmitglied"} />}
+                                    onChange={(_, selected) => {
+                                        typeof selected === 'string'
+                                            ? console.log("String was typed in no UserModel selected")
+                                            : setSelectedUser(selected);
+                                    }}
+                                />
+                                <Button
+                                    sx={{
+                                        backgroundColor: "lightgray",
+                                        color: "white",
+                                        mr: 1,
+                                        ml: 1
+                                    }}
+                                    onClick={handleOnClick}
+                                >
+                                    Hinzufügen
+                                </Button>
+                            </Box>
+                        </ClickAwayListener>
+                    </>
+                ) : (
+                    <Button
+                        startIcon={<AddIcon />}
+                        fullWidth
+                        sx={{ backgroundColor: "lightgray", color: "white" }}
+                        onClick={() => setOpen(true)}
+                    />
+                )}
             </Box>
         </GridFooterContainer>
     );

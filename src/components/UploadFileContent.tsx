@@ -4,10 +4,12 @@ import {Alert, Box, Button, Grid, Paper, Snackbar, SnackbarCloseReason} from "@m
 import {UploadFile} from "@mui/icons-material";
 import {useDropzone} from "react-dropzone";
 import {useNavigate} from "react-router-dom";
-import {_post} from "../../bff/clients/apiChessHubCoreClient";
+import {gamesApi} from "@/api/clients/apiChesshubCore";
+import {GameRequest} from "@benaurel/chesshub-core-client";
+import {parsePGN} from "@/api/utils/pgnParsing";
 
 export function UploadFileContent() {
-    const [pgnContent, setPgnContent] = React.useState<string>("");
+    const [pgnContent, setPgnContent] = React.useState<GameRequest>();
     const [fileName, setFileName] = React.useState<string>("");
     const [open, setOpen] = React.useState<boolean>(false);
     const navigate = useNavigate();
@@ -22,7 +24,7 @@ export function UploadFileContent() {
 
             reader.onload = (e) => {
                 const text = e.target?.result as string;
-                setPgnContent(text);
+                setPgnContent(parsePGN(text));
             }
 
             reader.readAsText(file);
@@ -36,7 +38,7 @@ export function UploadFileContent() {
     });
 
     const uploadPGN = async () => {
-        const response = await _post('/game/pgn', pgnContent);
+        const response = await  (pgnContent && gamesApi.createGame(pgnContent));
 
         if (response) {
             navigate("/view-game");
