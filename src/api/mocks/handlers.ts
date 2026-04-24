@@ -61,5 +61,9 @@ export const handlers = [
 
     http.get("*/games/user/*", () => {
         return HttpResponse.json(dummyGamesTableData);
+    }),
+
+    http.get("*/games/club/*", () => {
+        return HttpResponse.json(dummyGamesTableData);
     })
 ];
