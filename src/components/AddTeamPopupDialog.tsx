@@ -13,10 +13,11 @@ import {
     TextField
 } from "@mui/material";
 import React from "react";
-import { TeamSimple, UserSimple } from "@benaurel/chesshub-core-client";
+import { UserSimple } from "@benaurel/chesshub-core-client";
+import {TeamVm} from "@/types/viewmodels/team.vm";
 
 interface AddTeamPopupDialogProps {
-    addTeam: (team: Partial<TeamSimple>) => void;
+    addTeam: (team: Partial<TeamVm>) => void;
     allUsers: UserSimple[];
     currentHighestID: number;
 }
@@ -46,10 +47,11 @@ export function AddTeamPopupDialog({addTeam, allUsers, currentHighestID}: AddTea
     const handleSave = () => {
         if (!teamName || !admin) return;
 
-        const newTeam: Partial<TeamSimple> = {
+        const newTeam: Partial<TeamVm> = {
             id: currentHighestID + 1,
             name: teamName,
             adminId: admin.id,
+            adminName: admin.name
         };
 
         addTeam(newTeam);

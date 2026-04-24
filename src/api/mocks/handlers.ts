@@ -1,5 +1,12 @@
 import { http, HttpResponse } from 'msw';
-import {allDummySimple, allUsers, dummyAllClubs, dummyClubAffiliation, dummyGamesTableData} from './dummyData';
+import {
+    allDummySimple,
+    allUsers,
+    dummyAllClubs,
+    dummyClubAffiliation,
+    dummyClubTeams,
+    dummyGamesTableData, dummyTeamVm
+} from './dummyData';
 import { UserResponse, ClubSimple, UserSimple } from '@benaurel/chesshub-core-client';
 
 export const handlers = [
@@ -30,7 +37,7 @@ export const handlers = [
         return HttpResponse.json(dummyClubAffiliation)
     }),
 
-    // Mock for getAllClubs
+    // Mock for Clubs
     http.get('*/clubs', async () => {
         const clubs: ClubSimple[] = dummyAllClubs.map(c => ({
             id: c.id,
@@ -38,6 +45,12 @@ export const handlers = [
             adminId: c.adminId
         }));
         return HttpResponse.json(clubs);
+    }),
+    http.get("*/clubs/*/teams", () => {
+        return HttpResponse.json([dummyTeamVm]);
+    }),
+    http.get("*/clubs/*", () => {
+        return HttpResponse.json(dummyClubTeams);
     }),
 
     // Mock for Login

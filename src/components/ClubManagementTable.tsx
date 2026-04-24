@@ -5,25 +5,27 @@ import {useNavigate} from "react-router-dom";
 import {AddTeamPopupDialog} from "@/components/AddTeamPopupDialog";
 import {useLookup} from "@/context/LookupContext";
 import {ROUTES} from "@/routes";
-import { Club, TeamSimple } from "@benaurel/chesshub-core-client";
+import {TeamVm} from "@/types/viewmodels/team.vm";
+import {ClubVm} from "@/types/viewmodels/club.vm";
 
 interface ClubManagementTableProps {
-    club: Club & { teams: TeamSimple[] };
+    club: ClubVm & { teams: TeamVm[] };
 }
 
 export default function ClubManagementTable({club}: ClubManagementTableProps){
-    const [rows, setRows] = React.useState<TeamSimple[]>(club?.teams || []);
+    const [rows, setRows] = React.useState<TeamVm[]>(club?.teams || []);
     const allUsers = Object.values(useLookup().usersSimple);
     const navigate = useNavigate();
 
-    const addTeam = (newTeam: Partial<TeamSimple>) => {
+    const addTeam = (newTeam: Partial<TeamVm>) => {
         // Since the backend currently lacks a POST endpoint for teams, 
         // we add it to the local state for now for UI feedback.
+
         const teamWithId = {
             ...newTeam,
             id: Math.max(0, ...rows.map(r => r.id)) + 1,
-            clubName: club.name
-        } as TeamSimple;
+            clubName: club.name,
+        } as TeamVm;
         
         setRows((prevState) => [...prevState, teamWithId]);
         console.warn("Team addition requested, but backend persistence is missing in OpenAPI.");

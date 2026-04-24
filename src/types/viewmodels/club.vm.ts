@@ -1,5 +1,5 @@
-import {ClubMemberStatus} from "@/types/common/roles";
 import {TeamVm} from "@/types/viewmodels/team.vm";
+import {ClubMemberStatus} from "@benaurel/chesshub-core-client";
 
 export interface ClubVm {
     id: number;
