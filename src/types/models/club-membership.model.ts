@@ -1,4 +1,5 @@
-import {ClubRole, ClubMemberStatus} from "@/types/common/roles";
+import { ClubRole } from "@/types/common/roles";
+import { ClubMemberStatus } from "@benaurel/chesshub-core-client";
 
 export interface ClubMembershipModel {
     userId: number;

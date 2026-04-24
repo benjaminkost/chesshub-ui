@@ -8,9 +8,7 @@ import { MetaDataForGameInput } from "@/components/MetaDataForGameInput";
 import { gamesApi } from "@/api/clients/apiChesshubCore";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
-import dayjs, { Dayjs } from "dayjs";
 import { produce } from "immer";
-import { User } from "@benaurel/chesshub-core-client";
 import { ROUTES } from "@/routes";
 import { GameState, GameStateNode } from "@/types/models/game.model";
 import { GameMetaData } from "@/types/viewmodels/game.vm";
@@ -18,45 +16,39 @@ import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
 import { parsePgnToGameState } from "@/api/utils/pgnParsing";
 import { mapGameVmToRequest } from "@/api/mappers/mapper";
 import {convertGameStateToPgn} from "@/api/utils/interactWithGameState";
+import { useAuth} from "@/context/AuthContext";
+import {mapUserResponseToUserVm} from "@/api/mappers/user.mapper";
 
 export interface ChessBoardEditorProps {
     allTeams: TeamSimpleVm[];
-    user: User;
-    initialWhitePlayer?: string;
-    initialBlackPlayer?: string;
-    initialDate?: Dayjs | null;
-    initialEvent?: string;
-    initialRound?: number;
-    initialTeam?: TeamSimpleVm | undefined;
+    initialMetaData?: GameMetaData,
     initialMoves?: string;
+}
+
+const defaultMetaData:GameMetaData = {
+    whitePlayerId: undefined,
+    whitePlayerName: "",
+    blackPlayerId: undefined,
+    blackPlayerName: "",
+    date : null,
+    event : "",
+    round : undefined,
+    teamName: undefined
 }
 
 export function ChessBoardEditor({ 
     allTeams,
-    user,
-    initialWhitePlayer = "",
-    initialBlackPlayer = "",
-    initialDate = null,
-    initialEvent = "",
-    initialRound = undefined,
-    initialTeam = undefined,
+    initialMetaData=defaultMetaData,
     initialMoves = ""
 }: ChessBoardEditorProps) {
     const navigate = useNavigate();
+    const { user } = useAuth();
     
     const [chessApi, setChessApi] = useState<Api | null>(null);
     const [lastMove, setLastMove] = useState<Key[] | undefined>();
     const [gameState, setGameState] = useState<GameState>(parsePgnToGameState(initialMoves));
 
-    const [metaData, setMetaData] = useState<GameMetaData>({
-        whitePlayerName: initialWhitePlayer,
-        blackPlayerName: initialBlackPlayer,
-        date: initialDate || dayjs(),
-        event: initialEvent,
-        round: initialRound,
-        teamId: initialTeam?.id,
-        teamName: initialTeam?.name
-    });
+    const [metaData, setMetaData] = useState<GameMetaData>(initialMetaData);
 
     const handleMetaChange = (update: Partial<GameMetaData>) => {
         setMetaData(prev => ({ ...prev, ...update }));
@@ -112,7 +104,8 @@ export function ChessBoardEditor({
 
         try {
             await gamesApi.createGame(gameRequest);
-            navigate(ROUTES.GAMES.LIST_USER.func(user.id!));
+            if (!user) return;
+            navigate(ROUTES.GAMES.LIST_USER.func(mapUserResponseToUserVm(user).id));
         } catch (error) {
             console.error("Failed to save game:", error);
             alert("Fehler beim Speichern der Partie.");

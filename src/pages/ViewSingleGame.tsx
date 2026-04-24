@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react";
 import { ChessBoardEditor } from "@/components/ChessBoardEditor";
 import PageLayout from "@/components/PageLayout";
 import { useParams } from "react-router-dom";
-import { gamesApi, usersApi } from "@/api/clients/apiChesshubCore";
+import { gamesApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { GameVm } from "@/types/viewmodels/game.vm";
-import { UserVm } from "@/types/viewmodels/user.vm";
-import { mapGameToVm, mapUserToVm } from "@/api/mappers/mapper";
+import { mapGameToVm } from "@/api/mappers/mapper";
 
 export default function ViewSingleGame() {
     const { gameId } = useParams<{ gameId: string }>();
     const [game, setGame] = useState<GameVm | null>(null);
-    const [currentUser, setCurrentUser] = useState<UserVm | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -20,13 +18,8 @@ export default function ViewSingleGame() {
             if (!gameId) return;
             try {
                 setLoading(true);
-                const [gameRes, userRes] = await Promise.all([
-                    gamesApi.getGameById(Number(gameId)),
-                    usersApi.getCurrentUser()
-                ]);
-                
+                const gameRes = await gamesApi.getGameById(Number(gameId));
                 setGame(mapGameToVm(gameRes.data));
-                setCurrentUser(mapUserToVm(userRes.data));
                 setError(null);
             } catch (err: any) {
                 console.error("Failed to fetch game details:", err);
@@ -49,7 +42,7 @@ export default function ViewSingleGame() {
         );
     }
 
-    if (error || !game || !currentUser) {
+    if (error || !game) {
         return (
             <PageLayout>
                 <Box p={4} textAlign="center">
@@ -62,13 +55,16 @@ export default function ViewSingleGame() {
     return (
         <PageLayout>
             <ChessBoardEditor 
-                allTeams={[]} // Could be fetched if needed for editing
-                user={currentUser as any} // UserVm vs User client mismatch, might need deeper mapping
-                initialWhitePlayer={game.whitePlayerName}
-                initialBlackPlayer={game.blackPlayerName}
-                initialDate={game.date}
-                initialEvent={game.event}
-                initialRound={game.round}
+                allTeams={[]}
+                initialMetaData={{
+                    whitePlayerId: game.whitePlayerId,
+                    whitePlayerName: game.whitePlayerName,
+                    blackPlayerId: game.blackPlayerId,
+                    blackPlayerName: game.blackPlayerName,
+                    date: game.date,
+                    event: game.event,
+                    round: game.round,
+                }}
                 initialMoves={game.moves} 
             />
         </PageLayout>

@@ -56,7 +56,6 @@ export function InputGame() {
         <PageLayout>
             <InputGameContent 
                 allTeams={allTeams as any} 
-                user={currentUser} 
             />
         </PageLayout>
     );

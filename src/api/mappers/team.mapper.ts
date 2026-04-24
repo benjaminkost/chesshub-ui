@@ -9,15 +9,15 @@ export const mapTeamModelToTeamVm = (team: TeamModel,
     users: Record<number, UserSimpleVm>): TeamVm => {
     const { clubId, adminId } = team;
 
-    const adminName = adminId && users[adminId]?.name || undefined;
-    const clubName = clubId && clubs[clubId]?.name || undefined;
+    const adminName = adminId ? users[adminId]?.name : undefined;
+    const clubName = clubId ? clubs[clubId]?.name : undefined;
 
     return {
         id: team.id,
         clubId: team.clubId,
         clubName: clubName,
         name: team.name,
-        adminId: team?.adminId,
+        adminId: team.adminId,
         adminName: adminName,
     }
 }
@@ -52,7 +52,7 @@ export const mapTeamDtoToTeamSimple = (team: TeamDto):TeamSimple => {
 export const mapTeamMemberToTeamMemberVm = (teamMember: TeamMember): TeamMemberVm => {
     return {
         id: teamMember.id,
-        name: teamMember.firstName + " " + teamMember.lastName,
+        name: (teamMember.firstName || "") + " " + (teamMember.lastName || ""),
         userName: teamMember.userName,
         roles: teamMember.roles
     }
@@ -65,7 +65,9 @@ export const mapTeamDtoToTeamVm = (team: TeamDto): TeamVm => {
         clubName: team.clubName,
         name: team.name,
         adminId: team.adminId,
-        adminName: team.adminFirstName + " " + team.adminLastName,
+        adminName: team.adminFirstName && team.adminLastName
+            ? team.adminFirstName + " " + team.adminLastName
+            : undefined,
         members: team.members?.map(mapTeamMemberToTeamMemberVm)
     }
 }

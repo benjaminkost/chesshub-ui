@@ -1,6 +1,6 @@
 import {ClubModel} from "@/types/models/club.model";
 import {ClubAffiliationVm, ClubSimpleVm} from "@/types/viewmodels/club.vm";
-import {ClubMemberStatus} from "@/types/common/roles";
+import {ClubMemberStatus} from "@benaurel/chesshub-core-client";
 import {UserSimpleVm} from "@/types/viewmodels/user.vm";
 
 export const mapClubModelToClubAffiliation = (club: ClubModel,
