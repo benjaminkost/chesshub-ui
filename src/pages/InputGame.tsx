@@ -18,11 +18,9 @@ export function InputGame() {
                 setLoading(true);
                 const userRes = await usersApi.getCurrentUser();
                 setCurrentUser(userRes.data);
-                debugger
                 const teamsRes = await teamsApi.getAllTeams();
                 setAllTeams(teamsRes.data.map(mapTeamDtoToTeamSimple));
                 setError(null);
-                debugger
             } catch (err: any) {
                 console.error("Failed to fetch input game data:", err);
                 setError("Daten konnten nicht geladen werden.");

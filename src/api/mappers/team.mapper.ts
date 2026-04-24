@@ -2,6 +2,7 @@ import { TeamModel } from "@/types/models/team.model";
 import { TeamSimpleVm, TeamVm } from "@/types/viewmodels/team.vm";
 import { TeamMemberVm, UserSimpleVm } from "@/types/viewmodels/user.vm";
 import { ClubSimpleVm } from "@/types/viewmodels/club.vm";
+import {TeamDto, TeamSimple} from "@benaurel/chesshub-core-client";
 
 export const mapTeamModelToTeamVm = (team: TeamModel,
     clubs: Record<number, ClubSimpleVm>,
@@ -36,5 +37,14 @@ export const mapTeamSimpleVmToTeamVm = (team: TeamSimpleVm, clubId: number, cont
         adminId: context?.adminId,
         adminName: context?.adminName,
         members: context?.memberIds
+    }
+}
+
+export const mapTeamDtoToTeamSimple = (team: TeamDto):TeamSimple => {
+    return {
+        id: team.id,
+        name: team.name,
+        clubName: team.clubName || "",
+        adminId: team.adminId
     }
 }
