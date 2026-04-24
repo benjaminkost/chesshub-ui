@@ -26,7 +26,11 @@ const columns: GridColDef[] = [
         valueFormatter: (value) => value ? dayjs(value).format("DD.MM.YYYY") : ""
     },
     { field: "opening", headerName: "Eröffnung", resizable: false, flex: 2 },
-    { field: "moves", headerName: "Züge", resizable: false, flex: 5 }
+    { field: "moves", headerName: "Züge",
+        valueFormatter: (params:string) => {
+            return params.length > 20 ? params.slice(0,20) + "..." : params;
+        },
+    resizable: false, flex: 5 }
 ];
 
 export function GamesTable({ rows, ownGamesOrTeamGames }: GameTableProps) {
@@ -49,10 +53,7 @@ export function GamesTable({ rows, ownGamesOrTeamGames }: GameTableProps) {
                 autoHeight
                 sx={{
                     '& .MuiDataGrid-columnHeader': { backgroundColor: 'gray', color: "white" },
-                    '& .MuiDataGrid-filler': { backgroundColor: 'gray!important' },
-                    '& .MuiDataGrid-virtualScrollerContent': {
-                        '&:hover': { color: "blue", cursor: "pointer" }
-                    }
+                    '& .MuiDataGrid-filler': { backgroundColor: 'gray!important' }
                 }}
                 columnVisibilityModel={columnVisibilityModel}
                 columns={columns}

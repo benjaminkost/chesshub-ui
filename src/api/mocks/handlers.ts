@@ -1,5 +1,5 @@
 import { http, HttpResponse } from 'msw';
-import {allDummySimple, allUsers, dummyAllClubs} from './dummyData';
+import {allDummySimple, allUsers, dummyAllClubs, dummyGamesTableData} from './dummyData';
 import { UserResponse, ClubSimple, UserSimple } from '@benaurel/chesshub-core-client';
 
 export const handlers = [
@@ -53,6 +53,10 @@ export const handlers = [
 
     // Mock for teams
     http.get("*/teams", () => {
-        return HttpResponse.json(allDummySimple)
+        return HttpResponse.json(allDummySimple);
+    }),
+
+    http.get("*/games/user/*", () => {
+        return HttpResponse.json(dummyGamesTableData);
     })
 ];
