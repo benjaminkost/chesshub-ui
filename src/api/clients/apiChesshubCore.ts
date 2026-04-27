@@ -31,11 +31,3 @@ export const clubsApi = new ClubsApi(apiConfig, BASE_URL, axiosInstance);
 export const teamsApi = new TeamsApi(apiConfig, BASE_URL, axiosInstance);
 export const gamesApi = new GamesApi(apiConfig, BASE_URL, axiosInstance);
 export const usersApi = new UsersApi(apiConfig, BASE_URL, axiosInstance);
-
-export default {
-    auth: authApi,
-    clubs: clubsApi,
-    teams: teamsApi,
-    games: gamesApi,
-    users: usersApi,
-};

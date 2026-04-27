@@ -1,6 +1,5 @@
 import {AppBar, Box, Button, Toolbar} from "@mui/material";
 import {ProfileComponent} from "./ProfileComponent";
-import SearchFieldComponent from "./SearchFieldComponent";
 import {MenuButton} from "./MenuButton";
 import {useNavigate} from "react-router-dom";
 import {HomeIcon} from "@/components/HomeIcon";
@@ -95,7 +94,6 @@ export function Header() {
                 <Box sx={{ flexGrow: 1 }} />
                 {isLoggedIn ?
                     <>
-                    <SearchFieldComponent/>
                     <ProfileComponent menuElements={menuElements}/>
                     </>
                     :
