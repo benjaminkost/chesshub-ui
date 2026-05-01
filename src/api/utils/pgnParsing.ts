@@ -3,11 +3,11 @@ import {v4 as uuidv4} from "uuid";
 import {defaultStartValue, GameState, GameStateNode} from "@/types/models/game.model";
 import {GameRequest} from "@benaurel/chesshub-core-client";
 
-export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>  { // TODO: written bei Gemini -> needs review
+export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>  {
     const chess = new Chess();
     const rootId = defaultStartValue;
 
-    // Initialer State mit Startaufstellung
+    // Initial state with starting position
     const allGameStates: Record<string, GameStateNode> = {
         [rootId]: {
             id: rootId,
@@ -21,29 +21,30 @@ export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>
     };
 
     let activeId = rootId;
-    // Der Stack speichert die ID, zu der wir nach einer geschlossenen Klammer zurückkehren
+    // The stack saves the id which we will return to when variation ends
     const parentStack: string[] = [];
 
-    // Wir extrahieren Züge, Kommentare und Klammern.
-    // RegEx: Züge (e4), Klammern (), oder Kommentare {}
-    const tokens = pgn.match(/\(|\)|\d+\.+|[a-zA-Z0-9+#=/-]+|\{[^}]*\}/g) || [];
+    // Extract moves, parentheses, comments
+    // RegEx: Moves (e4), Parentheses (), or Comments {}
+    const tokens = pgn.match(/\(|\)|\d+\.+|[a-zA-Z0-9+#=\/-]+|\{[^}]*}/g) || [];
 
     tokens.forEach(token => {
         if (token === "(") {
-            // Variante startet: Wir speichern den Vater des aktuellen Zuges auf dem Stack
+            // Variant starts: we save the parent of the current move on the stack
             const currentNode = allGameStates[activeId];
             if (currentNode.parentId) {
-                parentStack.push(currentNode.parentId);
+                activeId = currentNode.parentId
+                parentStack.push(currentNode.id);
             }
         } else if (token === ")") {
-            // Variante endet: Wir springen zurück zum letzten gespeicherten Vater
+            // Variant ends: we jump back to the parent
             const lastParent = parentStack.pop();
             if (lastParent) activeId = lastParent;
         } else if (token.startsWith("{") || /^\d+\.+$/.test(token)) {
-            // Kommentare oder Zugnummern (1., 1...) ignorieren wir für die Logik
+            // comments will be discarded for now
             return;
         } else {
-            // Es ist ein echter Zug (z.B. "e4" oder "Nf3")
+            // it is a move
             try {
                 const currentFen = allGameStates[activeId].fen;
                 chess.load(currentFen);
@@ -53,7 +54,7 @@ export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>
                     const newStateId = uuidv4();
                     const parentNode = allGameStates[activeId];
 
-                    // Neuen Knoten erstellen
+                    // Create new node
                     const newNode: GameStateNode = {
                         id: newStateId,
                         parentId: activeId,
@@ -64,12 +65,12 @@ export const parsePgnToGameState= (pgn: string, lastPosition=false):GameState =>
                         nextMoves: []
                     };
 
-                    // In Map speichern
+                    // Save in map
                     allGameStates[newStateId] = newNode;
-                    // Verknüpfung beim Vater eintragen
+                    // Add child node to parent node
                     allGameStates[activeId].nextMoves.push(newStateId);
 
-                    // Der neue Zug ist nun der aktive Pointer
+                    // The current node is now the active node
                     activeId = newStateId;
                 }
             } catch (e) {
@@ -100,10 +101,16 @@ export const parsePGN = (pgnString: string, teamId?: number): GameRequest => {
             const [_, key, value] = match;
             switch (key.toLowerCase()) {
                 case 'white':
-                    result.whitePlayerName = value;
+                    result.whitePlayer = {
+                        firstName: value.split(" ").at(0) || "",
+                        lastName: value.split(" ").at(-1) || ""
+                    };
                     break;
                 case 'black':
-                    result.blackPlayerName = value;
+                    result.blackPlayer = {
+                        firstName: value.split(" ").at(0) || "",
+                        lastName: value.split(" ").at(-1) || ""
+                    };
                     break;
                 case 'date':
                     result.date = value;
@@ -113,7 +120,6 @@ export const parsePGN = (pgnString: string, teamId?: number): GameRequest => {
                     break;
             }
         } else if (line.trim() !== '' && !line.startsWith('[')) {
-            // Alles, was kein Tag ist, gehört zu den Zügen
             result.moves += line.trim() + ' ';
         }
     });

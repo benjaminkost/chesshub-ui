@@ -82,5 +82,13 @@ export const handlers = [
 
     http.get("*/games/club/*", () => {
         return HttpResponse.json(dummyGamesTableData);
+    }),
+
+    http.get("*/games/:gameId", () => {
+        return HttpResponse.json(dummyGamesTableData[0]);
+    }),
+
+    http.post("*/games", () => {
+        return new HttpResponse(null, {status: 200});
     })
 ];

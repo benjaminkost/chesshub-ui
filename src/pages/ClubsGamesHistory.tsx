@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { gamesApi } from "@/api/clients/apiChesshubCore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { GameVm } from "@/types/viewmodels/game.vm";
-import { mapGameToVm } from "@/api/mappers/mapper";
+import {mapGameToVm} from "@/api/mappers/game.mapper";
 
 export default function ClubsGamesHistory() {
     const { clubId } = useParams<{ clubId: string }>();
