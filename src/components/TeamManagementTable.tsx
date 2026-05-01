@@ -31,7 +31,6 @@ const cssForMemberRole = (role: TeamRole) => {
 }
 
 export default function TeamManagementTable({team}: TeamManagementTableProps) {
-    debugger
     const [currentMembers, setCurrentMembers] = React.useState<TeamMember[]>(team.members ?? []);
     const [openSnackbar, setOpenSnackbar] = React.useState<boolean>(false);
     const navigate = useNavigate();
