@@ -12,15 +12,13 @@ import { produce } from "immer";
 import { ROUTES } from "@/routes";
 import { GameState, GameStateNode } from "@/types/models/game.model";
 import { GameMetaData } from "@/types/viewmodels/game.vm";
-import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
 import { parsePgnToGameState } from "@/api/utils/pgnParsing";
-import { mapGameVmToRequest } from "@/api/mappers/mapper";
 import {convertGameStateToPgn} from "@/api/utils/interactWithGameState";
 import { useAuth} from "@/context/AuthContext";
 import {mapUserResponseToUserVm} from "@/api/mappers/user.mapper";
+import {mapGameVmToRequest} from "@/api/mappers/game.mapper";
 
 export interface ChessBoardEditorProps {
-    allTeams: TeamSimpleVm[];
     initialMetaData?: GameMetaData,
     initialMoves?: string;
 }
@@ -37,13 +35,12 @@ const defaultMetaData:GameMetaData = {
 }
 
 export function ChessBoardEditor({ 
-    allTeams,
     initialMetaData=defaultMetaData,
     initialMoves = ""
 }: ChessBoardEditorProps) {
     const navigate = useNavigate();
     const { user } = useAuth();
-    
+
     const [chessApi, setChessApi] = useState<Api | null>(null);
     const [lastMove, setLastMove] = useState<Key[] | undefined>();
     const [gameState, setGameState] = useState<GameState>(parsePgnToGameState(initialMoves));
@@ -138,7 +135,6 @@ export function ChessBoardEditor({
                 <Grid size={2}></Grid>
                 <Grid size={8}>
                     <MetaDataForGameInput
-                        allTeams={allTeams}
                         gameMetaData={metaData}
                         onChangeGameMetaData={handleMetaChange}
                     />

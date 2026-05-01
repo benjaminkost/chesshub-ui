@@ -4,19 +4,17 @@ import React from "react";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { GameMetaData } from "@/types/viewmodels/game.vm";
-import { TeamSimpleVm } from "@/types/viewmodels/team.vm";
 import { useLookup } from "@/context/LookupContext";
 
 interface MetaDataForGameInputProps {
-    allTeams: TeamSimpleVm[];
     gameMetaData: GameMetaData;
     onChangeGameMetaData: (update: Partial<GameMetaData>) => void;
 }
 
 export function MetaDataForGameInput({
-    allTeams,
     gameMetaData,
     onChangeGameMetaData }: MetaDataForGameInputProps) {
+    const allTeams = Object.values(useLookup().teamsSimple);
     const allUsers = Object.values(useLookup().usersSimple);
 
     return (

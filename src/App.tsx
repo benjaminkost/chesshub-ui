@@ -19,23 +19,28 @@ import React from "react";
 import {ROUTES} from "@/routes";
 import {AuthProvider} from "@/context/AuthContext";
 
-import { clubsApi, usersApi } from "@/api/clients/apiChesshubCore";
+import {clubsApi, teamsApi, usersApi} from "@/api/clients/apiChesshubCore";
+import {mapTeamDtoToTeamSimple} from "@/api/mappers/team.mapper";
 
 export function App() {
 
-    const [lookup, setLookup] = React.useState<LookupData>({ usersSimple: {}, clubsSimple: {} });
+    const [lookup, setLookup] = React.useState<LookupData>({ usersSimple: {}, teamsSimple: {}, clubsSimple: {} });
 
     React.useEffect(() => {
         const fetchLookups = async () => {
             try {
-                const [clubsRes, usersRes] = await Promise.all([
+                const [clubsRes, teamsRes, usersRes] = await Promise.all([
                     clubsApi.getAllClubs(),
+                    teamsApi.getAllTeams(),
                     usersApi.getAllUsers()
                 ]);
 
                 setLookup({
                     clubsSimple: Object.fromEntries(
                         clubsRes.data.map(c => [c.id, { ...c }])
+                    ),
+                    teamsSimple: Object.fromEntries(
+                        teamsRes.data.map(t => [t.id, { ... mapTeamDtoToTeamSimple(t)}])
                     ),
                     usersSimple: Object.fromEntries(
                         usersRes.data.map(u => [u.id, { ...u }])
