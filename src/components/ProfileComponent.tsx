@@ -5,6 +5,7 @@ import React from "react";
 import {MenuElement} from "@/types/viewmodels/navigation.vm";
 import {authApi} from "@/api/clients/apiChesshubCore";
 import {ROUTES} from "@/routes";
+import {useNavigate} from "react-router-dom";
 
 export interface ProfileProps {
     menuElements?: MenuElement[];
@@ -13,12 +14,15 @@ export interface ProfileProps {
 export function ProfileComponent( {menuElements}:ProfileProps) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
+    const navigate = useNavigate();
 
     const handleSelect = async (selectedOption: string) => {
 
         if (selectedOption === ROUTES.HOME.func()){
             await authApi.logout();
             window.location.href = selectedOption;
+        } else {
+            navigate(selectedOption)
         }
 
         handleClose();
