@@ -73,16 +73,6 @@ export function Registration() {
                 alignItems: "center",
             }}
         >
-            <Box
-                sx={{
-                    backgroundColor: tokens.color.surfaceContainerLow,
-                    padding: 3,
-                    borderRadius: tokens.radius.xl,
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-            >
             <Paper sx={{
                 display: "flex",
                 mt: 4,
@@ -162,7 +152,6 @@ export function Registration() {
                     Bereits ein Konto? Hier einloggen
                 </Link>
             </Paper>
-            </Box>
         </Box>
     );
 }

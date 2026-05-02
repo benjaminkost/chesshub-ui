@@ -60,16 +60,6 @@ export function Login() {
                     alignItems: "center",
                 }}
             >
-                <Box
-                    sx={{
-                        backgroundColor: tokens.color.surfaceContainerLow,
-                        padding: 3,
-                        borderRadius: tokens.radius.xl,
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                    }}
-                >
                 <Paper
                     sx={{
                         display: "flex",
@@ -157,7 +147,6 @@ export function Login() {
                         Passwort zurücksetzen
                     </Link>
                 </Paper>
-                </Box>
             </Box>
         </>
     );
