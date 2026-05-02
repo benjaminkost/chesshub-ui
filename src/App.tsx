@@ -21,6 +21,8 @@ import {AuthProvider} from "@/context/AuthContext";
 
 import {clubsApi, teamsApi, usersApi} from "@/api/clients/apiChesshubCore";
 import {mapTeamDtoToTeamSimple} from "@/api/mappers/team.mapper";
+import {ThemeProvider} from "@mui/material";
+import {theme} from "@/styles/theme";
 
 export function App() {
 
@@ -56,30 +58,32 @@ export function App() {
     }, []);
 
     return (
-        <AuthProvider>
-          <LookupContext.Provider value={lookup}>
-              <BrowserRouter>
-                  <main>
-                      <Routes>
-                          <Route path={ROUTES.HOME.url} element={< Home />} />
-                          <Route path={ROUTES.AUTH.REGISTER.url} element={< RegistrationPage />} />
-                          <Route path={ROUTES.AUTH.LOGIN.url} element={< LoginPage />} />
-                          <Route path={ROUTES.USER.CLUB_AFFILIATION.url} element={< ClubAffiliation />} />
-                          <Route path={ROUTES.USER.SETTINGS.url} element={<ProfileSettingsPage/>} />
-                          <Route path={ROUTES.GAMES.LIST_USER.url} element={< OwnGamesHistory />} />
-                          <Route path={ROUTES.GAMES.LIST_CLUB.url} element={< ClubsGamesHistory />} />
-                          <Route path={ROUTES.GAMES.VIEW.url} element={< ViewSingleGame /> } />
-                          <Route path={ROUTES.GAMES.CREATE.url} element={< InputGame />} />
-                          <Route path={ROUTES.TEAMS.MANAGE.url} element={< TeamManagement />} />
-                          <Route path={ROUTES.CLUBS.MANAGE.url} element={< ClubManagement />} />
-                          <Route path={ROUTES.AUTH.REQUEST_NEW_PASSWORD.url} element={<RequestNewPasswordPage/>} />
-                          <Route path={ROUTES.IMPRESSUM.url} element={< Impressum />} />
-                          <Route path={ROUTES.ABOUT.url} element={< AboutChessHub />} />
-                          <Route path={ROUTES.BUG_REPORT.url} element={< BugReport />}/>
-                      </Routes>
-                  </main>
-              </BrowserRouter>
-          </LookupContext.Provider>
-        </AuthProvider>
+        <ThemeProvider theme={theme}>
+            <AuthProvider>
+              <LookupContext.Provider value={lookup}>
+                  <BrowserRouter>
+                      <main>
+                          <Routes>
+                              <Route path={ROUTES.HOME.url} element={< Home />} />
+                              <Route path={ROUTES.AUTH.REGISTER.url} element={< RegistrationPage />} />
+                              <Route path={ROUTES.AUTH.LOGIN.url} element={< LoginPage />} />
+                              <Route path={ROUTES.USER.CLUB_AFFILIATION.url} element={< ClubAffiliation />} />
+                              <Route path={ROUTES.USER.SETTINGS.url} element={<ProfileSettingsPage/>} />
+                              <Route path={ROUTES.GAMES.LIST_USER.url} element={< OwnGamesHistory />} />
+                              <Route path={ROUTES.GAMES.LIST_CLUB.url} element={< ClubsGamesHistory />} />
+                              <Route path={ROUTES.GAMES.VIEW.url} element={< ViewSingleGame /> } />
+                              <Route path={ROUTES.GAMES.CREATE.url} element={< InputGame />} />
+                              <Route path={ROUTES.TEAMS.MANAGE.url} element={< TeamManagement />} />
+                              <Route path={ROUTES.CLUBS.MANAGE.url} element={< ClubManagement />} />
+                              <Route path={ROUTES.AUTH.REQUEST_NEW_PASSWORD.url} element={<RequestNewPasswordPage/>} />
+                              <Route path={ROUTES.IMPRESSUM.url} element={< Impressum />} />
+                              <Route path={ROUTES.ABOUT.url} element={< AboutChessHub />} />
+                              <Route path={ROUTES.BUG_REPORT.url} element={< BugReport />}/>
+                          </Routes>
+                      </main>
+                  </BrowserRouter>
+              </LookupContext.Provider>
+            </AuthProvider>
+        </ThemeProvider>
       )
 }
