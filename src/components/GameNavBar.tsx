@@ -4,6 +4,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import LastPage from '@mui/icons-material/LastPage';
 import React from "react";
+import {tokens} from "@/styles/theme";
 
 interface GameNavBar {
     onMoveBack: () => void,
@@ -47,20 +48,21 @@ export default function GameNavBar({onForwardToEnd, onMoveForward, onMoveBack, o
                 justifyContent: "center",
                 position: "sticky",
                 bottom: 0,
-                backgroundColor: "black",
-                borderTop: "1px solid rgba(255,255,255,0.15)"
+                backgroundColor: tokens.color.surfaceContainerLow,
+                borderTop: `1px solid rgba(69,70,77,0.15)`,
+                borderRadius: `0 0 ${tokens.radius.md} ${tokens.radius.md}`,
             }}
         >
-            <IconButton sx={{flex: 1, color: "white"}} onClick={onBackToStart}>
+            <IconButton sx={{ flex: 1, color: tokens.color.onSurfaceVariant, transition: `color ${tokens.transition.base}`, "&:hover": { color: tokens.color.primary } }} onClick={onBackToStart}>
                 <FirstPageIcon />
             </IconButton>
-            <IconButton sx={{flex: 1, color: "white"}} onClick={onMoveBack}>
+            <IconButton sx={{ flex: 1, color: tokens.color.onSurfaceVariant, transition: `color ${tokens.transition.base}`, "&:hover": { color: tokens.color.primary } }} onClick={onMoveBack}>
                 <ArrowBackIosIcon/>
             </IconButton>
-            <IconButton sx={{flex: 1, color: "white"}} onClick={onMoveForward}>
+            <IconButton sx={{ flex: 1, color: tokens.color.onSurfaceVariant, transition: `color ${tokens.transition.base}`, "&:hover": { color: tokens.color.primary } }} onClick={onMoveForward}>
                 <ArrowForwardIosIcon/>
             </IconButton>
-            <IconButton sx={{flex: 1, color: "white"}} onClick={onForwardToEnd}>
+            <IconButton sx={{ flex: 1, color: tokens.color.onSurfaceVariant, transition: `color ${tokens.transition.base}`, "&:hover": { color: tokens.color.primary } }} onClick={onForwardToEnd}>
                 <LastPage />
             </IconButton>
         </Box>

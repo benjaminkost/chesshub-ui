@@ -1,6 +1,7 @@
 import {Box, Link} from "@mui/material";
 import "@/styles/App.css";
 import {ROUTES} from "@/routes";
+import {tokens} from "@/styles/theme";
 
 interface MediaAttributes {
     label: string,
@@ -26,24 +27,27 @@ export default function Footer({media=defaultMedia}: FooterProps) {
                     sx={{
                         display: "flex",
                         width: "100%",
-                        top: 5,
                         height: 80,
                         alignItems: "center",
                         justifyContent: "center",
-                        boxShadow: "0 -5px 10px rgb(0,0,0,0.1)",
-                        backgroundColor: "#bdbdbd",
-                        color: "#424242",
-                        gap: 4
-                }}
+                        backgroundColor: tokens.color.surfaceContainerLow,
+                        color: tokens.color.onSurfaceVariant,
+                        gap: 4,
+                        borderTop: `1px solid rgba(69,70,77,0.15)`,
+                    }}
                 >
                     {
                         media.map((elem) => (
                             <Link key={elem.label} sx={{
-                                fontWeight: "bold",
+                                fontFamily: tokens.font.body,
+                                fontSize: "0.875rem",
+                                letterSpacing: "0.018em",
+                                fontWeight: 500,
                                 cursor: "pointer",
-                                color: "white",
+                                color: tokens.color.onSurfaceVariant,
                                 textDecoration: "none",
-                                "&:hover": { color: "primary.main" }
+                                transition: `color ${tokens.transition.base}`,
+                                "&:hover": { color: tokens.color.primary }
                             }}
                                   href={elem.path}
                             >

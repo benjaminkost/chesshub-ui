@@ -1,9 +1,10 @@
 import {Alert, Box, Button, Snackbar, SnackbarCloseReason, TextField, Typography} from "@mui/material";
 import React from "react";
-import { User } from "@benaurel/chesshub-core-client";
+import { UserResponse } from "@benaurel/chesshub-core-client";
+import {tokens} from "@/styles/theme";
 
 interface ProfileSettingsProps {
-    user: User
+    user: UserResponse
 }
 
 export function ProfileSettings({user}: ProfileSettingsProps) {
@@ -39,7 +40,14 @@ export function ProfileSettings({user}: ProfileSettingsProps) {
                 <TextInputRow describingText={"Lichess Benutzername"} currentValue={lichessUsername} setCurrentValue={setLichessUserName} />
                 <TextInputRow describingText={"Chess.com Benutzername"} currentValue={chesscomUsername} setCurrentValue={setChesscomUserName} />
             </Box>
-            <Button sx={{ mt: 2, ml: 3, backgroundColor: "lightgray", color: "white" }} onClick={handleNewPassword}>
+            <Button
+                variant="contained"
+                sx={{
+                    mt: 2,
+                    ml: 3,
+                }}
+                onClick={handleNewPassword}
+            >
                 Passwort zurücksetzen
             </Button>
         </>
@@ -75,11 +83,22 @@ function TextInputRow({describingText, currentValue, setCurrentValue}:TextInputR
 
     return (
         <Box sx={{ m: 1, display: "flex", flexDirection: "row", gap: 2 }}>
-            <Typography sx={{flex: 1, fontWeight: "bold"}}>{describingText}</Typography>
-            <TextField sx={{flex: 2}} value={textValue} onChange={handleChange} />
-            <Box sx={{width: 20, flexGrow: 1, m: 1}}>
+            <Typography sx={{
+                flex: 1,
+                fontWeight: "bold",
+                color: tokens.color.onSurfaceVariant,
+                fontSize: "0.75rem",
+                letterSpacing: "0.05em",
+                textTransform: "uppercase",
+                alignSelf: "center",
+            }}>{describingText}</Typography>
+            <TextField sx={{ flex: 2 }} value={textValue} onChange={handleChange} />
+            <Box sx={{ width: 20, flexGrow: 1, m: 1 }}>
                 {showButton && (
-                    <Button onClick={handleClick} sx={{ backgroundColor: "gray", color: "white" }}>
+                    <Button
+                        variant="contained"
+                        onClick={handleClick}
+                    >
                         Aktualisieren
                     </Button>
                 )}

@@ -8,25 +8,27 @@ import {ROUTES} from "@/routes";
 import TeamMemberRoleManager from "@/components/TeamMemberRoleManager";
 import {mapUserSimpleVmToTeamMember} from "@/api/mappers/user.mapper";
 import {TeamVm} from "@/types/viewmodels/team.vm";
+import {tokens} from "@/styles/theme";
 
 interface TeamManagementTableProps {
     team: TeamVm;
 }
 
-const cssForMemberRole = (role: TeamRole) => {
+/** Role badge colours mapped to design tokens */
+const cssForMemberRole = (role: TeamRole): { backgroundColor: string; color: string } => {
     switch (role) {
         case TeamRole.DeputyAdmin:
-            return { backgroundColor: "red", color: "white" };
+            return { backgroundColor: tokens.color.error, color: tokens.color.onError };
         case TeamRole.HeadCoach:
-            return { backgroundColor: "orange", color: "white" };
+            return { backgroundColor: tokens.color.secondary, color: tokens.color.onSecondary };
         case TeamRole.Captain:
-            return { backgroundColor: "purple", color: "white" };
+            return { backgroundColor: tokens.color.primaryContainer, color: tokens.color.onPrimaryContainer };
         case TeamRole.Player:
-            return { backgroundColor: "blue", color: "white" };
+            return { backgroundColor: tokens.color.primary, color: tokens.color.onPrimary };
         case TeamRole.Reserve:
-            return { backgroundColor: "lightblue", color: "white" };
+            return { backgroundColor: tokens.color.surfaceVariant, color: tokens.color.onSurface };
         default:
-            return { backgroundColor: "black", color: "white" };
+            return { backgroundColor: tokens.color.surfaceContainerHigh, color: tokens.color.onSurface };
     }
 }
 
@@ -89,32 +91,58 @@ export default function TeamManagementTable({team}: TeamManagementTableProps) {
                 onClose={handleClose}
                 anchorOrigin={{ vertical: "top", horizontal: "right" }}
             >
-                <Alert severity={"warning"} sx={{ border: "solid 1px", borderColor: "orange", backgroundColor: 'hsl(39, 100%, 60%)', color: "white" }}>
+                <Alert severity={"warning"} sx={{
+                    backgroundColor: tokens.color.surfaceContainerHigh,
+                    color: tokens.color.secondary,
+                    border: `1px solid ${tokens.color.secondary}`,
+                }}>
                     Es muss mindestens einen Admin geben
                 </Alert>
             </Snackbar>
             <Paper
                 sx={{
                     m: 2, p: 2, width: "fit-content", display: "flex", flexDirection: "row", gap: 2,
-                    backgroundColor: "gray", color: "white"
+                    backgroundColor: tokens.color.surfaceContainerHigh,
+                    color: tokens.color.onSurface,
+                    borderRadius: tokens.radius.lg,
+                    boxShadow: tokens.shadow.cardLift,
                 }}
             >
                 <Grid container>
-                    <Grid size={6}><Typography sx={{fontWeight: "bold"}}>Mannschafts-ID:</Typography></Grid>
-                    <Grid size={6}><Typography>{team.id}</Typography></Grid>
-                    <Grid size={6}><Typography sx={{fontWeight: "bold"}}>Mannschaftsname:</Typography></Grid>
-                    <Grid size={6}><Typography>{team.name}</Typography></Grid>
-                    <Grid size={6}><Typography sx={{fontWeight: "bold"}}>Verein:</Typography></Grid>
+                    <Grid size={6}><Typography sx={{ fontWeight: "bold", color: tokens.color.onSurfaceVariant, fontSize: "0.75rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Mannschafts-ID:</Typography></Grid>
+                    <Grid size={6}><Typography sx={{ color: tokens.color.onSurface }}>{team.id}</Typography></Grid>
+                    <Grid size={6}><Typography sx={{ fontWeight: "bold", color: tokens.color.onSurfaceVariant, fontSize: "0.75rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Mannschaftsname:</Typography></Grid>
+                    <Grid size={6}><Typography sx={{ color: tokens.color.onSurface }}>{team.name}</Typography></Grid>
+                    <Grid size={6}><Typography sx={{ fontWeight: "bold", color: tokens.color.onSurfaceVariant, fontSize: "0.75rem", letterSpacing: "0.05em", textTransform: "uppercase" }}>Verein:</Typography></Grid>
                     <Grid size={6} onClick={() => navigate(ROUTES.CLUBS.MANAGE.func(team.clubId!))}
-                          sx={{"&:hover": {color: "blue", cursor: "pointer"}}}>
+                          sx={{
+                              color: tokens.color.primary,
+                              transition: `color ${tokens.transition.base}`,
+                              "&:hover": { color: tokens.color.onPrimaryContainer, cursor: "pointer" },
+                          }}>
                         <Typography>{team.clubName}</Typography>
                     </Grid>
                 </Grid>
             </Paper>
-            <Paper sx={{ m: 2 }}>
+            <Paper sx={{ m: 2, backgroundColor: tokens.color.surfaceContainer }}>
                 <DataGrid
                     autoHeight
-                    sx={{ "& .MuiDataGrid-columnHeader": { backgroundColor: "gray", color: "white" } }}
+                    sx={{
+                        color: tokens.color.onSurface,
+                        border: "none",
+                        "& .MuiDataGrid-columnHeader": {
+                            backgroundColor: tokens.color.surfaceContainerLow,
+                            color: tokens.color.onSurfaceVariant,
+                            fontFamily: tokens.font.body,
+                            letterSpacing: "0.05em",
+                            fontSize: "0.75rem",
+                            textTransform: "uppercase",
+                        },
+                        "& .MuiDataGrid-row:hover": { backgroundColor: tokens.color.surfaceBright },
+                        "& .MuiDataGrid-cell": { borderColor: `rgba(69,70,77,0.15)` },
+                        "& .MuiDataGrid-footerContainer": { backgroundColor: tokens.color.surfaceContainerLow, borderColor: `rgba(69,70,77,0.15)` },
+                        "& .MuiTablePagination-root": { color: tokens.color.onSurfaceVariant },
+                    }}
                     columns={columns}
                     rows={currentMembers}
                     slots={{

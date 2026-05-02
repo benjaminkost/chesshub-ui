@@ -4,12 +4,22 @@ import { Autocomplete, Box, Button, ClickAwayListener, TextField } from "@mui/ma
 import AddIcon from "@mui/icons-material/Add";
 import { ClubSimple, TeamMember, UserSimple } from "@benaurel/chesshub-core-client";
 import {useLookup} from "@/context/LookupContext";
+import {tokens} from "@/styles/theme";
 
 export interface AddClubToAffiliationProps {
     allClubs: ClubSimple[];
     clubsOfUser: (ClubSimple & { status?: any })[];
     addClubToUser: (club: ClubSimple | null) => void;
 }
+
+const addButtonSx = {
+    background: tokens.gradient.primaryCta,
+    color: tokens.color.onPrimary,
+    borderRadius: tokens.radius.md,
+    letterSpacing: "0.05em",
+    mx: 1,
+    "&:hover": { filter: "brightness(1.1)" },
+};
 
 export function AddClubToAffiliation({ allClubs, clubsOfUser, addClubToUser }: AddClubToAffiliationProps) {
     const [clicked, setClicked] = React.useState(false);
@@ -18,13 +28,13 @@ export function AddClubToAffiliation({ allClubs, clubsOfUser, addClubToUser }: A
     const [selectedClub, setSelectedClub] = React.useState<ClubSimple | null>(null);
 
     return (
-        <GridFooterContainer>
+        <GridFooterContainer sx={{ backgroundColor: tokens.color.surfaceContainerLow }}>
             <Box
                 sx={{
                     p: 1,
                     display: "flex",
                     justifyContent: "center",
-                    width: "100%"
+                    width: "100%",
                 }}
             >
                 {clicked ? (
@@ -44,12 +54,7 @@ export function AddClubToAffiliation({ allClubs, clubsOfUser, addClubToUser }: A
                             }}
                         />
                         <Button
-                            sx={{
-                                backgroundColor: "lightgray",
-                                color: "white",
-                                mr: 1,
-                                ml: 1
-                            }}
+                            sx={addButtonSx}
                             onClick={() => selectedClub && addClubToUser(selectedClub)}
                         >
                             Anfragen
@@ -59,7 +64,7 @@ export function AddClubToAffiliation({ allClubs, clubsOfUser, addClubToUser }: A
                     <Button
                         startIcon={<AddIcon />}
                         fullWidth
-                        sx={{ backgroundColor: "lightgray", color: "white" }}
+                        sx={addButtonSx}
                         onClick={() => setClicked(true)}
                     />
                 )}
@@ -94,13 +99,13 @@ export function AddUserToTeamSearchBar({membersInTeam, addUserToTeam }: AddUserT
     };
 
     return (
-        <GridFooterContainer>
+        <GridFooterContainer sx={{ backgroundColor: tokens.color.surfaceContainerLow }}>
             <Box
                 sx={{
                     p: 1,
                     display: "flex",
                     justifyContent: "center",
-                    width: "100%"
+                    width: "100%",
                 }}
             >
                 {open ? (
@@ -122,12 +127,7 @@ export function AddUserToTeamSearchBar({membersInTeam, addUserToTeam }: AddUserT
                                     }}
                                 />
                                 <Button
-                                    sx={{
-                                        backgroundColor: "lightgray",
-                                        color: "white",
-                                        mr: 1,
-                                        ml: 1
-                                    }}
+                                    sx={addButtonSx}
                                     onClick={handleOnClick}
                                 >
                                     Hinzufügen
@@ -139,7 +139,7 @@ export function AddUserToTeamSearchBar({membersInTeam, addUserToTeam }: AddUserT
                     <Button
                         startIcon={<AddIcon />}
                         fullWidth
-                        sx={{ backgroundColor: "lightgray", color: "white" }}
+                        sx={addButtonSx}
                         onClick={() => setOpen(true)}
                     />
                 )}

@@ -1,10 +1,11 @@
-import React, {useState} from "react";
-import {Box, Paper, TextField, Typography, Button, Link, Alert} from "@mui/material";
-import {useNavigate} from "react-router-dom";
-import {authApi} from "@/api/clients/apiChesshubCore";
-import {useAuth} from "@/context/AuthContext";
+import React, { useState } from "react";
+import { Box, Paper, TextField, Typography, Button, Link, Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { authApi } from "@/api/clients/apiChesshubCore";
+import { useAuth } from "@/context/AuthContext";
 import { LoginRequest } from "@benaurel/chesshub-core-client";
-import {ROUTES} from "@/routes";
+import { ROUTES } from "@/routes";
+import { tokens } from "@/styles/theme";
 
 
 export function Login() {
@@ -14,11 +15,11 @@ export function Login() {
     const navigate = useNavigate();
     const { login: authLogin } = useAuth();
 
-    const emailOrUsernameInput = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const emailOrUsernameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setEmailOrUsername(event.target.value);
     };
 
-    const passwordInput = (event:React.ChangeEvent<HTMLInputElement>) => {
+    const passwordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPassword(event.target.value);
     };
 
@@ -30,7 +31,7 @@ export function Login() {
                 password: password
             };
             const response = await authApi.login(loginRequest);
-            
+
             if (response.data) {
                 authLogin(response.data as any);
                 navigate(ROUTES.GAMES.CREATE.func());
@@ -51,14 +52,24 @@ export function Login() {
             <Box sx={{
                 flexGrow: 1,
                 minHeight: "14vh"
-            }}/>
+            }} />
             <Box
                 sx={{
                     display: "flex",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
                 }}
             >
+                <Box
+                    sx={{
+                        backgroundColor: tokens.color.surfaceContainerLow,
+                        padding: 3,
+                        borderRadius: tokens.radius.xl,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
                 <Paper
                     sx={{
                         display: "flex",
@@ -69,15 +80,18 @@ export function Login() {
                         maxWidth: "sm",
                         maxHeight: "sm",
                         mb: 3,
-                        backgroundColor: "lightgray",
-                        padding: 5
+                        backgroundColor: tokens.color.surfaceContainerHighest,
+                        padding: 5,
+                        borderRadius: tokens.radius.lg,
+                        boxShadow: tokens.shadow.cardLift,
                     }}
                 >
                     <Typography variant={"h5"}
-                                sx={{
-                                    mb: 3,
-                                    color: "#424242"
-                                }}
+                        sx={{
+                            mb: 3,
+                            color: tokens.color.onSurface,
+                            fontFamily: tokens.font.display,
+                        }}
                     >
                         Login
                     </Typography>
@@ -94,9 +108,6 @@ export function Login() {
                         required
                         value={emailOrUsername}
                         onChange={emailOrUsernameInput}
-                        sx={{
-                            backgroundColor: "white"
-                        }}
                     />
                     <TextField
                         label={"Passwort"}
@@ -104,19 +115,17 @@ export function Login() {
                         required
                         value={password}
                         onChange={passwordInput}
-                        sx={{
-                            backgroundColor: "white"
-                        }}
                     />
                     <Button
+                        variant="contained"
                         onClick={handleLogin}
                         disabled={disabled}
                         sx={{
-                            backgroundColor: disabled ? "#cfcfcf" : "gray",
-                            color: "white",
+                            background: disabled ? tokens.color.surfaceContainerHighest : tokens.gradient.primaryCta,
+                            color: disabled ? tokens.color.onSurfaceVariant : tokens.color.onPrimary,
                             "&:hover": {
-                                backgroundColor: disabled ? "#cfcfcf" : "#616161"
-                            }
+                                filter: disabled ? "none" : "brightness(1.1)",
+                            },
                         }}
                     >
                         Login
@@ -124,8 +133,12 @@ export function Login() {
                     <Link
                         href={"/auth/register"}
                         sx={{
-                            color: "gray",
-                            textAlign: "center"
+                            color: tokens.color.primary,
+                            textAlign: "center",
+                            textDecoration: "none",
+                            fontSize: "0.875rem",
+                            transition: `color ${tokens.transition.base}`,
+                            "&:hover": { color: tokens.color.onPrimaryContainer },
                         }}
                     >
                         Registrier dich
@@ -133,13 +146,18 @@ export function Login() {
                     <Link
                         href={"/request-new-password"}
                         sx={{
-                            color: "gray",
-                            textAlign: "center"
+                            color: tokens.color.onSurfaceVariant,
+                            textAlign: "center",
+                            textDecoration: "none",
+                            fontSize: "0.875rem",
+                            transition: `color ${tokens.transition.base}`,
+                            "&:hover": { color: tokens.color.onSurface },
                         }}
                     >
                         Passwort zurücksetzen
                     </Link>
                 </Paper>
+                </Box>
             </Box>
         </>
     );

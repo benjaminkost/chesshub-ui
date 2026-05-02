@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {HomeIcon} from "@/components/HomeIcon";
 import {ROUTES} from "@/routes";
 import {useAuth} from "@/context/AuthContext";
-import {NavItem} from "@/types/viewmodels/navigation.vm";
+import {MenuElement, NavItem} from "@/types/viewmodels/navigation.vm";
 import AddIcon from "@mui/icons-material/Add";
 import HistoryIcon from "@mui/icons-material/History";
 import Diversity3Icon from "@mui/icons-material/Diversity3";
@@ -14,20 +14,15 @@ import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import DescriptionIcon from "@mui/icons-material/Description";
 import React from "react";
 import {AppRole} from "@/types/common/roles";
+import {tokens} from "@/styles/theme";
 
 export function Header() {
     const { user, isLoggedIn } = useAuth();
     const navigate = useNavigate();
-
-    const menuElements = [
-        { label: "Logout", path: ROUTES.HOME.func()}
-    ];
-
-    if (isLoggedIn && user) {
-        menuElements.push(
-            {label: "Mein Account", path: ROUTES.USER.SETTINGS.func(user.id)},
-        )
-    }
+    const menuElements: MenuElement[] = (isLoggedIn && user) ? [
+        { label: "Mein Account", path: ROUTES.USER.SETTINGS.func(user.id) },
+        { label: "Logout", path: ROUTES.HOME.func() }
+    ] : [];
 
     const drawerNavItems: NavItem[] = [
         {label: "Partie erstellen", path: ROUTES.GAMES.CREATE.func(), icon: <AddIcon/>}
@@ -77,9 +72,11 @@ export function Header() {
     return (
         <AppBar position={"sticky"}
                 sx={{
-                    backgroundColor: "#bdbdbd",
-                    color: "#424242",
-                    height: 80
+                    backgroundColor: tokens.color.surfaceContainerLow,
+                    color: tokens.color.onSurface,
+                    height: 80,
+                    boxShadow: "none",
+                    borderBottom: `1px solid rgba(69,70,77,0.15)`,
                 }}
         >
             <Toolbar
@@ -99,7 +96,14 @@ export function Header() {
                     :
                     <Button
                         variant={"outlined"}
-                        color={"inherit"}
+                        sx={{
+                            color: tokens.color.primary,
+                            borderColor: tokens.color.primary,
+                            "&:hover": {
+                                borderColor: tokens.color.onPrimaryContainer,
+                                backgroundColor: `${tokens.color.primaryContainer}33`,
+                            },
+                        }}
                         onClick={loginButton}
                     >
                         Login

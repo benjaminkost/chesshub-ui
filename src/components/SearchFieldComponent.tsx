@@ -1,4 +1,6 @@
+import React from "react";
 import {Box, TextField} from "@mui/material";
+import {tokens} from "@/styles/theme";
 
 function SearchFieldComponent() {
     return (
@@ -17,10 +19,11 @@ function SearchFieldComponent() {
                     top: 10,
                     alignItems: "center",
                     mb: 2,
-                    '.MuiFormLabel-root': {color: "inherit" },
-                    '.MuiInputBase-input': { color: 'inherit' },
-                    '.MuiInput-underline:before': { borderBottomColor: 'rgba(255,255,255,0.7)' },
-                    '.MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottomColor: 'white' },
+                    ".MuiFormLabel-root": { color: tokens.color.onSurfaceVariant },
+                    ".MuiInputBase-input": { color: tokens.color.onSurface },
+                    ".MuiInput-underline:before": { borderBottomColor: tokens.color.outlineVariant },
+                    ".MuiInput-underline:hover:not(.Mui-disabled):before": { borderBottomColor: tokens.color.outline },
+                    ".MuiInput-underline:after": { borderBottomColor: tokens.color.primary },
                 }}
             />
         </Box>

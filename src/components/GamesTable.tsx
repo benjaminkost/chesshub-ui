@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { ROUTES } from "@/routes";
 import { GameVm } from "@/types/viewmodels/game.vm";
+import {tokens} from "@/styles/theme";
 
 interface GameTableProps {
     rows: GameVm[];
@@ -48,12 +49,26 @@ export function GamesTable({ rows, ownGamesOrTeamGames }: GameTableProps) {
     }
 
     return (
-        <Paper sx={{ m: 3, maxWidth: "100%" }}>
+        <Paper sx={{ m: 3, maxWidth: "100%", backgroundColor: tokens.color.surfaceContainer }}>
             <DataGrid
                 autoHeight
                 sx={{
-                    '& .MuiDataGrid-columnHeader': { backgroundColor: 'gray', color: "white" },
-                    '& .MuiDataGrid-filler': { backgroundColor: 'gray!important' }
+                    color: tokens.color.onSurface,
+                    border: "none",
+                    "& .MuiDataGrid-columnHeader": {
+                        backgroundColor: tokens.color.surfaceContainerLow,
+                        color: tokens.color.onSurfaceVariant,
+                        fontFamily: tokens.font.body,
+                        letterSpacing: "0.05em",
+                        fontSize: "0.75rem",
+                        textTransform: "uppercase",
+                    },
+                    "& .MuiDataGrid-filler": { backgroundColor: `${tokens.color.surfaceContainerLow} !important` },
+                    "& .MuiDataGrid-row:hover": { backgroundColor: tokens.color.surfaceBright },
+                    "& .MuiDataGrid-cell": { borderColor: `rgba(69,70,77,0.15)` },
+                    "& .MuiDataGrid-footerContainer": { backgroundColor: tokens.color.surfaceContainerLow, borderColor: `rgba(69,70,77,0.15)` },
+                    "& .MuiTablePagination-root": { color: tokens.color.onSurfaceVariant },
+                    "& .MuiDataGrid-columnSeparator": { color: `rgba(69,70,77,0.15)` },
                 }}
                 columnVisibilityModel={columnVisibilityModel}
                 columns={columns}
