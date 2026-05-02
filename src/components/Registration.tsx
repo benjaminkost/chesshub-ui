@@ -1,8 +1,9 @@
-import React, {useState} from "react";
-import {Box, Button, Link, Paper, TextField, Typography, Alert } from "@mui/material";
-import {useNavigate} from "react-router-dom";
-import {authApi} from "@/api/clients/apiChesshubCore";
+import React, { useState } from "react";
+import { Box, Button, Link, Paper, TextField, Typography, Alert } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { authApi } from "@/api/clients/apiChesshubCore";
 import { RegisterRequest } from "@benaurel/chesshub-core-client";
+import { tokens } from "@/styles/theme";
 
 export function Registration() {
     const [email, setEmail] = useState("");
@@ -49,7 +50,7 @@ export function Registration() {
                 lastName,
                 phoneNumber: phone
             };
-            
+
             await authApi.register(registerRequest);
             setUserRegistered(true);
             setTimeout(() => {
@@ -69,9 +70,19 @@ export function Registration() {
             sx={{
                 display: "flex",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
             }}
         >
+            <Box
+                sx={{
+                    backgroundColor: tokens.color.surfaceContainerLow,
+                    padding: 3,
+                    borderRadius: tokens.radius.xl,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
             <Paper sx={{
                 display: "flex",
                 mt: 4,
@@ -80,10 +91,16 @@ export function Registration() {
                 gap: 2,
                 maxWidth: "sm",
                 mb: 3,
-                backgroundColor: "lightgray",
-                padding: 5
+                backgroundColor: tokens.color.surfaceContainerHighest,
+                padding: 5,
+                borderRadius: tokens.radius.lg,
+                boxShadow: tokens.shadow.cardLift,
             }}>
-                <Typography variant={"h5"} sx={{ color: "#424242", mb: 2 }}>
+                <Typography variant={"h5"} sx={{
+                    color: tokens.color.onSurface,
+                    fontFamily: tokens.font.display,
+                    mb: 2,
+                }}>
                     Registrierung
                 </Typography>
 
@@ -99,23 +116,8 @@ export function Registration() {
                     </Alert>
                 )}
 
-                <TextField
-                    label={"E-Mail Adresse"}
-                    type="email"
-                    value={email}
-                    onChange={handleEmailChange}
-                    required
-                    sx={{ backgroundColor: "white" }}
-                />
-
-                <TextField
-                    label={"Passwort"}
-                    type="password"
-                    value={password}
-                    onChange={handlePasswordChange}
-                    required
-                    sx={{ backgroundColor: "white" }}
-                />
+                <TextField label={"E-Mail Adresse"} type="email" value={email} onChange={handleEmailChange} required />
+                <TextField label={"Passwort"} type="password" value={password} onChange={handlePasswordChange} required />
                 <TextField
                     label={"Passwort bestätigen"}
                     type="password"
@@ -124,59 +126,43 @@ export function Registration() {
                     error={!passwordsMatch}
                     helperText={!passwordsMatch ? "Passwörter stimmen nicht überein" : ""}
                     required
-                    sx={{ backgroundColor: "white" }}
                 />
-                <TextField
-                    label={"Benutzername"}
-                    value={username}
-                    onChange={handleUsernameChange}
-                    required
-                    sx={{ backgroundColor: "white" }}
-                />
-                <TextField
-                    label={"Vorname"}
-                    value={firstName}
-                    onChange={handleFirstNameChange}
-                    sx={{ backgroundColor: "white" }}
-                />
-                <TextField
-                    label={"Nachname"}
-                    value={lastName}
-                    onChange={handleLastNameChange}
-                    sx={{ backgroundColor: "white" }}
-                />
-                <TextField
-                    label={"Telefonnummer"}
-                    value={phone}
-                    onChange={handlePhoneChange}
-                    sx={{ backgroundColor: "white" }}
-                />
-                
+                <TextField label={"Benutzername"} value={username} onChange={handleUsernameChange} required />
+                <TextField label={"Vorname"} value={firstName} onChange={handleFirstNameChange} />
+                <TextField label={"Nachname"} value={lastName} onChange={handleLastNameChange} />
+                <TextField label={"Telefonnummer"} value={phone} onChange={handlePhoneChange} />
+
                 <Button
                     onClick={registerUser}
                     disabled={!isFormValid || userRegistered}
+                    variant="contained"
                     sx={{
-                        color: "white",
-                        backgroundColor: isFormValid ? "gray" : "#cfcfcf",
+                        background: isFormValid && !userRegistered ? tokens.gradient.primaryCta : tokens.color.surfaceContainerHighest,
+                        color: isFormValid && !userRegistered ? tokens.color.onPrimary : tokens.color.onSurfaceVariant,
                         "&:hover": {
-                            backgroundColor: isFormValid ? "#616161" : "#cfcfcf"
-                        }
+                            filter: isFormValid ? "brightness(1.1)" : "none",
+                        },
                     }}
                 >
                     Registrieren
                 </Button>
-                
+
                 <Link
                     href={"/auth/login"}
                     sx={{
                         mt: 1,
-                        color: "gray",
-                        textAlign: "center"
+                        color: tokens.color.primary,
+                        textAlign: "center",
+                        textDecoration: "none",
+                        fontSize: "0.875rem",
+                        transition: `color ${tokens.transition.base}`,
+                        "&:hover": { color: tokens.color.onPrimaryContainer },
                     }}
                 >
                     Bereits ein Konto? Hier einloggen
                 </Link>
             </Paper>
+            </Box>
         </Box>
     );
 }

@@ -3,6 +3,7 @@ import {DataGrid, GridColDef} from "@mui/x-data-grid";
 import React from "react";
 import {AddClubToAffiliation} from "@/components/TableSearchAndAddButton";
 import { ClubAffiliation, ClubMemberStatus, ClubSimple } from "@benaurel/chesshub-core-client";
+import {tokens} from "@/styles/theme";
 
 interface ClubsTableProps {
     allClubs: ClubSimple[];
@@ -24,6 +25,16 @@ const parseMemberStatus = (memberStatus: ClubMemberStatus): string => {
     }
 };
 
+const getMemberStatusColor = (status: ClubMemberStatus): string => {
+    switch (status) {
+        case ClubMemberStatus.Applicant: return tokens.color.secondary;     // cool slate
+        case ClubMemberStatus.Member:    return tokens.color.tertiary;       // emerald — "correct" / approved
+        case ClubMemberStatus.FormerMember: return tokens.color.onSurfaceVariant;
+        case ClubMemberStatus.Banned:    return tokens.color.error;
+        default: return tokens.color.onSurfaceVariant;
+    }
+};
+
 const clubsTableColumns: GridColDef[] = [
     {field: "id", headerName: "ID", resizable: false, flex: 1},
     {field: "name", headerName: "Vereinsname", resizable: false, flex: 2},
@@ -31,27 +42,9 @@ const clubsTableColumns: GridColDef[] = [
     {field: "status", headerName: "Mitgliedsstatus", resizable: false, flex: 1,
         renderCell: (params) => {
         const status = params.value as ClubMemberStatus;
-        let textColor = "black";
-
-        switch (status) {
-            case ClubMemberStatus.Applicant:
-                textColor = "orange";
-                break;
-            case ClubMemberStatus.Member:
-                textColor = "green";
-                break;
-            case ClubMemberStatus.FormerMember:
-                textColor = "purple";
-                break;
-            case ClubMemberStatus.Banned:
-                textColor = "red";
-                break;
-            default:
-                break;
-        }
 
         return (
-            <Box sx={{color: textColor}}>
+            <Box sx={{ color: getMemberStatusColor(status), fontWeight: 500 }}>
                 {parseMemberStatus(status)}
             </Box>
         );
@@ -78,14 +71,24 @@ export default function ClubsTable({allClubs, clubsOfUser}: ClubsTableProps) {
     };
 
     return (
-        <Paper sx={{ m: 2 }}>
+        <Paper sx={{ m: 2, backgroundColor: tokens.color.surfaceContainer }}>
             <DataGrid
                 autoHeight
                 sx={{
+                    color: tokens.color.onSurface,
+                    border: "none",
                     "& .MuiDataGrid-columnHeader": {
-                        backgroundColor: "gray",
-                        color: "white"
-                    }
+                        backgroundColor: tokens.color.surfaceContainerLow,
+                        color: tokens.color.onSurfaceVariant,
+                        fontFamily: tokens.font.body,
+                        letterSpacing: "0.05em",
+                        fontSize: "0.75rem",
+                        textTransform: "uppercase",
+                    },
+                    "& .MuiDataGrid-row:hover": { backgroundColor: tokens.color.surfaceBright },
+                    "& .MuiDataGrid-cell": { borderColor: `rgba(69,70,77,0.15)` },
+                    "& .MuiDataGrid-footerContainer": { backgroundColor: tokens.color.surfaceContainerLow, borderColor: `rgba(69,70,77,0.15)` },
+                    "& .MuiTablePagination-root": { color: tokens.color.onSurfaceVariant },
                 }}
                 columns={clubsTableColumns}
                 rows={currentClubs}

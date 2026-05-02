@@ -5,6 +5,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers";
 import { GameMetaData } from "@/types/viewmodels/game.vm";
 import { useLookup } from "@/context/LookupContext";
+import {tokens} from "@/styles/theme";
 
 interface MetaDataForGameInputProps {
     gameMetaData: GameMetaData;
@@ -21,7 +22,7 @@ export function MetaDataForGameInput({
         <Box sx={{ width: 600, display: "flex", flexDirection: "column", justifyContent: "center" }}>
             <Grid container rowSpacing={1} columnSpacing={1}>
                 <Grid size={2}>
-                    <Typography>Weiß</Typography>
+                    <Typography sx={{ color: tokens.color.onSurfaceVariant, mt: 1, fontWeight: 500 }}>Weiß</Typography>
                 </Grid>
                 <Grid size={10}>
                     <Autocomplete 
@@ -43,7 +44,7 @@ export function MetaDataForGameInput({
 
                 {/* Schwarze Player */}
                 <Grid size={2}>
-                    <Typography>Schwarz</Typography>
+                    <Typography sx={{ color: tokens.color.onSurfaceVariant, mt: 1, fontWeight: 500 }}>Schwarz</Typography>
                 </Grid>
                 <Grid size={10}>
                     <Autocomplete 
@@ -65,7 +66,7 @@ export function MetaDataForGameInput({
 
                 {/* Datum */}
                 <Grid size={2}>
-                    <Typography>Datum</Typography>
+                    <Typography sx={{ color: tokens.color.onSurfaceVariant, mt: 1, fontWeight: 500 }}>Datum</Typography>
                 </Grid>
                 <Grid size={10}>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -80,7 +81,7 @@ export function MetaDataForGameInput({
 
                 {/* Event */}
                 <Grid size={2}>
-                    <Typography>Event</Typography>
+                    <Typography sx={{ color: tokens.color.onSurfaceVariant, mt: 1, fontWeight: 500 }}>Event</Typography>
                 </Grid>
                 <Grid size={10}>
                     <TextField 
@@ -92,7 +93,7 @@ export function MetaDataForGameInput({
 
                 {/* Runde */}
                 <Grid size={2}>
-                    <Typography>Runde</Typography>
+                    <Typography sx={{ color: tokens.color.onSurfaceVariant, mt: 1, fontWeight: 500 }}>Runde</Typography>
                 </Grid>
                 <Grid size={10}>
                     <TextField 
@@ -105,7 +106,7 @@ export function MetaDataForGameInput({
 
                 {/* Mannschaft */}
                 <Grid size={2}>
-                    <Typography>Mannschaft</Typography>
+                    <Typography sx={{ color: tokens.color.onSurfaceVariant, mt: 1, fontWeight: 500 }}>Mannschaft</Typography>
                 </Grid>
                 <Grid size={10}>
                     <Autocomplete

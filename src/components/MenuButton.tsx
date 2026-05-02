@@ -5,6 +5,7 @@ import Divider from '@mui/material/Divider';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import {useNavigate} from "react-router-dom";
 import {NavItem} from "@/types/viewmodels/navigation.vm";
+import {tokens} from "@/styles/theme";
 
 export interface MenuButtonProps{
     navItems: NavItem[];
@@ -22,8 +23,12 @@ export function MenuButton({navItems}:MenuButtonProps) {
             <IconButton
                 id={"menuButton"}
                 aria-label={"menu"}
-                color={"inherit"}
-                sx={{mr: 2 }}
+                sx={{
+                    mr: 2,
+                    color: tokens.color.onSurface,
+                    transition: `color ${tokens.transition.base}`,
+                    "&:hover": { color: tokens.color.primary },
+                }}
                 onClick={toggleDrawer}
             >
                 <MenuIcon/>
@@ -31,12 +36,21 @@ export function MenuButton({navItems}:MenuButtonProps) {
             <Drawer
                 open={open}
                 onClose={toggleDrawer}
-                sx={{display: "flex", flexDirection: "column"}}
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    "& .MuiDrawer-paper": {
+                        backgroundColor: tokens.color.surfaceContainer,
+                        color: tokens.color.onSurface,
+                    },
+                }}
             >
                 <Box sx={{display: 'flex'}}>
                     <Box sx={{flexGrow: 1}}/>
                     <IconButton
-                        onClick={toggleDrawer}>
+                        onClick={toggleDrawer}
+                        sx={{ color: tokens.color.onSurfaceVariant }}
+                    >
                         <ChevronLeftIcon />
                     </IconButton>
                 </Box>
@@ -64,12 +78,18 @@ function DrawerList({drawerElements, onItemClick}:DrawerList) {
     }
 
     return (
-            <List sx={{width: 300}}>
+            <List sx={{ width: 300 }}>
                 {drawerElements?.map((elem, index) => (
-                    <ListItem key={index}>
-                        {elem.icon && <ListItemIcon>{elem.icon}</ListItemIcon>}
+                    <ListItem key={index} sx={{
+                        borderRadius: tokens.radius.md,
+                        mb: 0.5,
+                        transition: `background-color ${tokens.transition.base}`,
+                        "&:hover": { backgroundColor: tokens.color.surfaceBright },
+                    }}>
+                        {elem.icon && <ListItemIcon sx={{ color: tokens.color.primary }}>{elem.icon}</ListItemIcon>}
                         <ListItemButton
                             onClick={() => handleNav(elem.path)}
+                            sx={{ color: tokens.color.onSurface }}
                         >
                             <ListItemText primary={elem.label}/>
                         </ListItemButton>

@@ -4,6 +4,7 @@ import React from "react";
 import {defaultStartValue, GameState, GameStateNode} from "@/types/models/game.model";
 import {StockfishTurnOnBar} from "@/components/StockfishTurnOnBar";
 import {createMainLine} from "@/api/utils/interactWithGameState";
+import {tokens} from "@/styles/theme";
 
 interface MoveListProps {
     gameState: GameState,
@@ -47,9 +48,9 @@ export default function MoveList({width=200, height=600, gameState, setEvaluatio
 
     const handleCurrentColorOfCurrentMoveBox = (moveId:string) => {
         if (moveId === gameState.activeStateId){
-            return "black"
+            return tokens.color.surfaceContainerHighest;
         } else {
-            return "inherit";
+            return "transparent";
         }
     }
 
@@ -60,7 +61,7 @@ export default function MoveList({width=200, height=600, gameState, setEvaluatio
             flexDirection: "column",
             width: width,
             height: height,
-            ml: 5
+            ml: 5,
         }}
     >
         <StockfishTurnOnBar fen={gameState.allGameStates[gameState.activeStateId || defaultStartValue]?.fen}
@@ -68,10 +69,11 @@ export default function MoveList({width=200, height=600, gameState, setEvaluatio
                             setEvaluation={setEvaluation}
                             evaluation={gameState.allGameStates[gameState.activeStateId || defaultStartValue].analysis?.eval?.centiPawn}/>
         <Box sx={{
-            backgroundColor: "gray",
-            color: "white",
+            backgroundColor: tokens.color.surfaceContainer,
+            color: tokens.color.onSurface,
             overflowY: "auto",
-            flexGrow: 1
+            flexGrow: 1,
+            borderRadius: `${tokens.radius.md} ${tokens.radius.md} 0 0`,
         }}>
             {
                 mainLineStateHistory.map((gameStateNode, index) => {
@@ -85,7 +87,7 @@ export default function MoveList({width=200, height=600, gameState, setEvaluatio
                             key={gameStateNode.id}
                             sx={{
                                 display: "flex",
-                                flexDirection: "column"
+                                flexDirection: "column",
                             }}
                         >
                             <Move onMoveSelect={onMoveSelect}
@@ -95,7 +97,13 @@ export default function MoveList({width=200, height=600, gameState, setEvaluatio
 
                             {
                                 (whiteMoveNode.nextMoves.length > 1 || blackMoveNode?.nextMoves.length > 1) &&
-                                <Box sx={{border: "1px solid gray", pt: 0.75, pb: 0.75, backgroundColor: "dimgray"}}>
+                                <Box sx={{
+                                    pt: 0.75,
+                                    pb: 0.75,
+                                    backgroundColor: tokens.color.surfaceContainerLow,
+                                    borderLeft: `2px solid ${tokens.color.tertiary}`,
+                                    ml: 1,
+                                }}>
                             {
                                 whiteMoveNode.nextMoves.length > 1 &&
                                 whiteMoveNode.nextMoves.slice(1).map((id)=> {
@@ -150,18 +158,30 @@ function Move({onMoveSelect, whiteMoveNode, blackMoveNode, handleCurrentColorOfC
             key={whiteMoveNode.id}
             sx={{
                 display: "flex",
-                flexDirection: "row"
+                flexDirection: "row",
             }}
         >
-            <Box sx={{flex: 2, padding: 1, textAlign: "left", backgroundColor: "dimgray", borderRight: "1px solid rgba(255,255,255,0.1)"}}>
+            <Box sx={{
+                flex: 2,
+                padding: 1,
+                textAlign: "left",
+                backgroundColor: tokens.color.surfaceContainerLow,
+                color: tokens.color.onSurfaceVariant,
+                fontSize: "0.75rem",
+                letterSpacing: "0.025em",
+            }}>
                 {whiteMoveNode.moveNumber}</Box>
             <Box onClick={() => onMoveSelect(whiteMoveNode.id)}
-                 sx={{padding: 1,
+                 sx={{
+                     padding: 1,
                      flex: 4,
+                     fontFamily: tokens.font.body,
                      backgroundColor: handleCurrentColorOfCurrentMoveBox(whiteMoveNode.id),
+                     color: tokens.color.onSurface,
+                     transition: `background-color ${tokens.transition.base}`,
                      "&:hover": {
-                         backgroundColor: "lightgray",
-                         cursor: "pointer"
+                         backgroundColor: tokens.color.surfaceBright,
+                         cursor: "pointer",
                      }}}>
                 {whiteMoveNode.notation}
             </Box>
@@ -172,10 +192,13 @@ function Move({onMoveSelect, whiteMoveNode, blackMoveNode, handleCurrentColorOfC
                     } sx={{
                         padding: 1,
                         flex: 4,
+                        fontFamily: tokens.font.body,
                         backgroundColor: handleCurrentColorOfCurrentMoveBox(blackMoveNode.id),
+                        color: tokens.color.onSurface,
+                        transition: `background-color ${tokens.transition.base}`,
                         "&:hover": {
-                            backgroundColor: "lightgray",
-                            cursor: "pointer"
+                            backgroundColor: tokens.color.surfaceBright,
+                            cursor: "pointer",
                         }
                     }}>
                         {blackMoveNode.notation}
@@ -183,7 +206,7 @@ function Move({onMoveSelect, whiteMoveNode, blackMoveNode, handleCurrentColorOfC
                     :
                     (<Box sx={{
                         padding: 1,
-                        flex: 4
+                        flex: 4,
                     }}/>)
             }
         </Box>
@@ -204,10 +227,11 @@ function SideLine({currentNode, onMoveSelect, handleCurrentColorOfCurrentMoveBox
             sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap:  0.5,
+                gap: 0.5,
                 pl: variantDepth,
                 alignItems: "baseline",
-                fontSize: 13
+                fontSize: 13,
+                color: tokens.color.onSurfaceVariant,
             }}
         >
             <Box sx={{display:"flex", flexDirection: "row", flexWrap: "wrap", gap: 0.75}}>
@@ -223,10 +247,12 @@ function SideLine({currentNode, onMoveSelect, handleCurrentColorOfCurrentMoveBox
                                 <Box
                                     onClick={() => onMoveSelect(sideLine.id)}
                                      sx={{
+                                         color: tokens.color.onSurfaceVariant,
+                                         transition: `color ${tokens.transition.base}`,
                                          backgroundColor: handleCurrentColorOfCurrentMoveBox(sideLine.id),
                                          "&:hover": {
-                                             backgroundColor: "lightgray",
-                                             cursor: "pointer"
+                                             color: tokens.color.onSurface,
+                                             cursor: "pointer",
                                          }
                                      }}
                                 >

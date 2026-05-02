@@ -14,6 +14,7 @@ import ManageSearchIcon from "@mui/icons-material/ManageSearch";
 import DescriptionIcon from "@mui/icons-material/Description";
 import React from "react";
 import {AppRole} from "@/types/common/roles";
+import {tokens} from "@/styles/theme";
 
 export function Header() {
     const { user, isLoggedIn } = useAuth();
@@ -77,9 +78,11 @@ export function Header() {
     return (
         <AppBar position={"sticky"}
                 sx={{
-                    backgroundColor: "#bdbdbd",
-                    color: "#424242",
-                    height: 80
+                    backgroundColor: tokens.color.surfaceContainerLow,
+                    color: tokens.color.onSurface,
+                    height: 80,
+                    boxShadow: "none",
+                    borderBottom: `1px solid rgba(69,70,77,0.15)`,
                 }}
         >
             <Toolbar
@@ -99,7 +102,14 @@ export function Header() {
                     :
                     <Button
                         variant={"outlined"}
-                        color={"inherit"}
+                        sx={{
+                            color: tokens.color.primary,
+                            borderColor: tokens.color.primary,
+                            "&:hover": {
+                                borderColor: tokens.color.onPrimaryContainer,
+                                backgroundColor: `${tokens.color.primaryContainer}33`,
+                            },
+                        }}
                         onClick={loginButton}
                     >
                         Login

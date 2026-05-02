@@ -13,6 +13,7 @@ import React from "react";
 import {useNavigate} from "react-router-dom";
 import {ROUTES} from "@/routes";
 import {useAuth} from "@/context/AuthContext";
+import {tokens} from "@/styles/theme";
 
 interface RepositoryStruct {
     label: string,
@@ -56,10 +57,22 @@ export function BugReportContent({repositoryOptions=defaultRepositoryOptions}: B
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            mt: 5
+            mt: 5,
         }}>
+            <Box
+                sx={{
+                    backgroundColor: tokens.color.surfaceContainerLow,
+                    padding: 3,
+                    borderRadius: tokens.radius.xl,
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+            >
             <Paper sx={{
-                backgroundColor: "lightgray",
+                backgroundColor: tokens.color.surfaceContainerHighest,
+                borderRadius: tokens.radius.lg,
+                boxShadow: tokens.shadow.cardLift,
             }}>
             <Box sx={{
                 display: "flex",
@@ -68,21 +81,32 @@ export function BugReportContent({repositoryOptions=defaultRepositoryOptions}: B
                 justifyContent: "center",
                 gap: 1,
                 width: 400,
-                m: 2
+                m: 2,
             }}>
-                <Typography variant={"h5"} sx={{mb: 2, color: "white"}}>Problem melden</Typography>
-                <FormControl fullWidth sx={{backgroundColor: "white"}}>
-                    <Select value={repo} onChange={handleSelectRepo}>
+                <Typography variant={"h5"} sx={{
+                    mb: 2,
+                    color: tokens.color.onSurface,
+                    fontFamily: tokens.font.display,
+                }}>Problem melden</Typography>
+                <FormControl fullWidth>
+                    <Select value={repo} onChange={handleSelectRepo}
+                        sx={{ color: tokens.color.onSurface }}
+                    >
                         {repositoryOptions.map((repositoryOption) => (
                             <MenuItem value={repositoryOption.path}>{repositoryOption.label}</MenuItem>
                         ))
                         }
                     </Select>
                 </FormControl>
-                <TextField fullWidth sx={{backgroundColor: "white"}} multiline rows={4} value={bugDescription} onChange={handleTextInput}/>
-                <Button disabled={!repo || !bugDescription} sx={{ backgroundColor: "gray", color: "white"}} onClick={handleSend}>Abschicken</Button>
+                <TextField fullWidth multiline rows={4} value={bugDescription} onChange={handleTextInput}/>
+                <Button
+                    variant="contained"
+                    disabled={!repo || !bugDescription}
+                    onClick={handleSend}
+                >Abschicken</Button>
             </Box>
             </Paper>
+            </Box>
         </Box>
     );
 }

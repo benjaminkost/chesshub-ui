@@ -15,6 +15,7 @@ import {
 import React from "react";
 import { UserSimple } from "@benaurel/chesshub-core-client";
 import {TeamVm} from "@/types/viewmodels/team.vm";
+import {tokens} from "@/styles/theme";
 
 interface AddTeamPopupDialogProps {
     addTeam: (team: Partial<TeamVm>) => void;
@@ -64,14 +65,20 @@ export function AddTeamPopupDialog({addTeam, allUsers, currentHighestID}: AddTea
                 onClick={handleOpen}
                 sx={{
                     m: 2,
-                    backgroundColor: "gray",
-                    color: "white"
+                    background: tokens.gradient.primaryCta,
+                    color: tokens.color.onPrimary,
+                    borderRadius: tokens.radius.md,
+                    letterSpacing: "0.05em",
+                    "&:hover": { filter: "brightness(1.1)" },
                 }}
             >
                 Mannschaft hinzufügen
             </Button>
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Neue Mannschaft erstellen</DialogTitle>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+            >
+                <DialogTitle sx={{ color: tokens.color.onSurface, fontFamily: tokens.font.display }}>Neue Mannschaft erstellen</DialogTitle>
                 <DialogContent>
                     <Box
                         component="form"
@@ -80,7 +87,7 @@ export function AddTeamPopupDialog({addTeam, allUsers, currentHighestID}: AddTea
                             flexDirection: "column",
                             gap: 2,
                             mt: 1,
-                            minWidth: 300
+                            minWidth: 300,
                         }}
                     >
                         <TextField
@@ -108,12 +115,20 @@ export function AddTeamPopupDialog({addTeam, allUsers, currentHighestID}: AddTea
                     </Box>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose}>Abbrechen</Button>
+                    <Button
+                        onClick={handleClose}
+                        sx={{ color: tokens.color.onSurfaceVariant }}
+                    >Abbrechen</Button>
                     <Button 
                         onClick={handleSave} 
                         disabled={!teamName || !admin}
                         variant="contained"
-                        sx={{ backgroundColor: "gray" }}
+                        sx={{
+                            background: teamName && admin ? tokens.gradient.primaryCta : tokens.color.surfaceContainerHighest,
+                            color: teamName && admin ? tokens.color.onPrimary : tokens.color.onSurfaceVariant,
+                            borderRadius: tokens.radius.md,
+                            "&:hover": { filter: "brightness(1.1)" },
+                        }}
                     >
                         Speichern
                     </Button>

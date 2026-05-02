@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import {gamesApi} from "@/api/clients/apiChesshubCore";
 import {GameRequest} from "@benaurel/chesshub-core-client";
 import {parsePGN} from "@/api/utils/pgnParsing";
+import {tokens} from "@/styles/theme";
 
 export function UploadFileContent() {
     const [pgnContent, setPgnContent] = React.useState<GameRequest>();
@@ -60,9 +61,7 @@ export function UploadFileContent() {
                 open={open}
                 autoHideDuration={4000}
             >
-                <Alert
-                    severity={"error"}
-                >
+                <Alert severity={"error"}>
                     Datei konnte nicht hochgeladen werden
                 </Alert>
             </Snackbar>
@@ -72,23 +71,37 @@ export function UploadFileContent() {
                         <Paper
                             {...getRootProps()}
                             sx={{
-                                backgroundColor: isDragActive ? "blue" : "lightgray",
-                                border: "2px dotted gray",
+                                    backgroundColor: isDragActive
+                                        ? tokens.color.primaryContainer
+                                        : tokens.color.surfaceContainerHighest,
+                                border: `2px dashed ${isDragActive ? tokens.color.primary : tokens.color.outlineVariant}`,
                                 display: "flex",
                                 justifyContent: "center",
                                 alignItems: "center",
                                 m: 2,
                                 height: 400,
-                                width: 400
+                                width: 400,
+                                borderRadius: tokens.radius.lg,
+                                transition: `background-color ${tokens.transition.base}, border-color ${tokens.transition.base}`,
                             }}
                         >
                             <input {...getInputProps()} />
-                            <UploadFile sx={{ width: 100, height: 100, color: "gray" }} />
+                            <UploadFile sx={{
+                                width: 100,
+                                height: 100,
+                                color: isDragActive ? tokens.color.primary : tokens.color.onSurfaceVariant,
+                                transition: `color ${tokens.transition.base}`,
+                            }} />
                         </Paper>
 
                         <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 1 }}>
-                            {fileName && <Typography>{fileName}</Typography>}
-                            {pgnContent && <Button variant="contained" onClick={uploadPGN}>Upload</Button>}
+                            {fileName && <Typography sx={{ color: tokens.color.onSurfaceVariant }}>{fileName}</Typography>}
+                            {pgnContent && (
+                                    <Button
+                                        variant="contained"
+                                        onClick={uploadPGN}
+                                    >Upload</Button>
+                            )}
                         </Box>
                     </Box>
                 </Grid>

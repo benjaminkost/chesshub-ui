@@ -142,7 +142,15 @@ export function ChessBoardEditor({
                 <Grid size={2}></Grid>
                 <Grid size={2}></Grid>
                 <Grid size={8}>
-                    <Button fullWidth onClick={handleSaveGame} sx={{ width: 600, mt: 2, backgroundColor: "gray", color: "white" }}>
+                    <Button
+                        variant="contained"
+                        fullWidth
+                        onClick={handleSaveGame}
+                        sx={{
+                            width: 600,
+                            mt: 2,
+                        }}
+                    >
                         Partie speichern
                     </Button>
                 </Grid>
